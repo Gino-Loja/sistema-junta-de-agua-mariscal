@@ -47,10 +47,10 @@ export const SidebarWrapper = () => {
             />
             <SidebarMenu title="Main Menu">
               <SidebarItem
-                isActive={pathname === "/Users"}
+                isActive={pathname === "/users"}
                 title="Usuarios"
                 icon={<AccountsIcon />}
-                href="Users"
+                href="users"
               />
               <SidebarItem
                 isActive={pathname === "/payments"}
