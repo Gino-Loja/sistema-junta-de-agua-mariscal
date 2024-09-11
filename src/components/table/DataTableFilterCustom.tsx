@@ -14,7 +14,7 @@ export interface TableCustomFilterProps<T> {
 
 export default function DataTableFilterCustom<T>({ table, columnsFilter, columnItem }: TableCustomFilterProps<T>) {
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-     
+
     const handleCheckboxChange = (column: string, isSelected: boolean) => {
         let updatedFilters: string[];
 
@@ -51,11 +51,11 @@ export default function DataTableFilterCustom<T>({ table, columnsFilter, columnI
                     <DropdownSection>
                         {columnsFilter.map((column, id) => (
                             <DropdownItem
+                                key={id}
                             >
                                 <Checkbox
-                                    key={id}
                                     size="sm"
-                                    isSelected={selectedFilters.includes(column)}                                     color="default"
+                                    isSelected={selectedFilters.includes(column)} color="default"
                                     onChange={(e) => {
                                         // e.target.checked ?
                                         //     table.getColumn(columnItem)?.setFilterValue(column)

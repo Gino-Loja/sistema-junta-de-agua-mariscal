@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -8,13 +8,11 @@ import {
   TableRow,
   TableCell,
   Pagination,
-  ChipProps,
   Button,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Checkbox,
   DropdownSection,
   Skeleton,
   Input,
@@ -114,7 +112,7 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
-              
+
                 aria-label="Table Columns"
                 closeOnSelect={false}
                 selectionMode="multiple"
@@ -144,12 +142,12 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
 
           </div>
 
-          <div className="flex gap-3">
+          {/* <div className="flex gap-3">
 
 
 
 
-          </div>
+          </div> */}
 
 
           <Tooltip content="Agrega un nuevo usuario">
@@ -254,6 +252,7 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
               ))}
             </TableBody>
           </Table>
+
 
       }
 

@@ -17,14 +17,13 @@ export default function BreadcrumbsCustom() {
     return (
         <div className="flex flex-col flex-wrap gap-2">
 
-
-
             <Breadcrumbs variant="solid">
                 <BreadcrumbItem href='/' startContent={<HomeIcon />}>
 
-                    <Link href={'/'} >
+                    {/* <Link href={'/'} > */}
                         Inicio
-                    </Link>
+                    {/* </Link> */}
+
 
                 </BreadcrumbItem>
                 {pathnames.map((pathname, index) => {
@@ -32,22 +31,19 @@ export default function BreadcrumbsCustom() {
                     const href = `/${pathnames.slice(0, index + 1).join('/')}`;
 
                     return isLast ? (
-                        <BreadcrumbItem size='sm' startContent={icons[decodeURIComponent(pathname)]} >
-                            <Link href={href} className="text-gray-600">
+                        <BreadcrumbItem size='sm' href={href} startContent={icons[decodeURIComponent(pathname)]} >
+                            {/* <Link href={href} className="text-gray-600"> */}
                                 {decodeURIComponent(pathname)}
-                            </Link>
+                            {/* </Link> */}
                         </BreadcrumbItem>
                     ) : (
 
-                        <BreadcrumbItem >
-                            <Link href={href} className="text-gray-600">
+                        <BreadcrumbItem  href={href} >
+                            {/* <Link href={href} className="text-gray-600"> */}
                                 {decodeURIComponent(pathname)}
 
-                            </Link>
+                            {/* </Link> */}
                         </BreadcrumbItem>
-
-
-
 
                     );
                 })}

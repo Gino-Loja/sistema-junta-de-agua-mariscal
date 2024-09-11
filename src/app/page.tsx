@@ -18,11 +18,6 @@ export default function Home() {
 
 
 
-  
-
-  
-
-
   return (
     <div className=" relative overflow-x-auto">
       {/* <Table aria-label="Example table with custom cells">
