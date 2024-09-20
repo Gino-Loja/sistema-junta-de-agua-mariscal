@@ -1,6 +1,4 @@
-
 'use client'
-
 import { Chip, ChipProps } from "@nextui-org/react";
 import CustomTable from "../table/CustomTable";
 import { ColumnDef } from "@tanstack/react-table";
@@ -11,34 +9,37 @@ import { IUserRepository } from "@/model/user-repository/UserRepository";
 import { createApiUserRepository } from "@/services/serviceUser";
 import { SkeletonCustom } from "../skeletons/skeleton";
 import { Actions } from "../table/actions";
+import AlertSuccess from "../modal/AlertSuccess";
+import { useAlertSuccess, useUserStore } from "@/lib/store";
 
-export default function TableUser() {
-  const repositoryUser: IUserRepository = createApiUserRepository();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+export default function TableUser({users}: {users: User[]}) {
+ // const repositoryUser: IUserRepository = createApiUserRepository();
+  //const [isLoading, setIsLoading] = useState(false);
   const statusColorMap: Record<string, ChipProps["color"]> = {
     'true': "success",
     'false': "warning",
     '1': 'primary',
     '2': 'default',
   };
-
-  const [users, setUsers] = React.useState<User[]>([])
-  useEffect(() => {
-    setIsLoading(true);
-    repositoryUser.getListAllUser()
-      .then((users) => {
-        setUsers(users);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message || "Error desconocido");
-        setIsLoading(false);
-      });
-  }, []);
+  const {isOpen, message, closeAlert} = useAlertSuccess();
+  const {type} = useUserStore();
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   repositoryUser.getListAllUser()
+  //     .then((users) => {
+  //        users.success && setUsers(users.data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       throw new Error("Error al cargar datos", error);
+        
+  //     });
+  // }, []);
 
   const columns = useMemo<ColumnDef<User, any>[]>(
     () => [
+
       {
         header: "ID",
         accessorKey: "id",
@@ -105,7 +106,7 @@ export default function TableUser() {
         header: "Acciones",
         cell: (info) => {
           return (
-           <Actions></Actions>
+            <Actions data={info.row.original}></Actions>
           );
         },
 
@@ -124,13 +125,15 @@ export default function TableUser() {
     }
   ];
 
-  if (isLoading) {
-    return <SkeletonCustom />
-  }
+  // if (isLoading) {
+  //   return <SkeletonCustom />
+  // }
 
   return (
 
     <div>
+
+
       <CustomTable
         columns={columns}
         data={users}
@@ -139,6 +142,8 @@ export default function TableUser() {
           filtersConfig
         }>
       </CustomTable>
+
+      { isOpen && <AlertSuccess message={message} title={type} close={closeAlert}></AlertSuccess>}
     </div>
 
 

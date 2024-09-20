@@ -9,15 +9,7 @@ import { User } from "@/model/User";
 export default function Home() {
   const repositoryUser: IUserRepository = createApiUserRepository();
   const [userData, setUserData] = useState<User[]>([])
-  useEffect(() => {
-    repositoryUser.getAllUser().then((users) => {
-      setUserData(users);
-    });
-
-  }, []);
-
-
-
+ 
   return (
     <div className=" relative overflow-x-auto">
       {/* <Table aria-label="Example table with custom cells">

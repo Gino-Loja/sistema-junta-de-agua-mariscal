@@ -1,11 +1,14 @@
-import { TotalUser, UsersBySector, UsersInactivesActives } from "../types";
-import { User } from "../User";
+import { Dto } from "../Dto";
+import { QueryResultError, Sector, TotalUser, UsersBySector, UsersInactivesActives } from "../types";
+import { User, UserDto } from "../User";
 
 export interface IUserRepository {
-
-    
-    getAllUser: () => Promise<TotalUser[]>;
-    getAllUserBySector: () => Promise<UsersBySector[]>;
-    getUsersInactivesActives: () => Promise<UsersInactivesActives[]>;
-    getListAllUser: () => Promise<User[]>;
+    getAllUser: () => Promise<QueryResultError<TotalUser[]>>;
+    getAllUserBySector: () => Promise<QueryResultError<UsersBySector[]>>;
+    getUsersInactivesActives: () => Promise<QueryResultError<UsersInactivesActives[]>>;
+    getListAllUser: () => Promise<QueryResultError<User[]>>;
+    getAllSector: () => Promise<QueryResultError<Sector[]>>;
+    createUser: ( user: UserDto) => Promise<QueryResultError<User>>;
+    updateUser: ( user: UserDto, id:number) => Promise<QueryResultError<User>>;
 }
+

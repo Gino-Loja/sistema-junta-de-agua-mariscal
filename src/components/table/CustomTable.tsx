@@ -37,9 +37,14 @@ import { TableCustomProps } from "./ICustomTable";
 import type { Selection } from "@nextui-org/react";
 import DataTableFilterCustom from "./DataTableFilterCustom";
 import { AddIcon } from "../icons/add-icon";
+import { useUserStore } from "@/lib/store";
+
 
 
 export default function TableCustom<T>({ data, columns, labelName, filtersConfig }: TableCustomProps<T>) {
+
+
+  const { openModal, setData, setType } = useUserStore();
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -99,8 +104,6 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
                 ))}
               </>
             )}
-
-
             <Dropdown >
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -139,28 +142,24 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
 
               </DropdownMenu>
             </Dropdown>
-
           </div>
-
           {/* <div className="flex gap-3">
 
 
 
 
           </div> */}
-
-
           <Tooltip content="Agrega un nuevo usuario">
-            <Button radius="full" isIconOnly about="agregar" color="primary" aria-label="Like">
+            <Button radius="full" onPress={() => {
+              setType("create")
+              setData(null)
+              openModal()
+            }} isIconOnly about="agregar" color="primary" aria-label="Like">
               <AddIcon />
             </Button>
           </Tooltip>
-
-
         </div>
-
         <Divider className="my-1" />
-
       </div>
     );
   }, [

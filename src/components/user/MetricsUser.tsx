@@ -11,7 +11,7 @@ export default async function MetricsUser() {
   const userRepository: IUserRepository = createApiUserRepository();
   const usersAllSector = await userRepository.getAllUserBySector();
   const usersInactivesActives = await userRepository.getUsersInactivesActives();
-  const [totalUsers] = await userRepository.getAllUser();
+  const totalUsers = await userRepository.getAllUser();
   return (
     <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card  >
@@ -26,7 +26,7 @@ export default async function MetricsUser() {
         <CardBody className="flex flex-col items-center justify-center mt-0 pt-0 pb-6">
           <div className="bg-primary	 rounded-xl border-2 shadow-md px-4 py-5 w-1/2 flex flex-col items-center justify-center">
             {" "}
-            <h4 className="text-4xl font-bold">{totalUsers.total_usuarios}</h4>
+            <h4 className="text-4xl font-bold">{totalUsers.success && totalUsers.data[0].total_usuarios}</h4>
             <p className="text-muted-fx`oreground">Total de usuarios</p>
           </div>
         </CardBody>
@@ -42,21 +42,25 @@ export default async function MetricsUser() {
         </CardHeader>
         <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0 pb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {usersInactivesActives.map((user, id) => {
-              return (
-                <div key={id} className={clsx(
-                  "rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
-                  {
-                    "bg-success-300": user.estado === true,  // Color para Mariscal Sucre
-                    "bg-warning-300": user.estado === false,  // Color para otros sectores
-                  }
-                )}>
-                  <h4 className="text-4xl font-bold">{user.numero_usuarios}</h4>
-                  <p className="text-muted-fx foreground text-center">{user.estado === true ? " Activos " : " Inactivos "}</p>
-                </div>
 
-              )
-            })}
+            {usersInactivesActives.success &&
+              usersInactivesActives.data.map((user, id) => {
+                return (
+                  <div key={id} className={clsx(
+                    "rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
+                    {
+                      "bg-success-300": user.estado === true,  // Color para Mariscal Sucre
+                      "bg-warning-300": user.estado === false,  // Color para otros sectores
+                    }
+                  )}>
+                    <h4 className="text-4xl font-bold">{user.numero_usuarios}</h4>
+                    <p className="text-muted-fx foreground text-center">{user.estado === true ? " Activos " : " Inactivos "}</p>
+                  </div>
+
+                )
+              })
+            }
+
 
           </div>
 
@@ -73,21 +77,26 @@ export default async function MetricsUser() {
         </CardHeader>
         <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0 pb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {usersAllSector.map((user, id) => {
-              return (
-                <div key={id} className={clsx(
-                  "rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
-                  {
-                    "bg-primary-300": user.sector_nombre === "Mariscal Sucre",  // Color para Mariscal Sucre
-                    "bg-default-50": user.sector_nombre !== "Mariscal Sucre"    // Color para otros sectores
-                  }
-                )}>
-                  <h4 className="text-4xl font-bold">{user.numero_usuarios}</h4>
-                  <p className="text-muted-fx foreground text-center">{user.sector_nombre}</p>
-                </div>
 
-              )
-            })}
+            {usersAllSector.success &&
+
+              usersAllSector.data.map((user, id) => {
+                return (
+                  <div key={id} className={clsx(
+                    "rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
+                    {
+                      "bg-primary-300": user.sector_nombre === "Mariscal Sucre",  // Color para Mariscal Sucre
+                      "bg-default-50": user.sector_nombre !== "Mariscal Sucre"    // Color para otros sectores
+                    }
+                  )}>
+                    <h4 className="text-4xl font-bold">{user.numero_usuarios}</h4>
+                    <p className="text-muted-fx foreground text-center">{user.sector_nombre}</p>
+                  </div>
+
+                )
+              })
+            }
+
 
           </div>
 

@@ -1,7 +1,14 @@
+'use client'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { VerticalDotsIcon } from "../icons/VerticalDotsIcon ";
+import { useUserStore, } from "@/lib/store";
+import { User } from "@/model/User";
 
-export const Actions = () => {
+
+
+export const Actions = ({ data }: { data: User }) => {
+    const { setData, setType, openModal } = useUserStore();
+
     return (
         <div className="relative flex justify-end items-center gap-2">
             <Dropdown classNames={{
@@ -14,9 +21,14 @@ export const Actions = () => {
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                    <DropdownItem onPress={()=>console.log("adios")}>View</DropdownItem>
-                    <DropdownItem>Edit</DropdownItem>
-                    <DropdownItem>Delete</DropdownItem>
+                    <DropdownItem onPress={() => {
+                    }}>View</DropdownItem>
+                    <DropdownItem onPress={() => {
+                        setData(data);
+                        setType("update");
+                        openModal();
+                    }}>Editar</DropdownItem>
+                    {/* <DropdownItem>E</DropdownItem> */}
                 </DropdownMenu>
             </Dropdown>
         </div>

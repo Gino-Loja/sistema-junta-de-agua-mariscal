@@ -9,17 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@nextui-org/react": "^2.4.6",
     "@tanstack/react-table": "^8.20.5",
     "@types/pg": "^8.11.7",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.0.28",
+    "install": "^0.13.0",
     "next": "14.0.4",
     "next-themes": "^0.3.0",
+    "npm": "^10.8.3",
     "pg": "^8.12.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.0",
+    "zod": "^3.23.8",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

@@ -10,3 +10,5 @@ export type User = {
     tipo: string;
     cedula: string;
 }
+
+export type UserDto = Omit<User, "id" | "fecha_creacion">
