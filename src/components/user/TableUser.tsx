@@ -2,20 +2,16 @@
 import { Chip, ChipProps } from "@nextui-org/react";
 import CustomTable from "../table/CustomTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import {  useMemo } from "react";
 import { User } from "@/model/User";
 import React from "react";
-import { IUserRepository } from "@/model/user-repository/UserRepository";
-import { createApiUserRepository } from "@/services/serviceUser";
-import { SkeletonCustom } from "../skeletons/skeleton";
 import { Actions } from "../table/actions";
 import AlertSuccess from "../modal/AlertSuccess";
 import { useAlertSuccess, useUserStore } from "@/lib/store";
 
 
 export default function TableUser({users}: {users: User[]}) {
- // const repositoryUser: IUserRepository = createApiUserRepository();
-  //const [isLoading, setIsLoading] = useState(false);
+ 
   const statusColorMap: Record<string, ChipProps["color"]> = {
     'true': "success",
     'false': "warning",
@@ -24,18 +20,6 @@ export default function TableUser({users}: {users: User[]}) {
   };
   const {isOpen, message, closeAlert} = useAlertSuccess();
   const {type} = useUserStore();
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   repositoryUser.getListAllUser()
-  //     .then((users) => {
-  //        users.success && setUsers(users.data);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       throw new Error("Error al cargar datos", error);
-        
-  //     });
-  // }, []);
 
   const columns = useMemo<ColumnDef<User, any>[]>(
     () => [

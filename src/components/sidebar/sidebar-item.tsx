@@ -21,6 +21,7 @@ export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
   return (
     <NextLink
       href={href}
+      
       className="text-default-900 active:bg-none max-w-full"
     >
       <div

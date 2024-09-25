@@ -39,3 +39,21 @@ export type FormModalType = {
 //type dataOrError<T> = { data: T } | { success: false, error: string };
 
 export type QueryResultError<T> = { success: true, data: T } | { success: false, error: string };
+
+
+export type Lectures = {
+  id: number | null;
+  fecha: Date | null;
+  consumo: number | null;
+  lectura_anterior: number | null; // Opcional porque puede ser null
+  lectura_actual: number | null; // Opcional porque puede ser null
+  exceso: number | null; // Opcional porque puede ser null
+  usuario_id: number ;
+  nombre_usuario: string;
+  numero_serie: string
+}
+
+
+export type Years = { anio: number }
+
+export type Months = { mes: string, value: number }

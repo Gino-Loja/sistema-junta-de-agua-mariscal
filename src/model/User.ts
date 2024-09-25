@@ -12,3 +12,4 @@ export type User = {
 }
 
 export type UserDto = Omit<User, "id" | "fecha_creacion">
+

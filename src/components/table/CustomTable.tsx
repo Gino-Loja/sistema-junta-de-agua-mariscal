@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -41,11 +41,10 @@ import { useUserStore } from "@/lib/store";
 
 
 
-export default function TableCustom<T>({ data, columns, labelName, filtersConfig }: TableCustomProps<T>) {
-
+export default function TableCustom<T>({ data, columns, labelName, filtersConfig, children }: TableCustomProps<T>) {
 
   const { openModal, setData, setType } = useUserStore();
-  const [error, setError] = useState<string | null>(null);
+  
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 8,
@@ -65,12 +64,12 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
     onColumnVisibilityChange: setColumnVisibility,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    debugTable: true,
     state: {
       pagination,
       columnVisibility,
       columnFilters,
     },
+    
 
   });
 
@@ -89,8 +88,8 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
             onClear={() => (table.getColumn("nombre")?.setFilterValue(""))}
             className="max-w-sm"
           />
-          <div className="flex flex-row gap-2">
-            {filtersConfig?.length > 0 && (
+          <div className="flex flex-row gap-6  items-center">
+            {filtersConfig && filtersConfig.length > 0 && (
               <>
                 {filtersConfig.map((filter, index) => (
 
@@ -142,13 +141,8 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
 
               </DropdownMenu>
             </Dropdown>
+            {children}
           </div>
-          {/* <div className="flex gap-3">
-
-
-
-
-          </div> */}
           <Tooltip content="Agrega un nuevo usuario">
             <Button radius="full" onPress={() => {
               setType("create")
@@ -199,7 +193,7 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
   //console.log(table.getState().columnFilters)
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      <h1 className="text-2xl font-bold mb-4">Lista de Usuarios</h1>
+      <h1 className="text-2xl font-bold mb-4">Lista de {labelName}</h1>
       {
         table.getVisibleLeafColumns().length === 0 ? (
           <div className="text-red-500 font-medium">No hay columnas visibles
@@ -211,10 +205,8 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
             bottomContentPlacement="outside"
             topContent={topContent}
             topContentPlacement="outside"
-
           >
             <TableHeader   >
-
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableHeader key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -234,10 +226,12 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
             </TableHeader>
             <TableBody
               //isLoading={isLoading}
-              loadingContent={<Skeleton className="h-24 rounded-lg bg-secondary">
-                <div className="h-24 rounded-lg bg-secondary"></div>
-                <div className="h-24 rounded-lg bg-secondary"></div><div className="h-24 rounded-lg bg-secondary"></div>
-              </Skeleton>}
+              //isLoading={isLoading}
+              // isLoading={loading}
+              // loadingContent={<Skeleton className="h-24 rounded-lg bg-secondary">
+              //   <div className="h-24 rounded-lg bg-secondary"> dasdadasdasdasdas</div>
+              //   <div className="h-24 rounded-lg bg-secondary">asdsadasdsadasdsadsad</div><div className="h-24 rounded-lg bg-secondary"></div>
+              // </Skeleton>}
               emptyContent={"No rows to display."}>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>

@@ -9,7 +9,7 @@ import FormAddUser from '@/components/forms/FormUser';
 //import { getAllSector } from '@/lib/userAction';
 import { IUserRepository } from '@/model/user-repository/UserRepository';
 import { createApiUserRepository } from '@/services/serviceUser';
-import { User } from '@/model/User';
+
 import { SkeletonCustom } from '@/components/skeletons/skeleton';
 
 export default async function Users() {

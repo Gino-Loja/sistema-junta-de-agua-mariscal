@@ -14,15 +14,15 @@ const schema = z.object({
     nombre: z
         .string()
         .min(4, { message: "Su nombre debe tener al menos 4 caracteres!" })
-        .max(20, { message: "Su nombre no puede tener más de 150 caracteres!" }),
+        .max(250, { message: "Su nombre no puede tener más de 150 caracteres!" }),
     email: z.string().email({ message: "Por favor ingrese un correo válido!" }),
     direccion: z.string().min(1, { message: "Dirección es obligatoria!" }),
-    telefono: z.string().min(1, { message: "Teléfono es obligatorio!" }),
+    telefono: z.string().min(1, { message: "Teléfono es obligatorio!" })
+    .max(10, { message: "No puede tener más de 10 caracteres!" }),
     sector_id: z.preprocess((val) => Number(val),
         z.number().min(1, { message: "Sector es obligatorio!" })),
     cedula: z.string().min(1, { message: "Cedula es obligatorio!" }),
     estado: z.preprocess((val) => val === "Activo" ? true : false, z.boolean().refine(val => typeof val === 'boolean', { message: "Estado es obligatorio!" })),
-
     tipo: z.string().min(1, { message: "Tipo es obligatorio!" }),
 });
 type Inputs = z.infer<typeof schema>;
@@ -54,7 +54,7 @@ export default function FormAddUser({ sectores }: { sectores: Sector[] }) {
                     closeModal();
                     setMesage("Usuario actualizado con éxito");
                     openAlert();
-                    
+
                 } else {
                     throw new Error(res.error);
                 }

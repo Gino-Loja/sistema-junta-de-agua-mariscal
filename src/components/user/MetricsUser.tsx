@@ -23,8 +23,8 @@ export default async function MetricsUser() {
             </span>
           </div>
         </CardHeader>
-        <CardBody className="flex flex-col items-center justify-center mt-0 pt-0 pb-6">
-          <div className="bg-primary	 rounded-xl border-2 shadow-md px-4 py-5 w-1/2 flex flex-col items-center justify-center">
+        <CardBody className="flex flex-col items-center justify-center mt-0 pb-6">
+          <div className="transition duration-700 ease-in-out  hover:scale-110 bg-primary cursor-pointer rounded-xl border-2 shadow-md px-4 py-5 w-1/2 flex flex-col items-center justify-center">
             {" "}
             <h4 className="text-4xl font-bold">{totalUsers.success && totalUsers.data[0].total_usuarios}</h4>
             <p className="text-muted-fx`oreground">Total de usuarios</p>
@@ -47,7 +47,7 @@ export default async function MetricsUser() {
               usersInactivesActives.data.map((user, id) => {
                 return (
                   <div key={id} className={clsx(
-                    "rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
+                    "transition duration-700 ease-in-out  hover:scale-110 rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
                     {
                       "bg-success-300": user.estado === true,  // Color para Mariscal Sucre
                       "bg-warning-300": user.estado === false,  // Color para otros sectores
@@ -83,7 +83,7 @@ export default async function MetricsUser() {
               usersAllSector.data.map((user, id) => {
                 return (
                   <div key={id} className={clsx(
-                    "rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
+                    "transition duration-700 ease-in-out  hover:scale-110 rounded-xl cursor-pointer border-2 shadow-md px-4 py-5  flex flex-col items-center justify-center",
                     {
                       "bg-primary-300": user.sector_nombre === "Mariscal Sucre",  // Color para Mariscal Sucre
                       "bg-default-50": user.sector_nombre !== "Mariscal Sucre"    // Color para otros sectores

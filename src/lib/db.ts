@@ -1,7 +1,9 @@
-import { Pool } from "pg";
+import { Pool, types } from "pg";
 import dotenv from 'dotenv';
 dotenv.config();
-
+types.setTypeParser(20, function(val) {
+  return parseInt(val, 10)
+})
 let pool;
 if (!pool) {
   pool = new Pool({
