@@ -5,6 +5,8 @@ export interface ILecturesRepository {
     getComsumedMetersByMonths: (date: string) => Promise<QueryResultError<{exceso: number | null, consumo: number | null}>>;
     getALLMonthsLecturesByYear: (year: string) => Promise<QueryResultError<Months[]>>;
     getConsumedBySector: (date: string) => Promise<QueryResultError<{ sector: string, consumo: number }[]>>;
+    getComsumedMonthsByYear: (date: string) => Promise<QueryResultError<{ mes: string, consumo_total: number, exceso_total: number }[]>>;
+    
 
 }
 

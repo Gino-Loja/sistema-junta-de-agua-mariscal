@@ -7,6 +7,7 @@ import MetricLectures from "@/components/lecturas/MetricsLectures";
 //import dynamic from 'next/dynamic'
 import { SkeletonCustom } from "@/components/skeletons/skeleton";
 import { SkeletonMetricUser } from "@/components/skeletons/SkeletonsMetricUser";
+import { LectureBarChart } from "@/components/lecturas/LectureBarChart";
 
 type CustomSearchParams = { date: string }
 
@@ -24,14 +25,19 @@ export default async function Page({ searchParams }: {
       <Suspense key={date} fallback={<SkeletonMetricUser />}>
         <MetricLectures params={date}></MetricLectures>
       </Suspense>
+
+      <Suspense key={date + Math.random.toString()} fallback={<div>cargando....</div>}>
+        <FetchAndRenderComsumedMonthsByYear repository={repositoryLectures} selectedDate={date}></FetchAndRenderComsumedMonthsByYear>
+      </Suspense>
       <Suspense fallback={<SkeletonCustom />}>
-        {fetchAndRenderAllLectures({ repository: repositoryLectures, selectedDate: date })}
+        {/* {FetchAndRenderAllLectures({ repository: repositoryLectures, selectedDate: date })} */}
+        <FetchAndRenderAllLectures repository={repositoryLectures} selectedDate={date}></FetchAndRenderAllLectures>
       </Suspense>
     </div>
   )
 }
 
-async function fetchAndRenderAllLectures({ repository, selectedDate }: { repository: ILecturesRepository, selectedDate: string }) {
+async function FetchAndRenderAllLectures({ repository, selectedDate }: { repository: ILecturesRepository, selectedDate: string }) {
 
   //const month = searchParams.month || currentMonth;
   //console.log(date)
@@ -45,3 +51,11 @@ async function fetchAndRenderAllLectures({ repository, selectedDate }: { reposit
 
 
 
+async function FetchAndRenderComsumedMonthsByYear({ repository, selectedDate }: { repository: ILecturesRepository, selectedDate: string }) {
+  const consumedByYear = await repository.getComsumedMonthsByYear(selectedDate)
+  //console.log(consumedByYear)
+  return (
+    consumedByYear.success && <LectureBarChart data={consumedByYear.data}>
+    </LectureBarChart>
+  )
+}

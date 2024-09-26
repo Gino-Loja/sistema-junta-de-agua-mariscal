@@ -26,7 +26,7 @@ export default async function MetricLectures({ params }: { params: string }) {
   const lectureRepository: ILecturesRepository = createApiLecturesRepository();
   const consumedMeters = await lectureRepository.getComsumedMetersByMonths(params);
   const consumedBySector = await lectureRepository.getConsumedBySector(params);
- // console.log(consumedBySector)
+  // console.log(consumedBySector)
   const date = new Date(params);
 
   return (
@@ -53,6 +53,23 @@ export default async function MetricLectures({ params }: { params: string }) {
           <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
               {" "}
+              Consumo de sectores
+            </span>
+          </div>
+        </CardHeader>
+        <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0 overflow-hidden">
+          <div className="transition duration-700 ease-in-out hover:scale-110 min-w-72 min-h-36 flex flex-col items-center justify-center" >
+            {consumedBySector.success && <LecturePieChart sectors={consumedBySector.data}></LecturePieChart>}
+
+          </div>
+
+        </CardBody>
+      </Card>
+      <Card  >
+        <CardHeader className="flex flex-col items-center justify-center p-6" >
+          <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+            <span className="text-default-900 text-xl font-semibold">
+              {" "}
               Exceso de {months[date.getMonth()]}
             </span>
           </div>
@@ -65,25 +82,6 @@ export default async function MetricLectures({ params }: { params: string }) {
           </div>
         </CardBody>
       </Card>
-      <Card  >
-        <CardHeader className="flex flex-col items-center justify-center p-6" >
-          <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
-            <span className="text-default-900 text-xl font-semibold">
-              {" "}
-              Consumo mensual por sector
-            </span>
-          </div>
-        </CardHeader>
-        <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0 pb-6">
-          <div className="w-full h-full" >
-
-            {consumedBySector.success && <LecturePieChart sectors={consumedBySector.data}></LecturePieChart>}
-
-          </div>
-
-        </CardBody>
-      </Card>
-
-    </div>
+    </div>  
   );
 }           

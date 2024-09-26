@@ -192,8 +192,8 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
   }, [pagination]);
   //console.log(table.getState().columnFilters)
   return (
-    <div className="p-4 md:p-6 lg:p-8">
-      <h1 className="text-2xl font-bold mb-4">Lista de {labelName}</h1>
+    <div className="p-4 md:p-4 lg:p-8">
+      <h1 className="text-2xl font-bold shrink p-4 w-64 border-dashed border-2 border-divider mb-4 rounded-xl">Lista de {labelName}</h1>
       {
         table.getVisibleLeafColumns().length === 0 ? (
           <div className="text-red-500 font-medium">No hay columnas visibles

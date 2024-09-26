@@ -60,7 +60,6 @@ export async function getALLMonthsLecturesByYear(year: string): Promise<QueryRes
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
     }
 }
-
 export async function getComsumedMetersByMonths(date: string): Promise<QueryResultError<{ exceso: number | null, consumo: number | null }>> {
     try {
         const consumo: { exceso: number | null, consumo: number | null } = (await pool.query(`
@@ -77,8 +76,6 @@ export async function getComsumedMetersByMonths(date: string): Promise<QueryResu
         return { success: false, error: `Error al obtener el consumo de metros: ${error}` };
     }
 }
-
-
 export async function getConsumedBySector(date: string): Promise<QueryResultError<{ sector: string, consumo: number }[]>> {
 
     try {
@@ -102,5 +99,39 @@ export async function getConsumedBySector(date: string): Promise<QueryResultErro
         return { success: true, data: lectures };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+    }
+}
+export async function getComsumedMonthsByYear(date: string): Promise<QueryResultError<{ mes: string, consumo_total: number, exceso_total: number }[]>> {
+    try {
+        const months = (await pool.query(`
+                    SELECT 
+            CASE EXTRACT(MONTH FROM fecha)
+                WHEN 1 THEN 'Enero'
+                WHEN 2 THEN 'Febrero'
+                WHEN 3 THEN 'Marzo'
+                WHEN 4 THEN 'Abril'
+                WHEN 5 THEN 'Mayo'
+                WHEN 6 THEN 'Junio'
+                WHEN 7 THEN 'Julio'
+                WHEN 8 THEN 'Agosto'
+                WHEN 9 THEN 'Septiembre'
+                WHEN 10 THEN 'Octubre'
+                WHEN 11 THEN 'Noviembre'
+                WHEN 12 THEN 'Diciembre'
+            END AS mes,
+            SUM(consumo) AS consumo_total, 
+            SUM(exceso) AS exceso_total
+            FROM 
+                lecturas
+            WHERE 
+                extract(year from fecha) = extract( year from $1::date )
+            GROUP BY 
+                EXTRACT(MONTH FROM fecha)
+            ORDER BY 
+                EXTRACT(MONTH FROM fecha);
+            `, [date])).rows;
+        return { success: true, data: months };
+    } catch (error) {
+        return { success: false, error: `Error al obtener el consumo: ${error}` };
     }
 }
