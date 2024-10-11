@@ -1,0 +1,12 @@
+import { getCalculateMonthlyRevenue, getAmountMonthsByYear, getRevenueBySector, getSheetsByYearsAndMonths, percentageRevenueByStatus } from "@/lib/sheetsAction";
+import { ISheetsRepository } from "@/model/sheets-repository/sheetsRepository";
+
+export function createApiSheetsRepository(): ISheetsRepository {
+    return {
+        getSheetsByYearsAndMonths,
+        getCalculateMonthlyRevenue,
+        getRevenueBySector,
+        percentageRevenueByStatus,
+        getAmountMonthsByYear
+    };
+}
