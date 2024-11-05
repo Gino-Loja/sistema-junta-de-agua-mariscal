@@ -1,16 +1,16 @@
 'use client'
-import { AreaChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
+import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import {
     Card, CardBody, CardHeader,
     Divider
 } from "@nextui-org/react";
 import { useTheme } from "next-themes";
 
-export function LectureBarChart({ data }: { data: { mes: string, consumo_total: number, exceso_total: number }[] }) {
+export function MeasurementBarChart({ data }: { data: { mes: string, consumo_total: number, exceso_total: number }[] }) {
     const { theme } = useTheme()
 
     return (
-        <div className="m-5 h-96 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
+        <div className="h-96 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
             <Card >
 
                 <CardHeader className="grid grid-cols-1 gap-2 p-6" >
@@ -46,8 +46,7 @@ export function LectureBarChart({ data }: { data: { mes: string, consumo_total: 
                             <Area type="monotone" dataKey="consumo_total" stackId="1" stroke="#66AAF9" fill="#66AAF9" />
 
                             <Area type="monotone" dataKey="exceso_total" stackId="1" stroke="#F7B750" fill="#F7B750" />
-                            {/* <Bar dataKey="consumo_total" stackId="a" fill="#8884d8" />
-                            <Bar dataKey="exceso_total" stackId="a" fill="#82ca9d" /> */}
+                           
 
 
                         </AreaChart>

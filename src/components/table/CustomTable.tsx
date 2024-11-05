@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -7,11 +7,11 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Pagination,
   Button,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
+
   DropdownItem,
   DropdownSection,
   Input,
@@ -23,10 +23,10 @@ import {
   getCoreRowModel,
   ColumnFiltersState,
   getPaginationRowModel,
-  PaginationState,
   useReactTable,
   VisibilityState,
   getFilteredRowModel,
+  PaginationState,
 
 } from "@tanstack/react-table";
 import { ChevronDownIcon } from "../icons/ChevronUpIcon";
@@ -38,25 +38,30 @@ import DataTableFilterCustom from "./DataTableFilterCustom";
 
 
 
-export default function TableCustom<T>({ data, columns, labelName, filtersConfig, childrenFilterForCalendarTable, children }: TableCustomProps<T>) {
 
+export default function TableCustom<T>({ data, columns, per_page, filtersConfig, childrenFilterForCalendarTable, children }: TableCustomProps<T>) {
 
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 8,
-  })
+  const memoColumns = useMemo(() => columns, []);
+
+  // useEffect(() => {
+  //   window.scrollTo(0, document.documentElement.scrollHeight);
+  // }, [data]);
+  //console.log(data)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>('all');
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: per_page,
+  })
 
   const table = useReactTable({
     data: data,
-    columns,
+    columns: memoColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
     onColumnVisibilityChange: setColumnVisibility,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -65,16 +70,14 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
       columnVisibility,
       columnFilters,
     },
-
-
   });
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-4">
-        <div className="grid md:grid-cols-3  xl:grid-cols-3 sm:grid-cols-1 gap-4">
+      <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-2  xl:grid-cols-2 sm:grid-cols-2 gap-2">
 
-          <div>
+          {/* <div>
             <Input
               placeholder="Buscar por nombre..."
               isClearable
@@ -86,7 +89,7 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
               onClear={() => (table.getColumn("nombre")?.setFilterValue(""))}
               className="max-w-sm"
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-row gap-6 content-center">
             <div>
@@ -120,7 +123,6 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
                             column.toggleVisibility(selectedKeys.has(column.id))
                           }
                         }}
-
                       >
                         {capitalize(column.id)}
                       </DropdownItem>
@@ -155,12 +157,13 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
             <div>
               {childrenFilterForCalendarTable}
             </div>
+
             {children}
 
 
           </div>
         </div>
-        <Divider className="my-1" />
+       
       </div>
     );
   }, [
@@ -169,38 +172,10 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
     selectedKeys
   ]);
 
-  const bottomContent = React.useMemo(() => {
-    return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
-          Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-          {table.getRowCount().toLocaleString()} Rows
-        </span>
-        <Pagination
-          isCompact
 
-          showControls
-          showShadow
-          color="primary"
-          page={pagination.pageIndex + 1}
-          total={table.getPageCount()}
-          onChange={(value) => setPagination({ ...pagination, pageIndex: value - 1 })}
-        />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button isDisabled={!table.getCanPreviousPage()} size="sm" variant="flat" onPress={() => table.previousPage()}>
-            Previous
-          </Button>
-          <Button isDisabled={!table.getCanNextPage()} size="sm" variant="flat" onPress={() => table.nextPage()}>
-            Next
-          </Button>
-        </div>
-      </div>
-    );
-  }, [pagination]);
   //console.log(table.getState().columnFilters)
   return (
-    <div className="p-4 md:p-4 lg:p-8">
-      <h1 className="text-2xl font-bold shrink p-4 w-64 border-dashed border-2 border-divider mb-4 rounded-xl">Lista de {labelName}</h1>
+    <div >
       {
         table.getVisibleLeafColumns().length === 0 ? (
           <div className="text-red-500 font-medium">No hay columnas visibles
@@ -208,7 +183,6 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
             <Button onClick={() => table.resetColumnVisibility()} size="sm" variant="flat" color="primary">reseter</Button>
           </div>) :
           <Table aria-label="Tabla de usuarios"
-            bottomContent={bottomContent}
             bottomContentPlacement="outside"
             topContent={topContent}
             topContentPlacement="outside"
@@ -252,8 +226,6 @@ export default function TableCustom<T>({ data, columns, labelName, filtersConfig
               ))}
             </TableBody>
           </Table>
-
-
       }
 
     </div>

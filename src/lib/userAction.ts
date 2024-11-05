@@ -130,4 +130,31 @@ export async function updateUser(user: UserDto, id: number): Promise<QueryResult
     } catch (error) {
         return { success: false, error: `Failed to update user: ${error}` };
     }
-}                           
+}
+
+export async function getUserPagination(currentPage: number, itemsPerPage: number, query: string): Promise<QueryResultError<User[]>> {
+
+    //const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const offset = (currentPage - 1) * itemsPerPage;
+
+
+    // Si `itemsPerPage` es mayor que 0, aplicamos la paginación
+    // if (ITEMS_PER_PAGE > 0) {
+    //     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    //     query += ` LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
+    // }
+    try {
+        const user: User[] = (await pool.query(`
+    SELECT * FROM usuarios
+    
+    WHERE
+    nombre ILIKE '%' || $1 || '%'
+    OR 
+    cedula ILIKE  '%' || $1 || '%'
+
+    ORDER BY nombre ASC LIMIT ${itemsPerPage} OFFSET ${offset}`, [query])).rows;
+        return { success: true, data: user };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+    }
+}

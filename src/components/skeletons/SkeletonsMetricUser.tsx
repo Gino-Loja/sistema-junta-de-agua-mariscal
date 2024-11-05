@@ -1,7 +1,9 @@
+'use client'
+
 import React from "react";
 import { Card, CardBody, CardHeader, Skeleton } from "@nextui-org/react";
 
-export const SkeletonMetricUser = () => {
+export default function SkeletonMetricUser() {
     return (
         <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Skeleton para Numero de Usuarios */}

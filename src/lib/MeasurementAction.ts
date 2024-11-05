@@ -1,6 +1,7 @@
 'use server'
 import { Lectures, LecturesDto, Months, QueryResultError, Years } from "@/model/types";
 import pool from "./db";
+import { revalidatePath } from 'next/cache';
 
 
 export const getLecturesByYearsAndMonths = async (date: string): Promise<QueryResultError<Lectures[]>> => {
@@ -151,12 +152,12 @@ export async function createLecture(data: LecturesDto): Promise<QueryResultError
             RETURNING
                 id            
         `, [data.fecha, data.medidor_id, data.lectura_actual])).rows[0].id;
-
+        revalidatePath('/sheets');
         return { success: true, data: lecture };
     } catch (error) {
         return { success: false, error: `Error al crear la lectura: ${error}` };
     }
-}   
+}
 export async function updateLecture(data: LecturesDto, id: number): Promise<QueryResultError<boolean>> {
     try {
         const lecture: boolean = (await pool.query(`
@@ -171,9 +172,72 @@ export async function updateLecture(data: LecturesDto, id: number): Promise<Quer
             RETURNING
                 id
         `, [data.fecha, data.medidor_id, data.lectura_actual, id])).rows[0].id;
-
+        revalidatePath('/sheets');
         return { success: true, data: lecture };
     } catch (error) {
         return { success: false, error: `Error al actualizar la lectura: ${error}` };
     }
-}   
+}
+
+export async function getLecturesPagination(date: string,
+    currentPage: number,
+    itemsPerPage: number,
+    query: string): Promise<QueryResultError<Lectures[]>> {
+    //const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const offset = (currentPage - 1) * itemsPerPage;
+
+    // Si `itemsPerPage` es mayor que 0, aplicamos la paginación
+    // if (ITEMS_PER_PAGE > 0) {
+    //     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    //     query += ` LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
+    // }
+    try {
+        const lectures: Lectures[] = (await pool.query(`
+            SELECT 
+                u.nombre AS nombre, 
+                m.numero_serie, 
+                m.id AS medidor_id,
+                u.id AS usuario_id, 
+                l.fecha,
+                l.lectura_anterior, 
+                l.lectura_actual, 
+                l.consumo, 
+                l.exceso,
+                l.id
+            FROM 
+                usuarios u
+            INNER JOIN 
+                medidores m ON u.id = m.usuario_id
+            LEFT JOIN 
+                lecturas l ON m.id = l.medidor_id AND date_trunc('month', l.fecha) = date_trunc('month', $1::date)
+            WHERE 
+                 (u.nombre ILIKE '%' || $2 || '%'
+                OR u.cedula ILIKE  '%' || $2 || '%')
+            ORDER BY 
+            u.nombre ASC
+            LIMIT ${itemsPerPage} OFFSET ${offset}`, [date, query])).rows;
+           // console.log(lectures)
+        return { success: true, data: lectures };
+    } catch (error) {
+
+        return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
+    }
+}
+export async function getCounterLectures(date: string, query: string): Promise<QueryResultError<{ total_lectures: number }>> {
+    try {
+        const lecture = (await pool.query(`
+            SELECT count(*) as total_lectures
+        FROM usuarios u
+        JOIN medidores m ON u.id = m.usuario_id
+        LEFT JOIN lecturas l ON m.id = l.medidor_id AND date_trunc('month', l.fecha) = date_trunc('month', $1::date)
+        WHERE 
+            (u.nombre ILIKE '%' || $2 || '%'
+            OR u.cedula ILIKE '%' || $2 || '%');
+        `, [date, query])).rows[0];
+      //  console.log(lecture)
+        return { success: true, data: lecture };
+    } catch (error) {
+
+        return { success: false, error: `Error al obtener el total usuariosde : ${error}` };
+    }
+}

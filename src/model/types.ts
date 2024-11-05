@@ -54,7 +54,6 @@ export type Lectures = {
   medidor_id: number;
 }
 
-
 export type Years = { anio: number }
 
 export type Months = { mes: string, value: number }
@@ -75,13 +74,14 @@ export type Sheets = {
   nombre: string;        // Nombre del usuario asociado al medidor
   medidor_id: number;            // ID del medidor
 };
+export type SheetDto = Omit<Sheets, "medidor_id" | "id_lectura" | "fecha_emision" | "total_pagar" | "total_consumo" | "total_exceso" | "consumo" | "exceso" | "nombre">
 
 export type MonthlyRevenue = {
   total_recaudado: number;
   total_pagar: number;
 };
 
-export type RevenueBySector =  { sector_nombre: string, total_recaudado: number }
+export type RevenueBySector = { sector_nombre: string, total_recaudado: number }
 
 export const monthsInSpanish = [
   "Enero",
@@ -97,3 +97,18 @@ export const monthsInSpanish = [
   "Noviembre",
   "Diciembre",
 ];
+
+export type CustomSearchParams = { date: string, page: string, per_page: string, query: string, type:string , status:string, user: string}
+
+
+export type WaterMeter = {
+  id: number;
+  fecha_instalacion: Date;
+  numero_serie: string;
+  usuario_id: number;
+  nombre: string;
+  detalle: string;
+  estado: string;
+  tipo: string;
+}
+export type WaterMeterDto = Omit<WaterMeter, "nombre" | "id" >

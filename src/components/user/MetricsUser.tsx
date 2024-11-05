@@ -13,9 +13,9 @@ export default async function MetricsUser() {
   const usersInactivesActives = await userRepository.getUsersInactivesActives();
   const totalUsers = await userRepository.getAllUser();
   return (
-    <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card  >
-        <CardHeader className="flex flex-col items-center justify-center p-6" >
+        <CardHeader className="flex flex-col items-center justify-center" >
           <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
               {" "}
@@ -32,7 +32,7 @@ export default async function MetricsUser() {
         </CardBody>
       </Card>
       <Card  >
-        <CardHeader className="flex flex-col items-center justify-center p-6" >
+        <CardHeader className="flex flex-col items-center justify-center " >
           <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
               {" "}
@@ -40,7 +40,7 @@ export default async function MetricsUser() {
             </span>
           </div>
         </CardHeader>
-        <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0 pb-6">
+        <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
 
             {usersInactivesActives.success &&
@@ -67,7 +67,7 @@ export default async function MetricsUser() {
         </CardBody>
       </Card>
       <Card  >
-        <CardHeader className="flex flex-col items-center justify-center p-6" >
+        <CardHeader className="flex flex-col items-center justify-center" >
           <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
             <span className="text-default-900 text-xl font-semibold">
               {" "}

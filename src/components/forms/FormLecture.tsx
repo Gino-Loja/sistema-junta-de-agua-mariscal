@@ -7,7 +7,7 @@ import { Button, Input } from "@nextui-org/react";
 import { useUserStore } from "@/lib/store";
 import { DatePicker } from "@nextui-org/react";
 import { getLocalTimeZone, now, parseAbsoluteToLocal, DateValue } from "@internationalized/date";
-import { createApiLecturesRepository } from "@/services/serviceLectures";
+import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { toast } from "react-toastify";
 
@@ -80,7 +80,7 @@ export default function FormAddLecture() {
         // Lógica para manejar la creación o actualización de la lectura
         //console.log(formData)
 
-        console.log(formData.fecha.toDate(getLocalTimeZone()))
+        //console.log(formData.fecha.toDate(getLocalTimeZone()))
 
 
         if (type === "create") {
@@ -91,9 +91,9 @@ export default function FormAddLecture() {
                 if (res.success) {
                     closeModal();
                     toast.success('Lectura creada con éxito');
-
                 } else {
-                    toast.error('Algo salió mal, no se pudo crear la lectura');
+                    closeModal();
+                    toast.error('Algo salió mal, ya tienes lectura de ese mes');
                 }
             });
         } else if (type === "update") {
@@ -103,6 +103,7 @@ export default function FormAddLecture() {
                     toast.success('Lectura actualizada con éxito');
 
                 } else {
+                    closeModal();
                     toast.error('Algo salió mal, no se pudo actualizar la lectura');
                 }
             });
@@ -199,7 +200,7 @@ export default function FormAddLecture() {
                     <Controller
                         name="medidor_id"
                         control={control}
-                        defaultValue={data?.medidor_id}
+                        defaultValue={Number(data?.medidor_id)}
 
                         render={({ field }) => (
                             <Input
@@ -208,6 +209,7 @@ export default function FormAddLecture() {
                                 //name="medidor_id"
                                 type="number"
                                 isDisabled
+                                value={String(field.value)} 
                                 size="sm"
                             />
                         )}

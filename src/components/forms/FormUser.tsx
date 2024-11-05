@@ -142,7 +142,7 @@ export default function FormAddUser({ sectores }: { sectores: Sector[] }) {
                         {...register("tipo")}
                         value={data?.tipo}
                         defaultSelectedKeys={[data?.tipo]}
-
+                        disallowEmptySelection
                         isInvalid={errors.tipo?.message == undefined ? false : true}
                         errorMessage={errors.tipo?.message}
                     >
@@ -162,6 +162,7 @@ export default function FormAddUser({ sectores }: { sectores: Sector[] }) {
                         {...register("estado")}
                         defaultSelectedKeys={[data?.estado ? "Activo" : "Inactivo"]}
                         isInvalid={errors.estado?.message == undefined ? false : true}
+                        disallowEmptySelection
                         errorMessage={errors.estado?.message}
                         renderValue={(value) => {
                             return value.map((item) => <Chip className="capitalize mt-2" key={item.key} color={item.key == "Activo" ? "success" : "warning"} size="sm" variant="flat">

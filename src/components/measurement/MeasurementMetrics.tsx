@@ -3,9 +3,9 @@ import {
   Divider
 } from "@nextui-org/react";
 import React from "react";
-import { createApiLecturesRepository } from "@/services/serviceLectures";
+import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
-import LecturePieChart from "./LecturePieChart";
+import LecturePieChart from "./MeasurementPieChart";
 
 const months = [
   "Enero",
@@ -22,7 +22,7 @@ const months = [
   "Diciembre",
 ];
 
-export default async function MetricLectures({ params }: { params: string }) {
+export default async function MeasurementMetrics({ params }: { params: string }) {
 
   const lectureRepository: ILecturesRepository = createApiLecturesRepository();
   const consumedMeters = await lectureRepository.getComsumedMetersByMonths(params);
@@ -30,13 +30,12 @@ export default async function MetricLectures({ params }: { params: string }) {
   const date = new Date(params);
 
   return (
-    <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card className="border" >
-        <CardHeader className="grid grid-cols-1 gap-2 p-6" >
+        <CardHeader className="grid grid-cols-1 gap-2" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
             Consumo de {months[date.getMonth()]}
-
           </span>
 
           <p className="text-base text-default-500 ">Consumo total de metros cúbicos en {months[date.getMonth()]} </p>
@@ -53,7 +52,7 @@ export default async function MetricLectures({ params }: { params: string }) {
         </CardBody>
       </Card>
       <Card className="border"   >
-        <CardHeader className="grid grid-cols-1 gap-2 p-6" >
+        <CardHeader className="grid grid-cols-1 gap-2" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
             Consumo de Sectores
@@ -71,7 +70,7 @@ export default async function MetricLectures({ params }: { params: string }) {
         </CardBody>
       </Card>
       <Card className="border"  >
-        <CardHeader className="grid grid-cols-1 gap-2 p-6" >
+        <CardHeader className="grid grid-cols-1 gap-2" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
             Consumo de {months[date.getMonth()]}

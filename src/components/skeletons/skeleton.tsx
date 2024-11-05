@@ -1,7 +1,8 @@
+'use client'
+
 import React from "react";
 import { Card, Skeleton } from "@nextui-org/react";
-
-export const SkeletonCustom = () => {
+export default function SkeletonCustom() {
     return (
         <Card className="auto space-y-5 p-4 m-4" radius="lg">
 

@@ -1,7 +1,7 @@
 'use server'
-import { MonthlyRevenue, QueryResultError, RevenueBySector, Sheets } from "@/model/types";
+import { MonthlyRevenue, QueryResultError, RevenueBySector, SheetDto, Sheets } from "@/model/types";
 import pool from "./db";
-import { date } from "zod";
+import { revalidatePath } from 'next/cache';
 
 
 export const getSheetsByYearsAndMonths = async (date: string): Promise<QueryResultError<Sheets[]>> => {
@@ -69,6 +69,7 @@ export const getRevenueBySector = async (date: string): Promise<QueryResultError
             sectores.nombre
         `, [date])).rows; // Formateamos la fecha con año-mes-01
         return { success: true, data: sheets };
+
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
     }
@@ -118,5 +119,88 @@ export const getAmountMonthsByYear = async (date: string): Promise<QueryResultEr
         return { success: true, data: months };
     } catch (error) {
         return { success: false, error: `Error al obtener el consumo: ${error}` };
+    }
+}
+
+
+export const getSheetsPagination = async (date: string, currentPage: number, itemsPerPage: number, query: string): Promise<QueryResultError<Sheets[]>> => {
+    const offset = (currentPage - 1) * itemsPerPage;
+    //console.log(date, query, currentPage, itemsPerPage)
+
+    try {
+        const sheets: Sheets[] = (await pool.query(`
+        SELECT 
+                planillas.*, 
+                lecturas.consumo, 
+                lecturas.exceso, 
+                usuarios.nombre AS nombre, 
+                medidores.id AS medidor_id
+        FROM 
+            planillas
+        JOIN 
+            lecturas ON planillas.id_lectura = lecturas.id
+        JOIN 
+            medidores ON lecturas.medidor_id = medidores.id
+        JOIN 
+            usuarios ON medidores.usuario_id = usuarios.id
+        WHERE 
+            DATE_TRUNC('month', planillas.fecha_emision) = DATE_TRUNC('month', $1::date)
+            AND (usuarios.nombre ILIKE '%' || $2 || '%'
+            OR usuarios.cedula ILIKE  '%' || $2 || '%')
+        ORDER BY 
+            usuarios.nombre ASC
+        LIMIT ${itemsPerPage} OFFSET ${offset};
+        
+        `, [date, query])).rows; // Formateamos la fecha con año-mes-01
+
+
+        return { success: true, data: sheets };
+    } catch (error) {
+
+        return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+
+    }
+};
+
+export async function getCounterSheets(date: string, query: string): Promise<QueryResultError<{ total_planillas: number }>> {
+    try {
+        const sheets = (await pool.query(`select
+        count(*) as total_planillas
+        from
+        planillas
+        JOIN 
+            lecturas ON planillas.id_lectura = lecturas.id
+        JOIN 
+            medidores ON lecturas.medidor_id = medidores.id
+        JOIN 
+            usuarios ON medidores.usuario_id = usuarios.id
+        WHERE 
+            DATE_TRUNC('month', planillas.fecha_emision) = DATE_TRUNC('month', $1::date)
+            AND (usuarios.nombre ILIKE '%' || $2 || '%'
+            OR usuarios.cedula ILIKE  '%' || $2 || '%')
+        `, [date, query])).rows[0];
+        return { success: true, data: sheets };
+    } catch (error) {
+        console.log(error)
+        return { success: false, error: `Error al obtener el total de usuarios: ${error}` };
+    }
+}
+
+export async function updateSheet(data: SheetDto): Promise<QueryResultError<boolean>> {
+    try {
+        const sheet: boolean = (await pool.query(`
+            UPDATE public.planillas
+            SET 
+            valor_abonado=$1,
+            estado=$2
+            WHERE id = $3
+            RETURNING
+                id
+        `, [data.valor_abonado, data.estado, data.id])).rows[0].id;
+        revalidatePath('/sheets/tableSheets');
+        return { success: true, data: sheet };
+    } catch (error) {
+
+        return { success: false, error: `Error al actualizar la planilla: ${error}` };
     }
 }

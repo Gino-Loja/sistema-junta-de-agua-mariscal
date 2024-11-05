@@ -18,9 +18,9 @@ export default async function MetricSheets({ params }: { params: string }) {
   const date = new Date(params);
 
   return (
-    <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <Card className="border" >
-        <CardHeader className="grid grid-cols-1 gap-2 p-6" >
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Card className="border"  >
+        <CardHeader className="grid grid-cols-1 gap-1" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
             Recaudado en {monthsInSpanish[date.getMonth()]}
@@ -32,12 +32,11 @@ export default async function MetricSheets({ params }: { params: string }) {
         </CardHeader>
         <Divider></Divider>
 
-        <CardBody className="flex flex-col items-center justify-center mt-0 pb-6">
-          <div className="transition duration-700 ease-in-out  hover:scale-110  cursor-pointer  px-4 py-5  flex flex-col w-96">
+        <CardBody className="flex flex-col items-center justify-center mt-0">
+          <div className="transition duration-700 ease-in-out  hover:scale-110  cursor-pointer flex flex-col w-11/12">
             {" "}
 
             {
-
               calculeRevenue.success &&
               <>
 
@@ -68,7 +67,7 @@ export default async function MetricSheets({ params }: { params: string }) {
         </CardBody>
       </Card>
       <Card className="border"   >
-        <CardHeader className="grid grid-cols-1 gap-2 p-6" >
+        <CardHeader className="grid grid-cols-1 gap-1" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
             Recaudado en Sectores
@@ -85,7 +84,7 @@ export default async function MetricSheets({ params }: { params: string }) {
         </CardBody>
       </Card>
       <Card className="border"  >
-        <CardHeader className="grid grid-cols-1 gap-2 p-6" >
+        <CardHeader className="grid grid-cols-1 gap-1" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
             Planillas pagadas en {monthsInSpanish[date.getMonth()]}
@@ -96,7 +95,7 @@ export default async function MetricSheets({ params }: { params: string }) {
 
         </CardHeader>
         <Divider></Divider>
-        <CardBody className="flex flex-col items-center justify-center mt-0 pb-6">
+        <CardBody className="flex flex-col items-center justify-center mt-0">
           <div className="transition duration-700 ease-in-out  hover:scale-110  cursor-pointer   flex flex-col items-center justify-center">
 
             <h4 className="text-4xl font-bold">  {percentageRevenueByStatus.success && percentageRevenueByStatus.data.porcentaje_planilla_pagadas} %</h4>

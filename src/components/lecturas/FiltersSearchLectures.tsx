@@ -1,47 +1,36 @@
 'use client'
-import { Lectures, Months, Years } from "@/model/types";
+import { Lectures, Years } from "@/model/types";
 import {
-    Select, SelectItem, DatePicker
+    Select, SelectItem
 } from "@nextui-org/react";
-import { usePathname, useSearchParams, useRouter, useParams } from "next/navigation";
-import { now, getLocalTimeZone, parseAbsoluteToLocal } from "@internationalized/date";
-import { I18nProvider } from "@react-aria/i18n";
 
 
-export default function FiltersSearchLectures() {
-    //const date = new Date(Date.now());
-
-    const searchParams = useSearchParams();
-    const search = searchParams.get('date');
-    let dateParams = search != null ? parseAbsoluteToLocal(new Date(search).toISOString()) : now(getLocalTimeZone());
-
-
-    const pathname = usePathname();
-    const { replace } = useRouter();
-    const handleFilterChange = (year: string, month: string, day: string) => {
-        const params = new URLSearchParams(searchParams);
-        params.set('date', `${year}-${month}-${day}`); // Establece el año
-
-        //params.set('month', month); // Establece el mes
-        replace(`${pathname}?${params.toString()}`); // Actualiza la URL
-    };
-
+export default function FiltersSearchLectures({ years }: { years: Years[] }) {
+    
+    
+    //const [name, setName] = useQueryState('year')
+    // Route -> /shop/[tag]/[item]
+    // URL -> /shop/shoes/nike-air-max-97
+    // `params` -> { tag: 'shoes', item: 'nike-air-max-97' }
     return (
-        <I18nProvider locale="es">
-            <DatePicker
+        <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+            <Select
+                disallowEmptySelection
+                label="Select an animal"
+                className="max-w-xs"
+            >
+                {years.map((date, id) => (
+                    <SelectItem onPress={() => setName(date.anio.toString())} value={date.anio} key={id}>{date.anio}</SelectItem>
+                ))}
+            </Select>
 
-                label="Fecha de lectura"
-                granularity="day"
-                showMonthAndYearPickers
-                defaultValue={dateParams}
-                labelPlacement={'outside-left'}
-                onChange={(date) => {
-                    handleFilterChange(date.year.toString(), date.month.toString(), date.day.toString());
-                }}
-            />
-
-        </I18nProvider>
-
-
+            <Select
+                label="Favorite Animal"
+                placeholder="Select an animal"
+                className="max-w-xs"
+            >
+                <SelectItem value="dog" key={"2"}>Dog</SelectItem>
+            </Select>
+        </div>
     );
 }

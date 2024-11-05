@@ -19,7 +19,7 @@ export default function FiltersSearchSheets() {
     const { replace } = useRouter();
 
     const handleFilterChange = (year: string, month: string, day: string) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams.toString());
         params.set('date', `${year}-${month}-${day}`); // Establece el año
 
         //params.set('month', month); // Establece el mes
@@ -29,8 +29,8 @@ export default function FiltersSearchSheets() {
     return (
         <I18nProvider locale="es">
             <DatePicker
-
-                label="Fecha de lectura"
+            
+                label="Filtro por fecha"
                 granularity="day"
                 showMonthAndYearPickers
                 defaultValue={dateParams}

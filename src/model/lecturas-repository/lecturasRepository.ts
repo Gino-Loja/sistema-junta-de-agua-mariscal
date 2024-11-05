@@ -9,5 +9,7 @@ export interface ILecturesRepository {
 
     createLecture: (data: LecturesDto) => Promise<QueryResultError<boolean>>;
     updateLecture: (data: LecturesDto, id: number) => Promise<QueryResultError<boolean>>;
+    getLecturesPagination: (date: string, currentPage: number, itemsPerPage: number, query:string) => Promise<QueryResultError<Lectures[]>>;
+    getCounterLectures: (date:string, query:string) => Promise<QueryResultError<{ total_lectures: number }>>;
 }
 

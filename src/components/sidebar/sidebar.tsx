@@ -20,6 +20,9 @@ import { useSidebarContext } from "../layout/layout-context";
 import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { usePathname } from "next/navigation";
 import { PlanillaIcon } from "../icons/planilla-icon";
+import { CircleGauge } from 'lucide-react';
+import clsx from "clsx";
+//import CircleMeterWater from "../icons/sidebar/Circle-meter-water";
 
 export const SidebarWrapper = () => {
   const pathname = usePathname();
@@ -51,9 +54,29 @@ export const SidebarWrapper = () => {
                 isActive={pathname === "/users"}
                 title="Usuarios"
                 icon={<AccountsIcon />}
-                href="users"
+                href="/users"
               />
               <SidebarItem
+                isActive={pathname === "/water-meter"}
+                title="Medidores"
+                icon={
+                  <CircleGauge
+                  className={clsx(
+                    pathname === "/water-meter" 
+                      ? "hover:bg-default-100" 
+                      : "hover:bg-default-100"
+                  )}
+                    color={pathname === "/water-meter" ? "#0070F0" : "#969696"}
+                    fill="none"
+                    strokeWidth={2.75}
+                    
+                  />
+                }
+                href="/water-meter"
+              />
+
+              <SidebarItem
+
                 isActive={pathname === "/payments"}
                 title="Payments"
                 icon={<PaymentsIcon />}
@@ -74,16 +97,16 @@ export const SidebarWrapper = () => {
                 icon={<ProductsIcon />}
               />
               <SidebarItem
-                isActive={pathname === "/lectures"}
+                isActive={pathname === "/measurement" || pathname === "/measurement/table"}
                 title="Lecturas"
                 icon={<ReportsIcon />}
-                href="lectures"
+                href="/measurement"
               />
               <SidebarItem
-                isActive={pathname === "/sheets"}
+                isActive={pathname === "/sheets" || pathname === "/sheets/tableSheets"}
                 title="Planillas"
                 icon={<PlanillaIcon />}
-                href="sheets"
+                href="/sheets"
               />
             </SidebarMenu>
 

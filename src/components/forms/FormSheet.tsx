@@ -9,24 +9,26 @@ import { ISheetsRepository } from "@/model/sheets-repository/sheetsRepository";
 import { createApiSheetsRepository } from "@/services/serviceSheets";
 import { useUserStore } from '@/lib/store';
 
-const schema = z.object({
-  id: z.number(),
-  valor_abonado: z.preprocess((val) => Number(val),
-    z.number().min(1, { message: "Coloca un valor mayor a 0" })),
-
-  estado: z.enum(["pendiente", "pagada"]),
-});
 
 
-type WaterBillData = z.infer<typeof schema>;
 
 export default function FormAddSheet() {
   const { type, data, closeModal } = useUserStore();
 
+  const schema = z.object({
+    id: z.number(),
+    valor_abonado: z.preprocess((val) => Number(val),
+      z.number()
+      .min(0, { message: "Coloca un valor positivo" })
+      .max(data?.total_pagar, { message: "El valor no puede exceder el total a pagar" })),
+    estado: z.enum(["pendiente", "pagada"]),
+  });
+  type WaterBillData = z.infer<typeof schema>;
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitted },
   } = useForm<WaterBillData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -34,22 +36,23 @@ export default function FormAddSheet() {
     }
   });
 
+  //console.log(data)
 
   const repositorySheets: ISheetsRepository = createApiSheetsRepository();
   const onSubmit = handleSubmit((formData) => {
 
-    console.log('Datos actualizados:', formData);
 
-    // repositorySheets.updateSheet(formData).then((res) => {
-    //   if (res.success) {
-    //     toast.success('Planilla actualizada con éxito');
-    //   } else {
-    //     toast.error('Algo salió mal, no se pudo actualizar la planilla');
-    //   }
-    // });
+    repositorySheets.updateSheet(formData).then((res) => {
+      if (res.success) {
+        toast.success('Planilla actualizada con éxito');
+        closeModal();
+      } else {
+        toast.error(`Algo salió mal, no se pudo actualizar la planilla`);
+        closeModal();
+
+      }
+    });
   });
-
-
   return (
     <div >
       <div className="flex flex-row items-start justify-between">
@@ -58,13 +61,12 @@ export default function FormAddSheet() {
             Planilla {data?.id}
           </h3>
 
-          <p className="text-small text-default-500 m-2">Fecha: {data?.fecha_emision.toLocaleDateString()}</p>
+          <p className="text-small text-default-500">Fecha: {data?.fecha_emision.toLocaleDateString()}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="bordered">
             Ver mis planillas
           </Button>
-
         </div>
       </div>
       <div>
@@ -124,9 +126,10 @@ export default function FormAddSheet() {
                     type="number"
                     step="0.01"
                     className="max-w-[120px]"
-                    max={data?.total_pagar}
+                    //max={data?.total_pagar}
                     isInvalid={!!errors.valor_abonado}
                     errorMessage={errors.valor_abonado?.message}
+                    value={String(field.value)}
 
                   />
                 )}
@@ -137,12 +140,16 @@ export default function FormAddSheet() {
               <Controller
                 name="estado"
                 control={control}
+                defaultValue={data?.estado}
 
                 render={({ field }) => (
                   <Select
                     {...field}
-                    defaultSelectedKeys={[data?.estado]}
+                    selectedKeys={[field.value]}
                     className="max-w-[120px]"
+                    disallowEmptySelection
+                    isInvalid={errors.estado?.message == undefined ? false : true}
+                    errorMessage={errors.estado?.message}
                   >
                     <SelectItem key="pendiente" value="pendiente">Pendiente</SelectItem>
                     <SelectItem key="pagada" value="pagado">Pagado</SelectItem>
@@ -151,16 +158,15 @@ export default function FormAddSheet() {
               />
             </div>
           </div>
-          <Button type="submit" color="primary" isLoading={isSubmitting} fullWidth>
+          <Button type="submit" color="primary" isLoading={isSubmitted} fullWidth>
             Actualizar Planilla
           </Button>
         </form>
       </div>
       <div className="flex justify-between items-center">
         <span className="text-small text-default-500">
-          Actualizado: {new Date().toLocaleDateString()}
+          Actualizado: {data?.fecha_actualizacion !== null ? data?.fecha_actualizacion.toLocaleDateString() : data?.fecha_emision.toLocaleDateString()}
         </span>
-
       </div>
     </div>
   );

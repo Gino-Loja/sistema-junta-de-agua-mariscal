@@ -16,7 +16,7 @@ const CustomTooltip = ({ active, payload }: any) => {
     return null;
 };
 
-export default function LecturePieChart({ sectors }: { sectors: { sector: string, consumo: number }[] }) {
+export default function MeasurementPieChart({ sectors }: { sectors: { sector: string, consumo: number }[] }) {
 
     const { theme } = useTheme()
 
