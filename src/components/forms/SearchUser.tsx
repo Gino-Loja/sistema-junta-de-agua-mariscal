@@ -14,7 +14,7 @@ export const SearchUser = () => (
          <Autocomplete
       className="max-w-xs"
       
-      items={}
+      items={[{ name: 'Chocolate' }, { name: 'Strawberry' }, { name: 'Vanilla' }]}
       label="Select a character"
       placeholder="Type to search..."
       variant="bordered"

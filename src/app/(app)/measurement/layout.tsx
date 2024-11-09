@@ -14,7 +14,8 @@ export default function DashboardLayout({
             {
                 url: "/measurement/table",
                 title: "Lecturas",
-            }]
+            },
+        ]
         } ></NavigationTabs>
         {children}
     </section>

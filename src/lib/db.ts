@@ -1,6 +1,5 @@
 import { Pool, types,BindConfig } from "pg";
 import dotenv from 'dotenv';
-import { parse } from "path";
 dotenv.config();
 types.setTypeParser(20, function(val) {
   return parseInt(val, 10)

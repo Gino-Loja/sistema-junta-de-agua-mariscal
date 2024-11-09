@@ -11,8 +11,6 @@ export default function Home() {
   const [userData, setUserData] = useState<User[]>([])
 
   return (
-
-
     <Card className="max-w-[400px]">
       <CardHeader className="flex gap-3">
 

@@ -3,6 +3,7 @@
 import { WaterMeter } from "@/model/types";
 import { Chip, ChipProps } from "@nextui-org/react";
 import { ColumnDef } from "@tanstack/react-table";
+import { ActionsWaterMeter } from "./ActionsWaterMeter";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   'Activo': "success",
@@ -21,8 +22,8 @@ export const columns: ColumnDef<WaterMeter, any>[] = [
     accessorKey: "nombre",
   },
   {
-    header: "Id Usuario",
-    accessorKey: "usuario_id",
+    header: "Cedula",
+    accessorKey: "cedula",
   },
   {
     header: "Estado",
@@ -55,10 +56,14 @@ export const columns: ColumnDef<WaterMeter, any>[] = [
   },
   {
     header: "Acciones",
+    
     cell: (info) => {
+      
       return (
-        <div>...</div>
+        <ActionsWaterMeter data={info.row.original}></ActionsWaterMeter>
       );
     },
+
+
   },
 ];

@@ -14,6 +14,7 @@ export function useFilterPaginationParams(searchParams: Record<string, string | 
   const type = searchParams['type'] ?? '';
   const status = searchParams['status'] ?? '';
   const user = searchParams['user'] ?? '';
+
   // Cálculo de paginación
   const start = (Number(page) - 1) * Number(per_page); // 0, 5, 10, ...
   const end = start + Number(per_page);

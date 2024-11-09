@@ -12,7 +12,11 @@ export async function getWaterMeter(): Promise<QueryResultError<WaterMeter[]>> {
                 m.numero_serie,
                 m.tipo,
                 m.fecha_instalacion,
-                u.nombre AS usuario_nombre
+                u.nombre AS nombre,
+                usuario_id,
+                detalle,
+                m.estado,
+                u.cedula
             FROM 
                 medidores m
             JOIN 
@@ -44,7 +48,8 @@ export async function getWaterMeterPagination(currentPage: number,
                 u.nombre AS nombre,
                 usuario_id,
                 detalle,
-                m.estado
+                m.estado,
+                u.cedula
             FROM 
                 medidores m
             JOIN 
@@ -93,23 +98,25 @@ export async function getCounterMeterWater(query: string, status: string, type: 
 
 export async function getUserByName(
     name: string
-): Promise<QueryResultError<{ id: number, nombre: string }[]>> {
+): Promise<QueryResultError<{ id: number, cedula: string, nombre: string }[]>> {
 
     try {
         const waterMeters = (await pool.query(
             `SELECT 
-                u.id,
-                u.nombre
+                u.cedula,
+                u.nombre,
+                u.id
             FROM 
                 usuarios u
             WHERE 
                 u.nombre ILIKE '%' || $1 || '%' OR
-                u.cedula ILIKE '%' || $1 || '%' OR
-                u.id::text ILIKE '%' || $1 || '%'
+                u.cedula ILIKE '%' || $1 || '%'
+
             ORDER BY 
                 u.nombre ASC
             LIMIT 8;`, [name]
         )).rows;
+
         return { success: true, data: waterMeters };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los medidores: ${error}` };
@@ -128,3 +135,59 @@ export async function createWaterMeter(waterMeter: WaterMeterDto): Promise<Query
         return { success: false, error: `Error al crear el medidor: ${error}` };
     }
 }
+
+export async function getWaterMeterbyType(): Promise<QueryResultError<{ tipo: string, cantidad: number }[]>> {
+    try {
+        const rows = (await pool.query<{ tipo: string, cantidad: number }>(
+
+            `SELECT tipo,
+             COUNT(*) AS cantidad
+            FROM medidores
+            GROUP BY tipo;`
+        )).rows        
+        return { success: true, data: rows };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los medidores: ${error}` };
+    }
+}
+
+export async function getWaterMeterbyStatus(): Promise<QueryResultError<{ name: string, value: number }[]>> {
+    try {
+        const rows = (await pool.query<{ name: string, value: number }>(
+
+            `SELECT estado as name, COUNT(*) AS value
+                FROM medidores
+                GROUP BY estado;
+                `
+        )).rows        
+        return { success: true, data: rows };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los medidores: ${error}` };
+    }
+}
+
+export async function getWaterMeterbySector(): Promise<QueryResultError<{ name: string, value: number }[]>> {
+    try {
+        const rows = (await pool.query<{ name: string, value: number }>(
+
+            `SELECT 
+                s.nombre AS name,
+                COUNT(*) AS value
+            FROM 
+                medidores m
+            JOIN 
+                usuarios u ON m.usuario_id = u.id
+            JOIN 
+                sectores s ON u.sector_id = s.id
+            GROUP BY 
+                s.nombre;
+                `
+        )).rows        
+        return { success: true, data: rows };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los medidores: ${error}` };
+    }
+}
+
+
+

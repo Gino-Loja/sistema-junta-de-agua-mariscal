@@ -10,19 +10,18 @@ const TooltipWaterMeter = dynamic(() =>
 
 
 export default async function waterMeterTable({ repository, page, per_page, date, query, type, status }: { repository: IWaterMeter, page: string, per_page: string, date: string, query: string, type: string, status: string }) {
-  const sheets = per_page == '0'
+  const data = per_page == '0'
     ? await repository.getWaterMeter()
     : await repository.getWaterMeterPagination(Number(page), Number(per_page), query, type, status);
 
-    console.log(status)
   
   return (
 
     <div>
-      {sheets.success &&
+      {data.success &&
         <CustomTable
           columns={columns}
-          data={sheets.data}
+          data={data.data}
           per_page={Number(per_page)}
         >
           <TooltipWaterMeter></TooltipWaterMeter>

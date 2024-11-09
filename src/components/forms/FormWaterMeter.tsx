@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { use, useEffect } from 'react'
 import {
   Button,
   Select,
@@ -34,6 +34,8 @@ const schema = z.object({
   },
     z.number()),
 
+  // usuario_id: z.string().min(1, { message: "Debe ingresar el numero de serie!" }),
+
   fecha_instalacion: z.preprocess((val) => {
     // Verificar si el valor es nulo o indefinido
     if (val == null) {
@@ -58,7 +60,7 @@ const schema = z.object({
 });
 type WaterMeterInputs = z.infer<typeof schema>;
 
-export function FormWaterMeter({ users }: { users: { id: number, nombre: string }[] }) {
+export function FormWaterMeter({ users }: { users: { id: number, nombre: string, cedula: string }[] }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -66,19 +68,25 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string 
   const repositoryWaterMeter: IWaterMeter = createApiWaterMeter();
   //console.log(type)
 
+  const params = new URLSearchParams(searchParams.toString());
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitted, },
   } = useForm<WaterMeterInputs>({
+
     resolver: zodResolver(schema),
+    defaultValues: {
+      usuario_id: data?.usuario_id,
+    }
   });
 
 
 
+
   const handleSearch = useDebouncedCallback((term: string) => {
-    const params = new URLSearchParams(searchParams.toString());
     if (term) {
       params.set('user', term);
     } else {
@@ -110,6 +118,20 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string 
 
   });
 
+  // useEffect(() => {
+  //   if (data?.usuario_id) {
+
+  //     params.set('user', data.nombre);
+  //     replace(`${pathname}?${params.toString()}`);
+  //   }
+
+  //   return () => {
+  //     params.delete('user');
+  //   }
+  // }, [data, params]);
+
+  //const selectedUser = users.find(user => user.id === data?.usuario_id);
+
   return (
     <form className='overflow-hidden' onSubmit={onSubmit}>
       <div className="max-w-xl  bg-content1 rounded-lg ">
@@ -123,7 +145,7 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string 
         </div>
         <Divider />
         <div className="space-y-4 mt-2">
-          
+
           <InputField
             label="Número de Serie"
             //placeholder="Ingrese el número de serie"
@@ -148,21 +170,28 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string 
                 label="Seleccione un usuario"
                 placeholder="Busque el usuario..."
                 variant="bordered"
-                isInvalid={errors?.usuario_id?.message == undefined ? false : true}
+                //defaultSelectedKey={data?.usuario_id?.toString()}
+                //selectedKey={field.value?.toString()}
+                defaultInputValue={data?.nombre || ''}
+                isInvalid={errors?.usuario_id?.message ? true : false}
                 errorMessage={errors?.usuario_id?.message}
                 onClear={() => {
                   handleSearch('');
+                  field.onChange(null);
                 }}
-                onInputChange={(e) => {
-                  handleSearch(e);
+                onInputChange={(value) => {
+                  handleSearch(value);
                 }}
                 onSelectionChange={(selected) => {
-                  // Convierte el valor seleccionado a número
                   field.onChange(Number(selected));
                 }}
               >
                 {(item) => (
-                  <AutocompleteItem key={item.id} value={String(item.id)} className="capitalize">
+                  <AutocompleteItem
+                    key={item.id}
+                    value={String(item.id)}
+                    className="capitalize"
+                  >
                     {item.nombre}
                   </AutocompleteItem>
                 )}
@@ -269,7 +298,7 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string 
 
         {/* Footer */}
         <Button type="submit" isLoading={isSubmitted} color="primary" className="text-white mt-5 rounded-md flex w-full flex-wrap md:flex-nowrap">
-          Guardar Lectura
+          Guardar medidor
         </Button>
       </div>
     </form>

@@ -31,6 +31,7 @@ export function CustomActions<T>({ data, items }: ActionsProps<T>) {
                             key={item.key}
                             onPress={() => {
                                 if (item.key === 'update') {
+                                    
                                     setData(data);
                                     setType("update");
                                     openModal();

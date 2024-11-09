@@ -1,4 +1,4 @@
-import { createWaterMeter, getCounterMeterWater, getUserByName, getWaterMeter, getWaterMeterPagination } from "@/lib/waterMeterAction";
+import { createWaterMeter, getCounterMeterWater, getUserByName, getWaterMeter, getWaterMeterbySector, getWaterMeterbyStatus, getWaterMeterbyType, getWaterMeterPagination } from "@/lib/waterMeterAction";
 import { IWaterMeter } from "@/model/water-meter/WaterMeterRepository";
 
 export function createApiWaterMeter(): IWaterMeter {
@@ -7,6 +7,10 @@ export function createApiWaterMeter(): IWaterMeter {
         getWaterMeter,
         getCounterMeterWater,
         getUserByName,
-        createWaterMeter
+        createWaterMeter,
+        getWaterMeterbyType,
+        getWaterMeterbyStatus,
+        getWaterMeterbySector
+
     };
 }

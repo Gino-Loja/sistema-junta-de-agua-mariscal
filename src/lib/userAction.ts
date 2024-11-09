@@ -158,3 +158,14 @@ export async function getUserPagination(currentPage: number, itemsPerPage: numbe
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
     }
 }
+
+
+export async function getUserLogin(username: string, password: string): Promise<{ id: string, name: string, email: string } | null> {
+    try {
+        const user:{ id: string, name: string, email: string } = (await pool.query(`SELECT id::text, nombre, email  FROM usuarios WHERE nombre = $1`, [username, password])).rows[0];
+        return user;
+    } catch (error) {
+        return null
+    }
+}
+

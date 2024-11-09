@@ -110,5 +110,6 @@ export type WaterMeter = {
   detalle: string;
   estado: string;
   tipo: string;
+  cedula: string;
 }
-export type WaterMeterDto = Omit<WaterMeter, "nombre" | "id" >
+export type WaterMeterDto = Omit<WaterMeter, "nombre" | "id" | "cedula" >

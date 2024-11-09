@@ -8,7 +8,7 @@ import {
 export default function FiltersSearchLectures({ years }: { years: Years[] }) {
     
     
-    //const [name, setName] = useQueryState('year')
+   // const [name, setName] = useQueryState('year')
     // Route -> /shop/[tag]/[item]
     // URL -> /shop/shoes/nike-air-max-97
     // `params` -> { tag: 'shoes', item: 'nike-air-max-97' }
@@ -20,7 +20,7 @@ export default function FiltersSearchLectures({ years }: { years: Years[] }) {
                 className="max-w-xs"
             >
                 {years.map((date, id) => (
-                    <SelectItem onPress={() => setName(date.anio.toString())} value={date.anio} key={id}>{date.anio}</SelectItem>
+                    <SelectItem onPress={() => null } value={date.anio} key={id}>{date.anio}</SelectItem>
                 ))}
             </Select>
 
