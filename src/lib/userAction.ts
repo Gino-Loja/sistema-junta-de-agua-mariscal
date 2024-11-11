@@ -162,7 +162,7 @@ export async function getUserPagination(currentPage: number, itemsPerPage: numbe
 
 export async function getUserLogin(username: string, password: string): Promise<{ id: string, name: string, email: string } | null> {
     try {
-        const user:{ id: string, name: string, email: string } = (await pool.query(`SELECT id::text, nombre, email  FROM usuarios WHERE nombre = $1`, [username, password])).rows[0];
+        const user:{ id: string, name: string, email: string } = (await pool.query(`SELECT id::text, usuario as name, email FROM administradores WHERE usuario = $1 AND password_hash = $2`, [username, password])).rows[0];
         return user;
     } catch (error) {
         return null

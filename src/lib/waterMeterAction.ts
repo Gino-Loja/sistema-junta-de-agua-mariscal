@@ -144,7 +144,7 @@ export async function getWaterMeterbyType(): Promise<QueryResultError<{ tipo: st
              COUNT(*) AS cantidad
             FROM medidores
             GROUP BY tipo;`
-        )).rows        
+        )).rows
         return { success: true, data: rows };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los medidores: ${error}` };
@@ -159,7 +159,7 @@ export async function getWaterMeterbyStatus(): Promise<QueryResultError<{ name: 
                 FROM medidores
                 GROUP BY estado;
                 `
-        )).rows        
+        )).rows
         return { success: true, data: rows };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los medidores: ${error}` };
@@ -182,12 +182,65 @@ export async function getWaterMeterbySector(): Promise<QueryResultError<{ name: 
             GROUP BY 
                 s.nombre;
                 `
-        )).rows        
+        )).rows
         return { success: true, data: rows };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los medidores: ${error}` };
     }
 }
 
+//no esta  incluido en clean architecture
+export async function getWaterMeterById(id: number): Promise<QueryResultError<WaterMeter[]>> {
+    try {
+        const waterMeter = (await pool.query(
+            `SELECT 
+                m.*, 
+                u.nombre, 
+                u.cedula
+            FROM 
+                medidores m
+            JOIN 
+                usuarios u ON m.usuario_id = u.id
+            WHERE 
+                u.id = $1
+           `, [id]
+        )).rows;
+        return { success: true, data: waterMeter };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los medidores: ${error}` };
+    }
+}
 
+export async function getWaterMeterConsumptionById(id: number): Promise<QueryResultError<{ consumo_total: number }>> {
+    try {
+        const waterMeter = (await pool.query<{ consumo_total: number }>(
+            `SELECT 
+                    SUM(consumo) AS consumo_total
+                FROM 
+                    lecturas
+                WHERE 
+                    medidor_id = $1;
+           `, [id]
+        )).rows[0];
+        return { success: true, data: waterMeter };
+    } catch (error) {
+        return { success: false, error: `Error al obtener el consumo del medidor: ${error}` };
+    }
+}
 
+export async function getWaterMeterExcessById(id: number): Promise<QueryResultError<{ total_excesos: number }>> {
+    try {
+        const waterMeter = (await pool.query<{ total_excesos: number }>(
+            `SELECT 
+                SUM(exceso) AS total_excesos
+            FROM 
+                lecturas
+            WHERE 
+                medidor_id = 10;
+           `, [id]
+        )).rows[0];
+        return { success: true, data: waterMeter };
+    } catch (error) {
+        return { success: false, error: `Error al obtener el consumo del medidor: ${error}` };
+    }
+}

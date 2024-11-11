@@ -98,7 +98,7 @@ export const monthsInSpanish = [
   "Diciembre",
 ];
 
-export type CustomSearchParams = { date: string, page: string, per_page: string, query: string, type:string , status:string, user: string}
+export type CustomSearchParams = { date: string, page: string, per_page: string, query: string, type:string , status:string, user: string, medidor: string }
 
 
 export type WaterMeter = {

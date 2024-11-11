@@ -9,16 +9,19 @@ export default function DashboardLayout({
         <section>
             <NavigationTabs links={
                 [
-                {
-                    url: "/water-meter",
-                    title: "Resumen",
-                },
-                {
-                    url: "/water-meter/table",
-                    title: "Medidores",
-                },
-            ]
-            } ></NavigationTabs>
+                    {
+                        url: "/water-meter",
+                        title: "Resumen",
+                    },
+                    {
+                        url: "/water-meter/table",
+                        title: "Medidores",
+                    },
+
+
+                ]
+            } >
+            </NavigationTabs>
 
         </section>
         {children}

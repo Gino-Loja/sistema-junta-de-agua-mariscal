@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import { useLockedBody } from "../hooks/useBodyLock";
 import { NavbarWrapper } from "../navbar/navbar";

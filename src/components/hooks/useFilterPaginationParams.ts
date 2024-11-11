@@ -14,10 +14,11 @@ export function useFilterPaginationParams(searchParams: Record<string, string | 
   const type = searchParams['type'] ?? '';
   const status = searchParams['status'] ?? '';
   const user = searchParams['user'] ?? '';
+  const medidor = searchParams['medidor'] ?? '';
 
   // Cálculo de paginación
   const start = (Number(page) - 1) * Number(per_page); // 0, 5, 10, ...
   const end = start + Number(per_page);
 
-  return { date, page, per_page, query, start, end, type , status, user };
+  return { date, page, per_page, query, start, end, type , status, user, medidor };
 }

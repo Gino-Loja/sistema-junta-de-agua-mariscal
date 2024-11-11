@@ -44,11 +44,14 @@ export function ActionsWaterMeter<T>({ data }: ActionsProps<T>) {
                     </DropdownItem>
 
                     <DropdownItem
-                        onPress={() => {
-                            router.push(`/water-meter/${data.id}/`)
-                        }}
+                        // onPress={() => {
+                        //     router.push(`/water-meter/${data.id}/`)
+                        // }}
                     >
-                        ver Medidores
+
+                        <Link  href={`/water-meter/${data.usuario_id}/`}  className="flex items-center gap-2">
+                            <span>Ver Medidor</span>
+                        </Link>
                     </DropdownItem>
                  
                 </DropdownMenu>

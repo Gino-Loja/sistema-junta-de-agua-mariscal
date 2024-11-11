@@ -15,12 +15,11 @@ export const UserDropdown = () => {
     <Dropdown>
       <NavbarItem>
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            color="secondary"
-            size="md"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-          />
+
+
+          <Avatar as="button"
+            name="Gino" size="sm" isBordered color="primary" />
+
         </DropdownTrigger>
       </NavbarItem>
       <DropdownMenu

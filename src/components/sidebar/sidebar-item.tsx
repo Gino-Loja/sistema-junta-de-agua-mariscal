@@ -30,9 +30,11 @@ export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
   };
   return (
     <NextLink
+    
+
       href={href}
       scroll={true}
-      replace
+      
      // replace
       className="text-default-900 active:bg-none max-w-full"
     >
