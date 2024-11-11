@@ -29,10 +29,10 @@ export default async function Page({ params, searchParams }: {
       {/* {data.success && (
         <SelectWaterMeter waterMeter={data.data}></SelectWaterMeter>
       )} */}
-      <RenderSelectWaterMeter data={data} />
+      <RenderSelectWaterMeter data={data.data} />
 
       <div className="columns-3xs gap-5 space-y-5">
-      
+
 
         <div className="border border-default-200 rounded-xl">
           <RenderWaterMeterDetails id={params.id} />
@@ -87,18 +87,18 @@ export default async function Page({ params, searchParams }: {
 }
 
 
-export async function RenderSelectWaterMeter({ data }: { data: QueryResultError<WaterMeter[]> }) {
+async function RenderSelectWaterMeter({ data }: { data: WaterMeter[] }) {
   //const waterMeterByType = await repository.getWaterMeterbyType();
   return (
     <div>
-      {data.success && <SelectWaterMeter waterMeter={data.data} />
-      }
+      <SelectWaterMeter waterMeter={data} />
+
     </div>
 
   )
 }
 
-export async function RenderWaterMeterDetails({ id }: { id: string }) {
+async function RenderWaterMeterDetails({ id }: { id: string }) {
   const data = await getWaterMeterConsumptionById(Number(id));
   return (
     <div>
@@ -109,7 +109,7 @@ export async function RenderWaterMeterDetails({ id }: { id: string }) {
   )
 }
 
-export async function RenderWaterMeterDetailsExcess({ id }: { id: string }) {
+async function RenderWaterMeterDetailsExcess({ id }: { id: string }) {
   const data = await getWaterMeterExcessById(Number(id));
   return (
     <div>
