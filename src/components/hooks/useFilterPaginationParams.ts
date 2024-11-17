@@ -2,11 +2,13 @@
 import { CustomSearchParams } from "@/model/types";
 import { getLocalTimeZone, now } from "@internationalized/date";
 
-export function useFilterPaginationParams(searchParams: Record<string, string | string[] | undefined> & CustomSearchParams) {
+export  function useFilterPaginationParams(searchParams: Record<string, string | string[] | undefined> & CustomSearchParams) {
   const currentDate = now(getLocalTimeZone());
 
   // Si no existe el parámetro 'date', usa la fecha actual
-  const date = searchParams.date || currentDate.toAbsoluteString();
+
+  //const dateResponse = searchParams.date
+  const date =  searchParams.date || currentDate.toAbsoluteString();
 
   const page = searchParams['page'] ?? '1';
   const per_page = searchParams['per_page'] ?? '10'; // ITEMS PER PAGE

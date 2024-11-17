@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout/layout";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import "@/styles/globals.css";
 
 export default function RootLayout({
@@ -6,5 +7,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout>{children}</Layout>;
+  return <NuqsAdapter>
+    <Layout>
+      {children}
+
+    </Layout>
+  </NuqsAdapter>
+
+
+
+
 }

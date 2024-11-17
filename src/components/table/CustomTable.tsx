@@ -186,6 +186,8 @@ export default function TableCustom<T>({ data, columns, per_page, filtersConfig,
             bottomContentPlacement="outside"
             topContent={topContent}
             topContentPlacement="outside"
+            color={'primary'}
+            selectionMode="single" 
           >
             <TableHeader   >
               {table.getHeaderGroups().map((headerGroup) => (

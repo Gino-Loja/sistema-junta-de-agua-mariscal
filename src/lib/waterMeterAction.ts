@@ -236,8 +236,83 @@ export async function getWaterMeterExcessById(id: number): Promise<QueryResultEr
             FROM 
                 lecturas
             WHERE 
-                medidor_id = 10;
+                medidor_id = $1;
            `, [id]
+        )).rows[0];
+        return { success: true, data: waterMeter };
+    } catch (error) {
+        return { success: false, error: `Error al obtener el consumo del medidor: ${error}` };
+    }
+}
+
+export async function getWaterMeterLecturesById(id_usuario: number, id_medidor: number, fecha: string, currentPage: number, itemsPerPage: number): Promise<QueryResultError<{
+    id: number,
+    fecha: Date,
+    consumo: number,
+    lectura_anterior: number,
+    lectura_actual: number,
+    exceso: number,
+    medidor_id: number
+}[]>> {
+    const offset = (currentPage - 1) * itemsPerPage;
+
+    try {
+        const waterMeter = (await pool.query<{
+            id: number,
+            fecha: Date,
+            consumo: number,
+            lectura_anterior: number,
+            lectura_actual: number,
+            exceso: number,
+            medidor_id: number
+        }>(
+            `SELECT 
+                l.id,
+                l.fecha,
+                l.consumo,
+               l.lectura_anterior,
+                l.lectura_actual,
+                l.exceso,
+               l.medidor_id
+            FROM 
+                lecturas l
+            JOIN 
+                medidores m ON l.medidor_id = m.id
+            JOIN 
+                usuarios u ON m.usuario_id = u.id
+            WHERE 
+                u.id = $1
+                AND m.id = $2
+                AND date_trunc('year', l.fecha) = date_trunc('year', $3::date)
+
+            ORDER BY 
+                l.fecha ASC
+            LIMIT ${itemsPerPage}
+            OFFSET ${offset};
+           `, [id_usuario, id_medidor, fecha]
+        )).rows;
+        return { success: true, data: waterMeter };
+    } catch (error) {
+        return { success: false, error: `Error al obtener el consumo del medidor: ${error}` };
+    }
+}
+
+export async function getCounterMeterWaterbyId(id_usuario: number, id_medidor: number, fecha: string): Promise<QueryResultError<{ total_lecturas: number }>> {
+    try {
+        const waterMeter = (await pool.query<{ total_lecturas: number }>(
+            `SELECT 
+                    COUNT(*) AS total_lecturas
+                FROM 
+                    lecturas l
+                JOIN 
+                    medidores m ON l.medidor_id = m.id
+                JOIN 
+                    usuarios u ON m.usuario_id = u.id
+                WHERE 
+                    u.id = $1
+                    AND m.id = $2
+                AND date_trunc('year', l.fecha) = date_trunc('year', $3::date)
+            `, [id_usuario, id_medidor, fecha]
         )).rows[0];
         return { success: true, data: waterMeter };
     } catch (error) {

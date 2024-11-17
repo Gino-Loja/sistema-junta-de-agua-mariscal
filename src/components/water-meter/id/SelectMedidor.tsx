@@ -3,12 +3,22 @@
 import { WaterMeter } from "@/model/types";
 import { Select, SelectItem } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SelectWaterMeter({ waterMeter }: { waterMeter: WaterMeter[] }) {
     const searchParams = useSearchParams()
     const pathname = usePathname();
     const { replace } = useRouter();
     const params = new URLSearchParams(searchParams.toString());
+
+    useEffect(() => {
+        if (waterMeter.length > 0) {
+            params.set('medidor', waterMeter[0].id.toString());
+            replace(`${pathname}?${params.toString()}`);
+        }
+    }, []);
+
+    //params.set('medidor', waterMeter[0].id.toString());
 
     const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         params.set('medidor', e.target.value.toString());

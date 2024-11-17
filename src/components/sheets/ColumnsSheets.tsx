@@ -3,6 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CustomActions } from "../modal/Actions";
 import { Sheets } from "@/model/types";
 import { Chip } from "@nextui-org/react";
+import { ActionSheet } from "./ActionSheet";
 
 
 export const columns: ColumnDef<Sheets, any>[] =  [
@@ -100,9 +101,10 @@ export const columns: ColumnDef<Sheets, any>[] =  [
         cell: (info) => {
           const items =
             [{ name: "Pagar", key: "update" },
-            { name: "Ver planillas", key: "delete" }]
+            { name: "Ver planillas", key: "Link" }]
           return (
-            <CustomActions data={info.row.original} items={items}></CustomActions>
+            // <CustomActions data={info.row.original} items={items}></CustomActions>
+            <ActionSheet data={info.row.original}></ActionSheet>
           );
         },
 

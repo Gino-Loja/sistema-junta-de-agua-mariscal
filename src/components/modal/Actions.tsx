@@ -11,6 +11,7 @@ interface ActionsProps<T> {
 export function CustomActions<T>({ data, items }: ActionsProps<T>) {
     const { setData, setType, openModal } = useUserStore();
 
+
     // console.log(data,"data")
     return (
         <div className="relative flex justify-end items-center gap-2">
@@ -29,6 +30,7 @@ export function CustomActions<T>({ data, items }: ActionsProps<T>) {
                     {(item) => (
                         <DropdownItem
                             key={item.key}
+                            
                             onPress={() => {
                                 if (item.key === 'update') {
                                     
@@ -41,11 +43,17 @@ export function CustomActions<T>({ data, items }: ActionsProps<T>) {
                                     setData(data)
                                     openModal()
                                 }
+                            
+                                
+                               
                             }}
                         >
                             {item.name}
                         </DropdownItem>
-                    )}
+                    )
+                    
+                    }
+                    
 
                 </DropdownMenu>
             </Dropdown>

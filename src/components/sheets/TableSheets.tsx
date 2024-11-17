@@ -3,9 +3,6 @@ import { columns } from './ColumnsSheets';
 import { ISheetsRepository } from '@/model/sheets-repository/sheetsRepository';
 import dynamic from "next/dynamic";
 
-const TooltipSheets = dynamic(() =>
-  import("../forms/Tool").then((mod) => mod.default)
-)
 
 
 export default async function TableSheets({ repository, page, per_page, date, query }: { repository: ISheetsRepository, page: string, per_page: string, date: string, query:string }) {
@@ -21,7 +18,7 @@ export default async function TableSheets({ repository, page, per_page, date, qu
           data={sheets.data}
           per_page={Number(per_page)}
         >
-          <TooltipSheets></TooltipSheets>
+          {/* <TooltipSheets></TooltipSheets> */}
         </CustomTable>
       }
     </div>
