@@ -21,13 +21,16 @@ export const Actions = ({ data }: { data: User }) => {
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                    <DropdownItem onPress={() => {
-                    }}>View</DropdownItem>
-                    <DropdownItem onPress={() => {
-                        setData(data);
-                        setType("update");
-                        openModal();
-                    }}>Editar</DropdownItem>
+                    <DropdownItem
+                        key={1}
+                        onPress={() => {
+                        }}>View</DropdownItem>
+                    <DropdownItem key={2}
+                        onPress={() => {
+                            setData(data);
+                            setType("update");
+                            openModal();
+                        }}>Editar</DropdownItem>
                     {/* <DropdownItem>E</DropdownItem> */}
                 </DropdownMenu>
             </Dropdown>

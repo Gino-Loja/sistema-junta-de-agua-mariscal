@@ -36,7 +36,9 @@ export default function MeasurementFiltersSearch() {
                 defaultValue={dateParams}
                 labelPlacement={'outside-left'}
                 onChange={(date) => {
-                    handleFilterChange(date.year.toString(), date.month.toString(), date.day.toString());
+                    if (date) {
+                        handleFilterChange(date.year.toString(), date.month.toString(), date.day.toString());
+                    }
                 }}
             />
 

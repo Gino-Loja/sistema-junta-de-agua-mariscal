@@ -15,11 +15,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-
-
+  //"next": "^14.2.0",
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="es">
+      <body className={inter.className} suppressHydrationWarning>
         <Providers>
           {children}
         </Providers>

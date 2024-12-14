@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout/layout";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import NextTopLoader from 'nextjs-toploader';
 import "@/styles/globals.css";
 
 export default function RootLayout({
@@ -7,14 +8,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <NuqsAdapter>
+  return <>
+
+    <NextTopLoader />
+
     <Layout>
-      {children}
+      <NuqsAdapter >
+        {children}
+      </NuqsAdapter>
 
     </Layout>
-  </NuqsAdapter>
-
-
-
-
+  </>
 }

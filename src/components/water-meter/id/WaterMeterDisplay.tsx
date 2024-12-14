@@ -9,7 +9,7 @@ export default function WaterMeterDisplay({ data, title, subtitle, size = 'h-48'
             <div>
                 <div  className="space-y-3">
                     {/* //<h2 className="text-lg font-semibold">{data.value}</h2> */}
-                    <h4 className={`text-4xl lg:text-6xl font-bold `}>{data.value} m</h4>
+                    <h4 className={`text-3xl lg:text-4xl font-bold `}>{data.value} m</h4>
                     <p className="text-muted-foreground">{subtitle}</p>
                 </div>
             </div>

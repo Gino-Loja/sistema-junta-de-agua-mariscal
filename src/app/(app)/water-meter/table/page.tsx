@@ -20,15 +20,14 @@ export default async function Page({ searchParams }: {
 
   const repositoryWaterMeter: IWaterMeter = createApiWaterMeter();
 
-  const { date, page, per_page, query, start, end, type, status, user } = useFilterPaginationParams(searchParams);
+  const { date, page, per_page, query, start, end, type, status } = useFilterPaginationParams(searchParams);
   const data = await repositoryWaterMeter.getCounterMeterWater(query, status, type);
-  const userData = await repositoryWaterMeter.getUserByName(user);
   return <div className='flex flex-col overflow-hidden gap-4 px-4 pb-4'>
-    {userData.success &&
-      <FormModal>
-        <FormWaterMeter users={userData.data} />
-      </FormModal>
-    }
+
+    <FormModal>
+      <FormWaterMeter />
+    </FormModal>
+
     <div className='flex flex-row gap-2 justify-between'>
       <div>
         <h1 className="text-2xl font-bold shrink p-1 border-divider rounded-xl">Lista de Medidores</h1>

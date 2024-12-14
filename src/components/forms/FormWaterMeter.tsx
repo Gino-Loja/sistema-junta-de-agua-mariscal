@@ -25,6 +25,7 @@ import { getLocalTimeZone, now, parseAbsoluteToLocal } from '@internationalized/
 import { IWaterMeter } from '@/model/water-meter/WaterMeterRepository'
 import { createApiWaterMeter } from '@/services/waterMeterService'
 import { toast } from 'react-toastify'
+import { useAsyncList } from '@react-stately/data'
 
 
 const schema = z.object({
@@ -58,17 +59,14 @@ const schema = z.object({
   detalle: z.string().min(2, { message: "Debe ingresar el detalle de la instalación!" }),
   estado: z.enum(["Activo", "Inactivo"]),
 });
+
 type WaterMeterInputs = z.infer<typeof schema>;
 
-export function FormWaterMeter({ users }: { users: { id: number, nombre: string, cedula: string }[] }) {
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const pathname = usePathname();
+export function FormWaterMeter() {
   const { type, data, closeModal } = useUserStore();
   const repositoryWaterMeter: IWaterMeter = createApiWaterMeter();
   //console.log(type)
 
-  const params = new URLSearchParams(searchParams.toString());
 
   const {
     register,
@@ -84,16 +82,20 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string,
   });
 
 
+  let list = useAsyncList<{ id: number; nombre: string; cedula: string }>({
+    async load({ signal, filterText }) {
+      const text = filterText || '';
+      const res = await repositoryWaterMeter.getUserByName(text);
 
+      if (res.success) {
+        return {
+          items: res.data, // res.data debe ser un arreglo de usuarios.
+        };
+      }
+      return { items: [] }; // Asegúrate de devolver al menos un objeto con `items`.
+    },
+  });
 
-  const handleSearch = useDebouncedCallback((term: string) => {
-    if (term) {
-      params.set('user', term);
-    } else {
-      params.delete('user');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, 250);
 
 
   const onSubmit = handleSubmit((formData) => {
@@ -159,29 +161,28 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string,
           <Controller
             name="usuario_id"
             control={control}
+
             defaultValue={data?.usuario_id}
             render={({ field }) => (
+
               <Autocomplete
                 {...field}
                 isRequired
-                className="max-w-xs"
                 size='sm'
-                items={users}
+                items={list.items}
+                isLoading={list.isLoading}
+                inputValue={data?.nombre == undefined ? list.filterText : data?.nombre}
                 label="Seleccione un usuario"
                 placeholder="Busque el usuario..."
                 variant="bordered"
-                //defaultSelectedKey={data?.usuario_id?.toString()}
+                defaultSelectedKey={field.value?.toString()}
                 //selectedKey={field.value?.toString()}
-                defaultInputValue={data?.nombre || ''}
-                isInvalid={errors?.usuario_id?.message ? true : false}
+               // defaultInputValue={data?.nombre || ''}
+                //defaultSelectedKey={data?.usuario_id?.toString()}
+
+                // isInvalid={errors?.usuario_id?.message ? true : false}
+                onInputChange={list.setFilterText}
                 errorMessage={errors?.usuario_id?.message}
-                onClear={() => {
-                  handleSearch('');
-                  field.onChange(null);
-                }}
-                onInputChange={(value) => {
-                  handleSearch(value);
-                }}
                 onSelectionChange={(selected) => {
                   field.onChange(Number(selected));
                 }}
@@ -198,6 +199,7 @@ export function FormWaterMeter({ users }: { users: { id: number, nombre: string,
               </Autocomplete>
             )}
           />
+
           <Controller
             name="tipo"
             control={control}

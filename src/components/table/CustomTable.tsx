@@ -163,7 +163,7 @@ export default function TableCustom<T>({ data, columns, per_page, filtersConfig,
 
           </div>
         </div>
-       
+
       </div>
     );
   }, [
@@ -182,12 +182,13 @@ export default function TableCustom<T>({ data, columns, per_page, filtersConfig,
 
             <Button onClick={() => table.resetColumnVisibility()} size="sm" variant="flat" color="primary">reseter</Button>
           </div>) :
-          <Table aria-label="Tabla de usuarios"
+          <Table
+           aria-label="Tabla de usuarios"
             bottomContentPlacement="outside"
             topContent={topContent}
             topContentPlacement="outside"
             color={'primary'}
-            selectionMode="single" 
+           
           >
             <TableHeader   >
               {table.getHeaderGroups().map((headerGroup) => (

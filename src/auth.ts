@@ -9,6 +9,7 @@ import { getUserLogin } from "@/lib/userAction"
 export const { handlers, signIn, signOut, auth } = NextAuth({
     session: { strategy: "jwt" },
     //trustHost: false,
+    //secret: process.env.NEXTAUTH_SECRET,
     ...authConfig,
     providers: [
         Credentials({

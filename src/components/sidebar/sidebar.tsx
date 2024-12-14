@@ -88,8 +88,9 @@ export const SidebarWrapper = () => {
                 title="Balances"
               />
               <SidebarItem
-                isActive={pathname === "/customers"}
-                title="Customers"
+                isActive={pathname === "/meeting"}
+                title="Sesiones"
+                href="/meeting"
                 icon={<CustomersIcon />}
               />
               <SidebarItem

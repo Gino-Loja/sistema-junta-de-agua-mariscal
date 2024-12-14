@@ -1,43 +1,39 @@
 'use client';
-
+import { useQueryStates } from 'nuqs'
+import { coordinatesParsers } from '@/modules/searchParams';
 import { Input } from '@nextui-org/react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search({ placeholder }: { placeholder: string }) {
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const pathname = usePathname();
+
+
+
+
+  const [{ query }, setCoordinates] = useQueryStates(coordinatesParsers, {
+    history: 'replace',
+    // Sin la opción 'navigate: true'
+    shallow: false  // Esta es la opción que reemplaza 'navigate'
+  });
+
+  //const [search, setSearch] = useQueryState('query');
+
 
   const handleSearch = useDebouncedCallback((term: string) => {
-
-    const params = new URLSearchParams(searchParams.toString());
-
-    params.set('page', '1');
-    params.set('per_page', '10')
-
-
     if (term) {
-      params.set('query', term);
+      setCoordinates({ query: term })
     } else {
-      params.delete('query');
+      setCoordinates({ query: null })
     }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  }, 100);
 
   return (
 
     <Input
       placeholder={placeholder}
-      onChange={(e) => {
-        handleSearch(e.target.value);
-      }}
+      value={query} // Cambia de defaultValue a value
+      onChange={(e) => handleSearch(e.target.value)}
       isClearable
-      onClear={() => {    
-        handleSearch('');
-      }}
-
-      defaultValue={searchParams.get('query')?.toString()}
+      onClear={() => handleSearch('')}
     />
   );
 }

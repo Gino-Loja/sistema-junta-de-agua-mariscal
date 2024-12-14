@@ -18,6 +18,14 @@ type AlertModalState = {
   message: string;
   setMesage: (message: string) => void;
 };
+type AlertDrawerState = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onOpenChange: (e: boolean) => void;
+};
+
+
 
 
 export const useUserStore = create<FormModalState>((set) => ({
@@ -39,7 +47,16 @@ export const useAlertSuccess = create<AlertModalState>(
     closeAlert: () => set({ isOpen: false }),
     setMesage: (message) => set({ message }),
     message: ""
-
   })
 )
+
+export const useFormDrawer = create<AlertDrawerState>(
+  (set) => ({
+    isOpen: false,
+    onOpen: () => set({ isOpen: true }),
+    onClose: () => set({ isOpen: false }),
+    onOpenChange: (e) => set({ isOpen: !e }),
+  })
+)
+
 

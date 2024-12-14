@@ -32,6 +32,7 @@ export function ActionSheet<T>({ data }: ActionsProps<T>) {
 
 
                     <DropdownItem
+                        key={'edit'}
                         onPress={() => {
                             setData(data);
                             setType("update");
@@ -42,6 +43,8 @@ export function ActionSheet<T>({ data }: ActionsProps<T>) {
                     </DropdownItem>
 
                     <DropdownItem
+                                            key={'link'}
+
                     // onPress={() => {
                     //     router.push(`/water-meter/${data.id}/`)
                     // }}

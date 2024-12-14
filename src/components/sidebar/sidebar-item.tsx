@@ -34,8 +34,9 @@ export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
 
       href={href}
       scroll={true}
+      prefetch={false}
       
-     // replace
+     // replace 
       className="text-default-900 active:bg-none max-w-full"
     >
       <div

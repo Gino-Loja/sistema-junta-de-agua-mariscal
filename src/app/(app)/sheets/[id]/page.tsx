@@ -8,7 +8,6 @@ export default async function Page({ params, searchParams }: {
 }) {
     const { id } = coordinatesCache.parse(params)
 
-   
 
 
     return (
