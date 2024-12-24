@@ -98,7 +98,7 @@ export const deleteMeeting = async (id: number): Promise<QueryResultError<Meetin
     }
 };
 
-export const getTotalMeetingByStatus = async (): Promise<QueryResultError<StatusAllMeeting[]>> => {
+export const getTotalMeetingByStatus = async (date: string): Promise<QueryResultError<StatusAllMeeting[]>> => {
     try {
         const total: StatusAllMeeting[] = (await pool.query(`
             select
@@ -106,9 +106,12 @@ export const getTotalMeetingByStatus = async (): Promise<QueryResultError<Status
             count(*) as total
             from
             multas
+            WHERE 
+                date_trunc('month', fecha) = date_trunc('month', $1::date)
+               
             group by
             estado;
-        `)).rows;
+        `, [date])).rows;
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
@@ -141,7 +144,6 @@ export const getCounterMeetingByDate = async (date: string, query: string): Prom
 };
 
 export const getTotalAmount = async (date: string): Promise<QueryResultError<number>> => {
-    console.log(date)
     try {
         const total: number = (await pool.query(`
             select

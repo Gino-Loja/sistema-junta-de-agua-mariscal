@@ -1,5 +1,6 @@
 'use server';
 import Search from "@/components/forms/Search";
+import DrawerCustom from "@/components/modal/drawer-custom";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import PaginationControls from "@/components/table/PaginationControlsx";
 import { createApiMeetingRepository } from "@/modules/meeting/service/service-meeting";
@@ -17,7 +18,7 @@ export default async function Page({ searchParams }: PageProps) {
 
     const { date, query, page, per_page } = coordinatesCache.parse(searchParams)
     const repositoryMeeting = createApiMeetingRepository();
-    const status = await repositoryMeeting.getTotalMeetingByStatus();
+    const status = await repositoryMeeting.getTotalMeetingByStatus(date);
     const start = (Number(page) - 1) * Number(per_page)
     const end = start + Number(per_page)
 
@@ -26,13 +27,15 @@ export default async function Page({ searchParams }: PageProps) {
     }
 
     const totalMeetingCount = status.data.reduce((acc, item) => acc + item.total, 0)
-    totalAmount(repositoryMeeting, date)
 
     //console.log(date, query, page, per_page)
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
-            <FormMeeting></FormMeeting>
+            <DrawerCustom tittle="Registro de sesion" >
+                <FormMeeting></FormMeeting>
+            </DrawerCustom>
+
 
             <div className="flex flex-col sm:gap-4 pb-4">
                 <div className="flex items-center gap-4 px-4">
@@ -149,7 +152,7 @@ async function FechtRenderPaginationControls({ repository, selectedDate, start, 
     )
 }
 
-async function totalAmount(repository:IMeetingRepository, date: string) {
+async function totalAmount(repository: IMeetingRepository, date: string) {
 
     const data = await repository.getTotalAmount(date)
 
@@ -159,22 +162,22 @@ async function totalAmount(repository:IMeetingRepository, date: string) {
 
     return (
         <div className="border rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">Total Recaudado</h2>
-        <div className="grid gap-3">
-            <div
+            <h2 className="text-lg font-semibold mb-4">Total Recaudado en el Año </h2>
+            <div className="grid gap-3">
+                <div
 
-                className="border shadow-sm rounded p-6 pl-8 relative overflow-hidden"
-            >
-                <div className={`absolute left-0 top-0 bottom-0 w-2 bg-default`}></div>
-                <div>
-                    <div className="space-y-3">
-                        <h4 className={`text-3xl lg:text-4xl font-bold`}>{data.data}</h4>
-                        <p className="text-sm text-gray-500 "> Numero total de Multas</p>
+                    className="border shadow-sm rounded p-6 pl-8 relative overflow-hidden"
+                >
+                    <div className={`absolute left-0 top-0 bottom-0 w-2 bg-green-500`}></div>
+                    <div>
+                        <div className="space-y-3">
+                            <h4 className={`text-3xl lg:text-4xl font-bold`}>$ {data.data}</h4>
+                            <p className="text-sm text-gray-500 ">dinero de multas pagadas</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     )
-    
+
 }

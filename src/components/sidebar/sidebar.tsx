@@ -44,7 +44,7 @@ export const SidebarWrapper = () => {
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
             <SidebarItem
-            
+
               title="Inicio"
               icon={<HomeIcon />}
               isActive={pathname === "/"}
@@ -62,15 +62,15 @@ export const SidebarWrapper = () => {
                 title="Medidores"
                 icon={
                   <CircleGauge
-                  className={clsx(
-                    pathname === "/water-meter" 
-                      ? "hover:bg-default-100" 
-                      : "hover:bg-default-100"
-                  )}
+                    className={clsx(
+                      pathname === "/water-meter"
+                        ? "hover:bg-default-100"
+                        : "hover:bg-default-100"
+                    )}
                     color={pathname === "/water-meter" ? "#0070F0" : "#969696"}
                     fill="none"
                     strokeWidth={2.75}
-                    
+
                   />
                 }
                 href="/water-meter"
@@ -115,7 +115,7 @@ export const SidebarWrapper = () => {
 
 
             <SidebarMenu title="General">
-              <SidebarItem
+              {/* <SidebarItem
                 isActive={pathname === "/developers"}
                 title="Developers"
                 icon={<DevIcon />}
@@ -124,21 +124,27 @@ export const SidebarWrapper = () => {
                 isActive={pathname === "/view"}
                 title="View Test Data"
                 icon={<ViewIcon />}
-              />
+              /> */}
               <SidebarItem
-                isActive={pathname === "/settings"}
-                title="Settings"
-                icon={<SettingsIcon />}
+                isActive={pathname === "/setting" ||
+                  pathname === "/setting/company" ||
+                  pathname === "/setting/administrator"}
+                title="Configuración"
+                href="/setting"
+                icon={<SettingsIcon />
+
+
+                }
               />
             </SidebarMenu>
 
-            <SidebarMenu title="Updates">
+            {/* <SidebarMenu title="Updates">
               <SidebarItem
                 isActive={pathname === "/changelog"}
                 title="Changelog"
                 icon={<ChangeLogIcon />}
               />
-            </SidebarMenu>
+            </SidebarMenu> */}
           </div>
           <div className={Sidebar.Footer()}>
             <Tooltip content={"Settings"} color="primary">
