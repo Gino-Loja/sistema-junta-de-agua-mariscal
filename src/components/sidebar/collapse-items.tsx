@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import { ChevronUpIcon } from "../icons/sidebar/chevron-up-icon";
 import { Accordion, AccordionItem } from "@nextui-org/react";
-import clsx from "clsx";
+import Link from "next/link";
 
 interface Props {
   icon: React.ReactNode;
   title: string;
-  items: string[];
+  items: { name: string, href: string }[];
 }
 
 export const CollapseItems = ({ icon, items, title }: Props) => {
@@ -36,12 +36,19 @@ export const CollapseItems = ({ icon, items, title }: Props) => {
         >
           <div className="pl-12">
             {items.map((item, index) => (
-              <span
-                key={index}
-                className="w-full flex  text-default-500 hover:text-default-900 transition-colors"
-              >
-                {item}
-              </span>
+              // <span
+              //   key={index} 
+              //   className="w-full flex  text-default-500 hover:text-default-900 transition-colors"
+              // >
+              //   {item}
+              //   {/* <SidebarItem
+              //   isActive={false}
+              //   title={title}
+              //   icon={icon} */}
+
+              // </span>
+              <Link key={index} className="w-full flex mt-0 space-y-3 text-default-500 hover:text-default-900 transition-colors" href={item.href}>{item.name}</Link>
+
             ))}
           </div>
         </AccordionItem>

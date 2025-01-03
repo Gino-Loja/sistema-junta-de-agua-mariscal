@@ -2,17 +2,18 @@
 const nextConfig = {}
 
 module.exports = {
-    // async headers() {
-    //   return [
-    //     {
-    //       source: '/:path*{/}?',
-    //       headers: [
-    //         {
-    //           key: 'X-Accel-Buffering',
-    //           value: 'no',
-    //         },
-    //       ],
-    //     },
-    //   ]
-    // },
-  }
+  // async headers() {
+  //   return [
+  //     {
+  //       source: '/:path*{/}?',
+  //       headers: [
+  //         {
+  //           key: 'X-Accel-Buffering',
+  //           value: 'no',
+  //         },
+  //       ],
+  //     },
+  //   ]
+  // },output: "standalone",
+  output: "standalone",
+}

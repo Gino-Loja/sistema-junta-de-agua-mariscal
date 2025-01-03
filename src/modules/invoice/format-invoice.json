@@ -1,0 +1,66 @@
+{
+  "documentInfo": {
+    "accessKey": "2290330087001",
+    "businessName": "JUNTA ADMINISTRADORA DE AGUA POTABLE PRE COOPERATIVA MARISCAL SUCRE",
+    "commercialName": "nombreComercial0",
+    "businessAddress": "ORELLANA / LA JOYA DE LOS SACHAS / LA JOYA DE LOS SACHAS / VIA LA MARISCAL SN",
+    "dayEmission": "20",
+    "monthEmission": "12",
+    "yearEmission": "2024",
+    "codDoc": "01",
+    "rucBusiness": "2290330087001",
+    "environment": "1",
+    "typeEmission": "1",
+    "establishment": "001",
+    "establishmentAddress": "LA JOYA DE LOS SACHAS",
+    "emissionPoint": "001",
+    "sequential": "000005002",
+    "obligatedAccounting": "NO",
+    "contribuyenteRimpe": "CONTRIBUYENTE RÉGIMEN RIMPE"
+  },
+  "customer": {
+    "identificationType": "04",
+    "customerName": "ANGEL GINO LOJA MANCHENO",
+    "customerDni": "2200475529001",
+    "customerAddress": "direccionComprador0"
+  },
+  "payment": {
+    "totalWithoutTaxes": "0.50", // e; total sin impuestos
+    "totalDiscount": "0.00", // el total de descuentos la cantidad
+    "gratuity": "0.00",
+    "totalAmount": "0.50",
+    "currency": "DOLAR",
+    "paymentMethodCode": "01",
+    "totalPayment": "0.50"
+  },
+  "details": [
+    {
+      "productCode": "003",
+      "productName": "KILO DE PITAHAYA DE PROCESO",
+      "description": "KILO DE PITAHAYA DE PROCESO",
+      "quantity": 1.0,
+      "price": "0.50",
+      "discount": "0.00",
+      "subTotal": "0.50", //precio (precio x cantidad) sin impuestos pero con descuento
+      "taxTypeCode": "2", //IVA codigo
+      "percentageCode": "0", // porcentaje del codigo
+      "rate": "0.00", // es el valor del impuesto del porcentaje  puede ser 0.00 o 0.10 o 0.12
+      "taxableBaseTax": "0.00", //valor de base imponible
+      "taxValue": "0.00" //valor ya con impuestos aplicados
+    }
+  ],
+  "additionalInfo": [
+    {
+      "name": "Descripcion",
+      "value": "campoAdicional0"
+    }
+  ],
+  "totalsWithTax": [ // esto es los impuestos de cada detalle !! no se puede tener inpuestos repetidos 
+    {
+      "taxCode": "2",
+      "percentageCode": "2",
+      "taxableBase": "0.80",
+      "taxValue": "0.00"
+    }
+  ]
+}
