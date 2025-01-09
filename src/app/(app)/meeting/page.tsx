@@ -9,10 +9,8 @@ import TableMeeting from "@/modules/meeting/ui/table-meeting";
 import { IMeetingRepository } from "@/modules/meeting/utils/model";
 import { coordinatesCache } from "@/modules/searchParams";
 import { PageProps } from "@/modules/types";
+import { Card } from "@nextui-org/react";
 import { Suspense } from "react";
-
-
-
 
 export default async function Page({ searchParams }: PageProps) {
 
@@ -54,9 +52,13 @@ export default async function Page({ searchParams }: PageProps) {
                                         {
                                             status.data.map((item, index) => {
                                                 return (
-                                                    <div
+                                                    <Card
                                                         key={index}
-                                                        className="border shadow-sm rounded p-6 pl-8 relative overflow-hidden"
+                                                        radius="sm"
+                                                        shadow="none"
+                                                        className="border-1 shadow-sm border-transparent dark:border-default-200
+           
+                                                        hover:shadow-md rounded-md p-6 pl-8 relative overflow-hidden"
                                                     >
                                                         {/* Vertical line */}
                                                         <div className={`absolute left-0 top-0 bottom-0 w-2 ${item.estado === 'pagado' ? 'bg-success' : 'bg-danger'}`}></div>
@@ -67,7 +69,7 @@ export default async function Page({ searchParams }: PageProps) {
                                                                 <p className="text-sm text-gray-500 "> Resumen del total de Reuniones {item.estado == "pendiente" ? "Pendientes" : "Pagadas"}</p>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </Card>
 
                                                 )
                                             })
@@ -110,9 +112,12 @@ export default async function Page({ searchParams }: PageProps) {
                                 <div className="border rounded-lg shadow p-6">
                                     <h2 className="text-lg font-semibold mb-4">Total de usuarios multados</h2>
                                     <div className="grid gap-3">
-                                        <div
-
-                                            className="border shadow-sm rounded p-6 pl-8 relative overflow-hidden"
+                                        <Card
+                                            radius="sm"
+                                            shadow="none"
+                                            className="border-1 shadow-sm border-transparent dark:border-default-200
+           
+                                                        hover:shadow-md rounded-md p-6 pl-8 relative overflow-hidden"
                                         >
                                             <div className={`absolute left-0 top-0 bottom-0 w-2 bg-default`}></div>
                                             <div>
@@ -121,7 +126,7 @@ export default async function Page({ searchParams }: PageProps) {
                                                     <p className="text-sm text-gray-500 "> Numero total de Multas</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Card>
                                     </div>
                                 </div>
                                 {/* Product Images section */}
@@ -164,9 +169,12 @@ async function totalAmount(repository: IMeetingRepository, date: string) {
         <div className="border rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Total Recaudado en el Año </h2>
             <div className="grid gap-3">
-                <div
-
-                    className="border shadow-sm rounded p-6 pl-8 relative overflow-hidden"
+                <Card
+                    radius="sm"
+                    shadow="none"
+                    className="border-1 shadow-sm border-transparent dark:border-default-200
+           
+                                                        hover:shadow-md rounded-md p-6 pl-8 relative overflow-hidden"
                 >
                     <div className={`absolute left-0 top-0 bottom-0 w-2 bg-green-500`}></div>
                     <div>
@@ -175,7 +183,7 @@ async function totalAmount(repository: IMeetingRepository, date: string) {
                             <p className="text-sm text-gray-500 ">dinero de multas pagadas</p>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     )

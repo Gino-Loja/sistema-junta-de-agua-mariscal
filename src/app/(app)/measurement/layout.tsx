@@ -15,6 +15,10 @@ export default function DashboardLayout({
                 url: "/measurement/table",
                 title: "Lecturas",
             },
+            {
+                url: "/measurement/macro",
+                title: "Macromedidor",
+            },
         ]
         } ></NavigationTabs>
         {children}

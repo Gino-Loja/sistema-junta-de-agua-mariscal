@@ -73,7 +73,7 @@ export default async function MeasurementMetrics({ params }: { params: string })
         <CardHeader className="grid grid-cols-1 gap-2" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
-            Consumo de {months[date.getMonth()]}
+            Exceso de {months[date.getMonth()]}
 
           </span>
 

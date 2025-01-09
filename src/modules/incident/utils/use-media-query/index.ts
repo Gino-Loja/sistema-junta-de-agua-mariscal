@@ -1,2 +1,2 @@
-export * from './incident-action';
+export * from './action-incident';
 

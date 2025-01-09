@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { Details, InformationCompany, PaymentMethod, Service } from "../types";
 import { useState } from "react";
-import { IServiceInvoiceRepository } from "../utils/model";
+import { IInvoiceRepository } from "../utils/model";
 import { I18nProvider } from "@react-aria/i18n";
 import React from "react";
 
@@ -101,7 +101,7 @@ export default function FormInvoice({ repositoryService,
     paymentMethods,
     numberInvoice
 }: {
-    repositoryService: IServiceInvoiceRepository,
+    repositoryService: IInvoiceRepository,
     informationCompany: InformationCompany,
     paymentMethods: PaymentMethod[],
     numberInvoice: number

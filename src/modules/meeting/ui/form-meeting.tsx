@@ -45,6 +45,8 @@ const schema = z.object({
         // Verificamos que el dato sea del tipo `DateValue` y que no sea nulo
         return data != null && typeof data === 'object' && 'calendar' in data;
     }, { message: "Debe ingresar la Fecha!" })),
+
+    
     motivo: z.string().min(2, { message: "Debe ingresar el detalle de la instalación!" }),
     estado: z.enum(["pendiente", "pagado"]),
 });
@@ -97,6 +99,7 @@ export default function FormMeeting() {
     });
 
     let list = useAsyncList<{ id: number; nombre: string; cedula: string }>({
+        initialFilterText: data?.nombre_usuario?.toString(),
         async load({ signal, filterText }) {
             const text = filterText || '';
             const res = await repositoryWaterMeter.getUserByName(text);
@@ -132,8 +135,8 @@ export default function FormMeeting() {
                                 items={list.items}
                                 isLoading={list.isLoading}
                                 //inputValue={list.filterText}
-                                inputValue={data?.nombre_usuario == undefined ? list.filterText : data?.nombre_usuario}
-
+                                inputValue={list.filterText }
+                                
                                 label="Seleccione un usuario"
                                 placeholder="Busque el usuario..."
                                 variant="bordered"
@@ -174,7 +177,6 @@ export default function FormMeeting() {
                                 isInvalid={errors?.fecha?.message == undefined ? false : true}
                                 errorMessage={errors?.fecha?.message}
                                 showMonthAndYearPickers
-                            //defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                             />
                         )}
                     />

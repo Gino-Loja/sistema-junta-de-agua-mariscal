@@ -14,8 +14,6 @@ import {
   DateValue,
 } from "@nextui-org/react"
 import { CustomRadio } from './CustomRadio'
-import { useDebouncedCallback } from 'use-debounce'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -83,6 +81,8 @@ export function FormWaterMeter() {
 
 
   let list = useAsyncList<{ id: number; nombre: string; cedula: string }>({
+    initialFilterText: data?.nombre_usuario?.toString(),
+
     async load({ signal, filterText }) {
       const text = filterText || '';
       const res = await repositoryWaterMeter.getUserByName(text);
@@ -115,6 +115,10 @@ export function FormWaterMeter() {
         }
       });
     } else if (type === "update") {
+
+
+
+      
 
     }
 
@@ -171,7 +175,7 @@ export function FormWaterMeter() {
                 size='sm'
                 items={list.items}
                 isLoading={list.isLoading}
-                inputValue={data?.nombre == undefined ? list.filterText : data?.nombre}
+                inputValue={ list.filterText }
                 label="Seleccione un usuario"
                 placeholder="Busque el usuario..."
                 variant="bordered"

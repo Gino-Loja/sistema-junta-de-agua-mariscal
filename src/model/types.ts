@@ -113,3 +113,11 @@ export type WaterMeter = {
   cedula: string;
 }
 export type WaterMeterDto = Omit<WaterMeter, "nombre" | "id" | "cedula" >
+
+
+export type MeasurementMacro = {
+  id:number,
+  lectura:number,
+  consumo:number,
+  fecha:Date
+}

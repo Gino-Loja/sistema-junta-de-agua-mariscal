@@ -1,5 +1,5 @@
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
-import { getLecturesByYearsAndMonths, getALLMonthsLecturesByYear, getComsumedMetersByMonths, getConsumedBySector, getComsumedMonthsByYear, createLecture, updateLecture, getLecturesPagination, getCounterLectures } from "@/lib/MeasurementAction";
+import { getLecturesByYearsAndMonths, getALLMonthsLecturesByYear, getComsumedMetersByMonths, getConsumedBySector, getComsumedMonthsByYear, createLecture, updateLecture, getLecturesPagination, getCounterLectures, getMeasurementMacro, insertMeasurementMacro, updateMeasurementMacro, deleteMeasurementMacro, getMeasurementMacroAreaChart, getCounterMeasurementMacro } from "@/lib/MeasurementAction";
 export function createApiLecturesRepository(): ILecturesRepository {
     return {
         getLecturesByYearsAndMonths,
@@ -9,6 +9,13 @@ export function createApiLecturesRepository(): ILecturesRepository {
         getComsumedMonthsByYear,
         createLecture,
         updateLecture,
-        getLecturesPagination,getCounterLectures
+        getLecturesPagination,
+        getCounterLectures,
+        getMeasurementMacro,
+        insertMeasurementMacro,
+        updateMeasurementMacro,
+        deleteMeasurementMacro,
+        getMeasurementMacroAreaChart,
+        getCounterMeasurementMacro
     };
 }

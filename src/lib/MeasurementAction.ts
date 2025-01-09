@@ -1,5 +1,5 @@
 'use server'
-import { Lectures, LecturesDto, Months, QueryResultError, Years } from "@/model/types";
+import { Lectures, LecturesDto, MeasurementMacro, Months, QueryResultError, Years } from "@/model/types";
 import pool from "./db";
 import { revalidatePath } from 'next/cache';
 
@@ -239,5 +239,114 @@ export async function getCounterLectures(date: string, query: string): Promise<Q
     } catch (error) {
 
         return { success: false, error: `Error al obtener el total usuariosde : ${error}` };
+    }
+}
+
+export async function insertMeasurementMacro(date:Date, lectura:number): Promise<QueryResultError<boolean>> {
+
+    try {
+        const lecture: boolean = (await pool.query(`
+            INSERT INTO
+                lectura_macromedidor (fecha, lectura)
+            VALUES
+                ($1, $2)
+            RETURNING
+                id            
+        `, [date, lectura])).rows[0].id;
+        revalidatePath('/measurement/macro');
+        return { success: true, data: lecture };
+    } catch (error) {
+        return { success: false, error: `Error al crear la lectura: ${error}` };
+    }
+
+}
+
+export async function updateMeasurementMacro(date:Date, lectura:number, id:number): Promise<QueryResultError<boolean>> {
+
+    try {
+        const lecture: boolean = (await pool.query(`
+            UPDATE
+                lectura_macromedidor
+            SET
+                fecha = $1,
+                lectura = $2
+            WHERE
+                id = $3
+            RETURNING
+                id
+        `, [date, lectura, id])).rows[0].id;
+        revalidatePath('/measurement/macro');
+        return { success: true, data: lecture };
+    } catch (error) {
+        return { success: false, error: `Error al actualizar la lectura: ${error}` };
+    }
+}
+
+export const getMeasurementMacro = async (date:string,currentPage: number, itemsPerPage: number): Promise<QueryResultError<MeasurementMacro[]>> => {
+    try {
+        const offset = (currentPage - 1) * itemsPerPage;
+        const lectures: MeasurementMacro[] = (await pool.query(`
+            SELECT *
+            FROM
+            lectura_macromedidor
+            where date_trunc('month', fecha) = date_trunc('month', $1::date)
+            ORDER BY id DESC
+            LIMIT ${itemsPerPage} OFFSET ${offset}
+        
+        `, [date])).rows;
+        return { success: true, data: lectures };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
+    }
+}
+
+export const deleteMeasurementMacro = async (id: number):Promise<QueryResultError<boolean>> => {
+    try {
+      
+        await (pool.query(`
+            DELETE FROM
+            lectura_macromedidor
+            where id = $1
+        `, [id]));
+        revalidatePath('/measurement/macro');
+
+        return { success: true, data: true };
+    } catch (error) {
+        return { success: false, error: `Error al eliminar la lectura: ${error}` };
+    }    
+}
+
+export const getMeasurementMacroAreaChart = async (date:string): Promise<QueryResultError<{ fecha: Date, consumo: number }[]>> => {
+    try {
+        const lectures: { fecha: Date, consumo: number }[] = (await pool.query(`
+            SELECT fecha, consumo
+            FROM
+            lectura_macromedidor
+            where date_trunc('month', fecha) = date_trunc('month', $1::date)
+            ORDER BY id ASC
+          
+        
+        `, [date])).rows;
+        return { success: true, data: lectures };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
+    }
+}
+
+export const getCounterMeasurementMacro = async (date:string): Promise<QueryResultError<{ total: number }>> =>{
+
+
+    try {
+        const lecture:{ total: number } = (await pool.query(`
+            SELECT count(*) as total
+            FROM
+            lectura_macromedidor
+            where date_trunc('month', fecha) = date_trunc('month', $1::date)
+        `, [date])).rows[0];
+      //  console.log(lecture)
+        return { success: true, data: lecture };
+    } catch (error) {
+
+        return { success: false, error: `Error al obtener el conteo : ${error}` };
     }
 }

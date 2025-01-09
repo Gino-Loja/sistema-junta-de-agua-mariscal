@@ -56,14 +56,14 @@ async function renderWaterMeterByType({ repository }: { repository: IWaterMeter 
 
 async function renderWaterMeterBySector({ repository }: { repository: IWaterMeter }) {
     const waterMeterBySector = await repository.getWaterMeterbySector();
-    const colors = ['text-sky-600', 'text-teal-600', 'text-lime-950	', 'text-red-100', 'text-green-100'];
+    const colors = ["bg-blue-500", "bg-purple-500"];
     return (waterMeterBySector.success && <WaterMeterMetric colors={colors} label="Total de medidores" data={waterMeterBySector.data} />)
 
 }
 
 async function renderWaterMeterByStatus({ repository }: { repository: IWaterMeter }) {
     const waterMeterByStatus = await repository.getWaterMeterbyStatus();
-    const colors = ['text-red-500', 'text-green-500', 'text-pink-100', 'text-red-100', 'text-green-100'];
+    const colors = ['bg-red-500', 'bg-green-500'];
     return (waterMeterByStatus.success && <WaterMeterMetric colors={colors} label="Total por estado" data={waterMeterByStatus.data} />)
 
 }

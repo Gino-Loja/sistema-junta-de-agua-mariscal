@@ -3,8 +3,8 @@ import { create } from 'zustand'
 type FormModalState<T = any> = {
   data: T;
   setData: (data: T) => void;
-  type: "create" | "update";
-  setType: (type: "create" | "update") => void;
+  type: "create" | "update" | "delete";
+  setType: (type: "create" | "update" | "delete") => void;
   table: "user" | "student" | "parent" | "subject" | "class";
   setTable: (table: "user" | "student" | "parent" | "subject" | "class") => void;
   isOpen: boolean;
@@ -32,7 +32,7 @@ export const useUserStore = create<FormModalState>((set) => ({
   data: {},
   setData: (data) => set({ data }),
   type: "create",
-  setType: (type: "create" | "update") => set({ type }),
+  setType: (type: "create" | "update" | "delete") => set({ type }),
   table: "user",
   setTable: (table) => set({ table }),
   isOpen: false,
@@ -59,4 +59,33 @@ export const useFormDrawer = create<AlertDrawerState>(
   })
 )
 
+interface IncidentStore {
+  incident: Incident | null;
+  setIncident: (incident: Incident | null) => void;
+  clearIncident: () => void;
+}
+export const useIncidentStore = create<IncidentStore>((set) => ({
+  incident: null,
+  setIncident: (incident) => set({ incident }),
+  clearIncident: () => set({ incident: null }),
+}))
 
+
+interface DeleteStore {
+ 
+  id: number;
+  isOpen: boolean;
+  setId: (id: number) => void;
+  openModalDelete: () => void;
+  closeModalDelete: () => void;
+  
+}
+
+export const useDeleteStore = create<DeleteStore>((set) => ({
+  id: 0,
+  isOpen: false,
+  setId: (id) => set({ id }),
+  openModalDelete: () => set({ isOpen: true }),
+  closeModalDelete: () => set({ isOpen: false }),
+
+}))

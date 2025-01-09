@@ -4,8 +4,6 @@
 import { useUserStore } from "@/lib/store";
 import { InvoiceGenerationRequest } from "@/modules/invoice/types";
 import { Button, Card, CardBody, CardHeader, Chip, DatePicker, Input, Tab, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tabs, Textarea } from "@nextui-org/react";
-import { FileDown } from "lucide-react";
-import { date } from "zod";
 
 export default function InvoicePage() {
 
@@ -16,7 +14,6 @@ export default function InvoicePage() {
 
     const date = new Date(data.fecha_emision);
 
-    console.log(invoice)
     const paymentMethods = [
         { id: 1, codigo: '01', descripcion: 'SIN UTILIZACION DEL SISTEMA FINANCIERO' },
         { id: 2, codigo: '15', descripcion: 'COMPENSACIÓN DE DEUDAS' },
@@ -27,6 +24,7 @@ export default function InvoicePage() {
         { id: 7, codigo: '20', descripcion: 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO' },
         { id: 8, codigo: '21', descripcion: 'ENDOSO DE TÍTULOS' }
     ];
+    
 
 
 
