@@ -4,20 +4,21 @@ import SelectWaterMeter from "@/components/water-meter/id/SelectMedidor";
 import WaterMeterDisplay from "@/components/water-meter/id/WaterMeterDisplay";
 import { getCounterMeterWaterbyId, getWaterMeterById, getWaterMeterConsumptionById, getWaterMeterExcessById } from "@/lib/waterMeterAction";
 import { CustomSearchParams, WaterMeter } from "@/model/types";
-import { Card, Chip, Divider } from "@nextui-org/react";
+import { Chip } from "@nextui-org/react";
 import WaterMeterTableById from "./table";
 import { Suspense } from "react";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import PaginationControls from "@/components/table/PaginationControlsx";
-import { ChevronLeft, PlusCircle } from 'lucide-react'
+import { Activity, Calendar, ChevronLeft, Droplet, Gauge, Hash } from 'lucide-react'
 import Link from 'next/link'
+import Test from "./test";
 
 export default async function Page({ params, searchParams }: {
   params: { id: string },
   searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
 }) {
 
-  const { medidor, page, per_page, date, start, end } = await useFilterPaginationParams(searchParams);
+  const { medidor, page, per_page, date, start, end } = useFilterPaginationParams(searchParams);
   const data = await getWaterMeterById(Number(params.id));
   const counterRow = await getCounterMeterWaterbyId(Number(params.id), Number(medidor), date);
 
@@ -27,7 +28,6 @@ export default async function Page({ params, searchParams }: {
 
 
   const matchedMedidor = data.data.find((item) => item.id === Number(medidor));
-  const nada = 457.5
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -43,12 +43,17 @@ export default async function Page({ params, searchParams }: {
           </h1>
 
           <RenderSelectWaterMeter data={data.data} />
+
+
+         
         </div>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className=" grid flex-1 auto-rows-max gap-4">
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                <div className="border rounded-lg p-6">
+                {/* <div className="border rounded-lg p-6">
+
+
                   <h2 className="text-lg font-semibold mb-1">Detalles del consumo</h2>
                   <p className="text-sm text-gray-500 mb-4">
                     Consumo y exceso del medidor seleccionado
@@ -65,9 +70,29 @@ export default async function Page({ params, searchParams }: {
                     </div>
 
                   </div>
-                </div>
+                </div> */}
+
+                <section className=" border shadow rounded-md hover:shadow-hover transition-shadow p-6">
+                  <h2 className="text-xl font-semibold mb-2">Detalles del consumo</h2>
+                  <p className="text-gray-500 mb-6">Consumo y exceso del medidor seleccionado</p>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-gradient-to-br  rounded-xl p-6">
+                      <RenderWaterMeterDetails id={medidor} />
+                    </div>
+                    <div className="bg-gradient-to-br  rounded-xl p-6">
+                      <RenderWaterMeterDetailsExcess id={medidor} />
+                    </div>
+                  </div>
+                </section>
+
+
+
+
                 {/* Stock section */}
-                <div className="border rounded-lg p-6 overflow-hidden">
+
+
+
+                <div className="border rounded-md shadow p-6 overflow-hidden">
                   <h2 className="text-lg font-semibold mb-1">Lecturas registradas</h2>
                   <p className="text-sm text-gray-500 mb-4">
                     Lista de las lecturas registradas en el medidor seleccionado
@@ -88,89 +113,77 @@ export default async function Page({ params, searchParams }: {
                   </div>
                 </div>
                 {/* Product Category section */}
-                <div className="border rounded-lg p-6">
-                  <h1 className="text-2xl font-bold mb-4">Asignado</h1>
-                  {/* <div className="grid gap-6 sm:grid-cols-3">
-                  <div className="grid gap-3">
-                    <label htmlFor="category" className="text-sm font-medium">Category</label>
-                    <select id="category" className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                      <option value="">Select category</option>
-                      <option value="clothing">Clothing</option>
-                      <option value="electronics">Electronics</option>
-                      <option value="accessories">Accessories</option>
-                    </select>
-                  </div>
-                  <div className="grid gap-3">
-                    <label htmlFor="subcategory" className="text-sm font-medium">
-                      Subcategory (optional)
-                    </label>
-                    <select id="subcategory" className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                      <option value="">Select subcategory</option>
-                      <option value="t-shirts">T-Shirts</option>
-                      <option value="hoodies">Hoodies</option>
-                      <option value="sweatshirts">Sweatshirts</option>
-                    </select>
-                  </div>
-                </div> */}
 
-                  <div>
-                    <div className="space-y-3">
-                      <Chip className="text-xl lg:text-xl font-bold p-5 text-wrap" color="primary" variant="dot" radius="md" >{matchedMedidor?.nombre}</Chip>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
                 {/* Product Status section */}
-                <div className="border rounded-lg p-6">
-                  <h2 className="text-lg font-semibold mb-4">Estado del medidor</h2>
-                  <div className="grid gap-3">
-                    <div >
-                      <div>
-                        <div className="space-y-3">
-                          <Chip className="text-2xl lg:text-2xl font-bold p-6" variant="flat" radius="lg" color={matchedMedidor?.estado === "Activo" ? "success" : "danger"}>{matchedMedidor?.estado}</Chip>
-                        </div>
-                      </div>
+
+                <section className="border rounded-md shadow p-6">
+                  <h2 className="text-xl font-semibold mb-6">Asignado</h2>
+                  <Chip
+                    className="text-lg font-semibold p-6 w-full justify-center"
+                    color="primary"
+                    variant="dot"
+                    radius="lg"
+                  >
+                    {matchedMedidor?.nombre}
+                  </Chip>
+                </section>
+                <section className="border rounded-md shadow  p-6">
+
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+
+                    Estado del medidor</h2>
+                  <Chip
+                    className="text-lg font-medium py-6 px-8 w-full gap-3"
+                    variant="flat"
+                    radius="md"
+                    color={matchedMedidor?.estado === "Activo" ? "success" : "danger"}
+                  >
+                    <div className="flex justify-center items-center gap-3">
+                      <Activity className="h-5 w-5" />
+
+                      {matchedMedidor?.estado}
                     </div>
-                  </div>
-                </div>
+
+                  </Chip>
+                </section>
                 {/* Product Images section */}
-                <div className="border rounded-lg p-6 overflow-hidden">
-                  <h2 className="text-lg font-semibold mb-1">Detalles</h2>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Detalles del medidor
-                  </p>
-                  <div className="grid gap-2">
-
-                    <div>
-                      <div className="space-y-3 flex flex-col">
-                        <div>
-                          <span>Serie: </span> <Chip className="text-2xl lg:text-2xl font-bold p-5" color="default" variant="flat" radius="sm" >{matchedMedidor?.numero_serie}</Chip>
-
-                        </div>
-
-                        <div>
-                          <span>Fecha: </span><Chip className="text-2xl lg:text-2xl font-bold p-5" color="success" variant="flat" radius="sm" >{matchedMedidor?.fecha_instalacion.toLocaleDateString()}</Chip>
-
-                        </div>
+                <section className="border rounded-md shadow  transition-shadow p-6">
+                  <h2 className="text-xl font-semibold mb-4">Detalles</h2>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Hash className="h-5 w-5 text-gray-400" />
+                      <div>
+                        <p className="text-sm text-gray-500">Serie</p>
+                        <p className="font-medium">{matchedMedidor?.numero_serie}</p>
                       </div>
                     </div>
-
-                  </div>
-                </div>
-                {/* Archive Product section */}
-                <div className="border rounded-lg p-6">
-                  <h2 className="text-lg font-semibold mb-1">Tipo del Medidor</h2>
-
-                  <div >
-                    <div className="space-y-3">
-                      <Chip className="text-xl lg:text-xl font-bold p-6" color="warning" variant="solid" radius="sm" >{matchedMedidor?.tipo}</Chip>
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-5 w-5 text-gray-400" />
+                      <div>
+                        <p className="text-sm text-gray-500">Fecha de instalación</p>
+                        <p className="font-medium">{matchedMedidor?.fecha_instalacion.toLocaleDateString()}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </section>
+                {/* Archive Product section */}
+                <section className="border rounded-md shadow  p-8 ">
+                  <h2 className="text-xl font-bold mb-6  flex items-center gap-2">
+                    <Gauge className="h-6 w-6" />
+                    Tipo del Medidor
+                  </h2>
+                  <Chip
+                    className="text-lg font-semibold py-6 px-8 w-full justify-center   border-2 "
+                    radius="lg"
+                  >
+                    {matchedMedidor?.tipo}
+                  </Chip>
+                </section>
               </div>
             </div>
-            
+
           </div>
         </main>
       </div>

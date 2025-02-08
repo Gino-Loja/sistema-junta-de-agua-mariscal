@@ -11,7 +11,6 @@ interface NavigationTabsProps {
 export default function NavigationTabs({ links }: NavigationTabsProps) {
 
     const pathname = usePathname();
-    const router = useRouter();
 
     return (
         <div className="flex w-full flex-col p-2">

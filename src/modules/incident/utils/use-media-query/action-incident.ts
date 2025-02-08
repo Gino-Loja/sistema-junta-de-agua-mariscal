@@ -175,7 +175,7 @@ export const getSectors = async (): Promise<QueryResultError<{ value: string, la
     try {
         const sectors: { value: string, label: string }[] = (await pool.query(`
             SELECT 
-                id as value,
+                id::text as value,
                 nombre as label
             FROM 
                 sectores

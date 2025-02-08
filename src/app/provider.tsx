@@ -5,6 +5,9 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { SessionProvider } from 'next-auth/react';
+import { Session } from 'next-auth'
+
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -12,12 +15,16 @@ export interface ProvidersProps {
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
+  
 
   return (
 
     <NextUIProvider>
       <NextThemesProvider defaultTheme="system" attribute="class" {...themeProps}>
-            {children}
+        <SessionProvider >
+        {children}
+
+        </SessionProvider>
             <ToastContainer
               position="top-right"
               autoClose={3000}
