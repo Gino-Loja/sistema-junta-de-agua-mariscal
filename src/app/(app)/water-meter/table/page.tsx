@@ -1,6 +1,8 @@
+import { FormDelete } from "@/components/forms/form-delete";
 import { FormWaterMeter } from "@/components/forms/FormWaterMeter";
 import Search from "@/components/forms/Search";
 import { useFilterPaginationParams } from "@/components/hooks/useFilterPaginationParams";
+import FormModalDelete from "@/components/modal/form-modal-delete";
 import FormModal from "@/components/modal/FormModal";
 import SkeletonCustom from "@/components/skeletons/skeleton";
 import PaginationControls from "@/components/table/PaginationControlsx";
@@ -27,6 +29,10 @@ export default async function Page({ searchParams }: {
     <FormModal>
       <FormWaterMeter />
     </FormModal>
+
+    <FormModalDelete>
+      <FormDelete funtionDelete={repositoryWaterMeter.deleteWaterMeter}></FormDelete>
+    </FormModalDelete>
 
     <div className='flex flex-row gap-2 justify-between'>
       <div>

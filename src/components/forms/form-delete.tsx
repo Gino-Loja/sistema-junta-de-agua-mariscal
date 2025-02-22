@@ -21,7 +21,6 @@ export function FormDelete({ funtionDelete }: { funtionDelete: (id: number) => P
             toast.success('Registro eliminado exitosamente')
         } else {
             setIsloading(false)
-
             toast.error(result.error)
         }
     }

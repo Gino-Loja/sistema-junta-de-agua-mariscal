@@ -302,7 +302,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                                     <Textarea
                                         isRequired
                                         {...field}
-                                        label="Motivo de sesion"
+                                        label="Detalle del Incidente"
                                         placeholder="Ingrese detalles adicionales"
                                         isInvalid={errors?.descripcion?.message == undefined ? false : true}
                                         errorMessage={errors?.descripcion?.message}

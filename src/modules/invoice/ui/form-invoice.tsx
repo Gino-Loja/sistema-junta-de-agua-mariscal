@@ -150,7 +150,7 @@ export default function FormInvoice({ repositoryService,
         try {
             const id = toast.loading("Por favor espere, se está generando la factura");
 
-            const response = await fetch(`http://localhost:8000/invoice/sign?usuario_id=${user.id}`, {
+            const response = await fetch(`https://api.jaapmariscalsucre.site/invoice/sign?usuario_id=${user.id}`, {
                 method: 'POST',
                 headers: {
                     'accept': 'application/json',

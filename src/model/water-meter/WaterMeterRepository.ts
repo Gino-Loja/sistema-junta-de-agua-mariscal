@@ -9,6 +9,8 @@ export interface IWaterMeter {
     getWaterMeterbyType: () => Promise<QueryResultError<{ tipo: string, cantidad: number }[]>>
     getWaterMeterbyStatus: () => Promise<QueryResultError<{ name: string, value: number }[]>>
     getWaterMeterbySector: () => Promise<QueryResultError<{ name: string, value: number }[]>>
-    
+    updateWaterMeter: (waterMeter: WaterMeterDto, id: number) => Promise<QueryResultError<boolean>>
+
+    deleteWaterMeter: (id: number) => Promise<QueryResultError<boolean>>
 }
 

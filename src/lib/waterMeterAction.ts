@@ -2,6 +2,7 @@
 
 import { QueryResultError, WaterMeter, WaterMeterDto } from "@/model/types";
 import pool from "./db";
+import { revalidatePath } from "next/cache";
 
 export async function getWaterMeter(): Promise<QueryResultError<WaterMeter[]>> {
     try {
@@ -130,6 +131,31 @@ export async function createWaterMeter(waterMeter: WaterMeterDto): Promise<Query
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id;`, [waterMeter.numero_serie, waterMeter.tipo, waterMeter.fecha_instalacion, waterMeter.usuario_id, waterMeter.detalle, waterMeter.estado]
         )).rows[0].id;
+        revalidatePath('/water-meter');
+        return { success: true, data: waterMeterId };
+    } catch (error) {
+        return { success: false, error: `Error al crear el medidor: ${error}` };
+    }
+}
+export async function updateWaterMeter(waterMeter: WaterMeterDto, id: number): Promise<QueryResultError<boolean>> {
+    try {
+        const waterMeterId = (await pool.query(
+            `UPDATE medidores SET numero_serie = $1, tipo = $2, fecha_instalacion = $3, usuario_id = $4, detalle = $5, estado = $6
+            WHERE id = $7 RETURNING id;`, [waterMeter.numero_serie, waterMeter.tipo, waterMeter.fecha_instalacion, waterMeter.usuario_id, waterMeter.detalle, waterMeter.estado, id]
+        )).rows[0].id;
+        revalidatePath('/water-meter');
+        return { success: true, data: waterMeterId };
+    } catch (error) {
+        return { success: false, error: `Error al crear el medidor: ${error}` };
+    }
+}
+
+export async function deleteWaterMeter(id: number): Promise<QueryResultError<boolean>> {
+    try {
+        const waterMeterId = (await pool.query(
+            `DELETE FROM medidores WHERE id = $1 RETURNING id;`, [id]
+        )).rows[0].id;
+        revalidatePath('/water-meter');
         return { success: true, data: waterMeterId };
     } catch (error) {
         return { success: false, error: `Error al crear el medidor: ${error}` };

@@ -13,8 +13,6 @@ export default async function waterMeterTable({ repository, page, per_page, date
   const data = per_page == '0'
     ? await repository.getWaterMeter()
     : await repository.getWaterMeterPagination(Number(page), Number(per_page), query, type, status);
-
-  
   return (
 
     <div>

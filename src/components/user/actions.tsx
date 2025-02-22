@@ -3,6 +3,7 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@
 import { VerticalDotsIcon } from "../icons/VerticalDotsIcon ";
 import { useUserStore, } from "@/lib/store";
 import { User } from "@/model/User";
+import { Pencil } from "lucide-react";
 
 
 
@@ -21,11 +22,13 @@ export const Actions = ({ data }: { data: User }) => {
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                    <DropdownItem
+                    {/* <DropdownItem
                         key={1}
                         onPress={() => {
-                        }}>View</DropdownItem>
+                        }}>View</DropdownItem> */}
                     <DropdownItem key={2}
+                        startContent={<Pencil className="text-primary-500 h-4 w-4 " />}
+
                         onPress={() => {
                             setData(data);
                             setType("update");

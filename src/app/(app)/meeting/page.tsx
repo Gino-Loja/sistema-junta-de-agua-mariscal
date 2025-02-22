@@ -1,6 +1,8 @@
 'use server';
+import { FormDelete } from "@/components/forms/form-delete";
 import Search from "@/components/forms/Search";
 import DrawerCustom from "@/components/modal/drawer-custom";
+import FormModalDelete from "@/components/modal/form-modal-delete";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import PaginationControls from "@/components/table/PaginationControlsx";
 import { createApiMeetingRepository } from "@/modules/meeting/service/service-meeting";
@@ -34,6 +36,12 @@ export default async function Page({ searchParams }: PageProps) {
                 <FormMeeting></FormMeeting>
             </DrawerCustom>
 
+            <FormModalDelete>
+
+                <FormDelete funtionDelete={repositoryMeeting.deleteMeeting}></FormDelete>
+
+            </FormModalDelete>
+
 
             <div className="flex flex-col sm:gap-4 pb-4">
                 <div className="flex items-center gap-4 px-4">
@@ -46,7 +54,7 @@ export default async function Page({ searchParams }: PageProps) {
                                 <div className="border rounded-lg shadow  p-6">
                                     <h2 className="text-lg font-semibold mb-1">Detalles de Reuniones</h2>
                                     <p className="text-sm text-gray-500 mb-4">
-                                        Detalles del estado de las Reuniones registradas
+                                        Detalles del estado de las Reuniones registradas por mes
                                     </p>
                                     <div className="grid lg:grid-cols-2 gap-6">
                                         {
@@ -62,7 +70,7 @@ export default async function Page({ searchParams }: PageProps) {
                                                     >
                                                         {/* Vertical line */}
                                                         <div className={`absolute left-0 top-0 bottom-0 w-2 ${item.estado === 'pagado' ? 'bg-success' : 'bg-danger'}`}></div>
-                                                        <h1 className="text-2xl font-bold mb-4">Reuniones {item.estado == "pendiente" ? "Pendientes" : "Pagadas"}</h1>
+                                                        <h1 className="text-2xl font-bold mb-4">Reuniones {item.estado == "pendiente" ? "Pendientes por pagar" : "Pagadas"}</h1>
                                                         <div>
                                                             <div className="space-y-3">
                                                                 <h4 className={`text-3xl lg:text-4xl font-bold`}>{item.total}</h4>
@@ -82,7 +90,7 @@ export default async function Page({ searchParams }: PageProps) {
                                 <div className="border rounded-lg p-6 shadow overflow-hidden">
                                     <h2 className="text-lg font-semibold mb-1">Multas registradas</h2>
                                     <p className="text-sm text-gray-500 mb-4">
-                                        Lista de deudores de Reuniones
+                                        Lista de deudores de Reuniones por mes
                                     </p>
                                     <div className='flex flex-col sm:flex-row gap-2 justify-start sm:justify-between mb-3'>
 
@@ -90,7 +98,7 @@ export default async function Page({ searchParams }: PageProps) {
                                             <Search placeholder='Buscar por nombre...' />
                                         </div>
 
-                                        <div className='hidden sm:block'>
+                                        <div >
                                             <FiltersSearchSheets />
                                         </div>
 

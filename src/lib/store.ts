@@ -89,3 +89,4 @@ export const useDeleteStore = create<DeleteStore>((set) => ({
   closeModalDelete: () => set({ isOpen: false }),
 
 }))
+

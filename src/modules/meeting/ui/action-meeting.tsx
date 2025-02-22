@@ -1,9 +1,10 @@
 'use client'
 
 import { VerticalDotsIcon } from "@/components/icons/VerticalDotsIcon ";
-import { useFormDrawer, useUserStore } from "@/lib/store";
+import { useDeleteStore, useFormDrawer, useUserStore } from "@/lib/store";
 
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function ActionMeeting({ data }: any) {
 
@@ -12,6 +13,8 @@ export default function ActionMeeting({ data }: any) {
 
     const { onOpen } = useFormDrawer();
     const { setData, setType } = useUserStore();
+    const { setId, openModalDelete } = useDeleteStore();
+    
 
 
     // console.log(data,"data")
@@ -29,16 +32,33 @@ export default function ActionMeeting({ data }: any) {
                 <DropdownMenu >
 
 
-                    <DropdownItem
-
+                    <DropdownItem 
+                        
                         key="update"
+
                         onPress={() => {
-                            setType("create")
+                            setType("update")
                             setData(data)
                             onOpen()
                         }}
+                        startContent={<Pencil className="text-primary-500 h-4 w-4 " />}
                     >
-                        Actualizar
+                            Actualizar
+                        
+                    </DropdownItem>
+                    <DropdownItem
+                        startContent={<Trash2 className="text-danger-500 h-4 w-4" />}
+
+
+                        key="delete"
+                        onPress={() => {
+                            setType("delete")
+                            setId(data.id)
+                            openModalDelete()
+                            
+                        }}
+                    >
+                        Eliminar
                     </DropdownItem>
 
 

@@ -10,6 +10,7 @@ import { getLocalTimeZone, now, parseAbsoluteToLocal, DateValue } from "@interna
 import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { toast } from "react-toastify";
+import { I18nProvider } from "@react-aria/i18n";
 
 // Definir el esquema de validación usando Zod
 //const schemaDate:DateValue = 
@@ -143,6 +144,9 @@ export default function FormAddLecture() {
                     control={control}
                     defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                     render={({ field }) => (
+                        <I18nProvider
+
+                        locale="es">
                         <DatePicker
                             {...field}
                             label="Fecha"
@@ -153,6 +157,7 @@ export default function FormAddLecture() {
                             showMonthAndYearPickers
                         //defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                         />
+                            </I18nProvider>
                     )}
                 />
                 <Input

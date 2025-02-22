@@ -151,8 +151,6 @@ export default function FormMacro() {
                                 size="sm"
                                 isInvalid={errors?.fecha?.message == undefined ? false : true}
                                 errorMessage={errors?.fecha?.message}
-
-                            //defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                             />
                         </I18nProvider>
 

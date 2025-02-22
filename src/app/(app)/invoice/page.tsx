@@ -8,6 +8,7 @@ export default async function Page() {
     const numberInvoice = await repository.getNumberInvoice();
     const paymentMethods = await repository.getPaymentMethods();
 
+
     if (!informationCompany.success) {
         return <div>Error al obtener la información de la empresa</div>;
     }

@@ -62,7 +62,7 @@ export const getNumberInvoice = async (): Promise<QueryResultError<number>> => {
     try {
         const secuencial: number = (await pool.query(`
             SELECT LPAD((COALESCE(MAX(id::INTEGER), 0) + 1)::text, 9, '0') AS secuencial
-            FROM public.facturas_detalles;
+            FROM public.facturas;
 
         `)).rows[0].secuencial;
         return { success: true, data: secuencial };

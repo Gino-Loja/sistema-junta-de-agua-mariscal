@@ -32,7 +32,7 @@ export const getIncidents = async (
             INNER JOIN
                 sectores s ON i.sector_id = s.id
             WHERE 
-                date_trunc('month', i.fecha) = date_trunc('month', $1::date)
+                date_trunc('year', i.fecha) = date_trunc('year', $1::date)
                 AND 
                 (u.nombre ILIKE '%' || $2 || '%'  )
                 AND

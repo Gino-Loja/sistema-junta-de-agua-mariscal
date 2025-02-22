@@ -16,7 +16,7 @@ export const getMeeting = async (date: string, query: string, currentPage: numbe
                 m.fecha,
                 m.estado,
                 m.fecha_actualizacion,
-                m.id AS multa_id,
+                m.id,
                 u.id AS usuario_id
             FROM 
                 multas m
@@ -56,10 +56,9 @@ export const insertMeeting = async (formData: { usuario_id: number; fecha: Date,
     }
 };
 
-export const updateMeeting = async (formData: { usuario_id: number; fecha: Date, estado: string; motivo: string; multa_id: number }): Promise<QueryResultError<Meeting[]>> => {
-
+export const updateMeeting = async (formData: { usuario_id: number; fecha: Date, estado: string; motivo: string; multa_id: number }): Promise<QueryResultError<boolean>> => {
     try {
-        const meeting: Meeting[] = (await pool.query(`
+        const meeting: boolean = (await pool.query(`
             UPDATE 
                 multas
             SET 
@@ -67,29 +66,32 @@ export const updateMeeting = async (formData: { usuario_id: number; fecha: Date,
                 fecha = $2,
                 estado = $3,
                 motivo = $4,
-                fecha_actualizacion = CURRENT_DATE,
+                fecha_actualizacion = CURRENT_DATE
             WHERE 
                 id = $5
+            RETURNING id
                 
-        `, [formData.usuario_id, formData.fecha, formData.estado, formData.motivo, formData.multa_id])).rows; // Formateamos la fecha con año-mes-01
+        `, [formData.usuario_id, formData.fecha, formData.estado, formData.motivo, formData.multa_id])).rows[0].id; // Formateamos la fecha con año-mes-01
         revalidatePath('/meeting');
 
         return { success: true, data: meeting };
     } catch (error) {
+
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
     }
 };
 
-export const deleteMeeting = async (id: number): Promise<QueryResultError<Meeting[]>> => {
+export const deleteMeeting = async (id: number): Promise<QueryResultError<boolean>> => {
 
     try {
-        const meeting: Meeting[] = (await pool.query(`
+        const meeting: boolean = (await pool.query(`
             DELETE FROM 
                 multas
             WHERE 
                 id = $1
+            RETURNING id
                 
-        `, [id])).rows; // Formateamos la fecha con año-mes-01
+        `, [id])).rows[0].id; // Formateamos la fecha con año-mes-01
         revalidatePath('/meeting');
 
         return { success: true, data: meeting };

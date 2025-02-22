@@ -4,8 +4,6 @@ import Search from "@/components/forms/Search";
 import SelectParams from "@/components/forms/SelectParams";
 import DrawerCustom from "@/components/modal/drawer-custom";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
-import SheetsPieChart from "@/components/sheets/SheetPieChart";
-import { SheetsBarChart } from "@/components/sheets/SheetsBarChart";
 import { createApiIncidentRepository } from "@/modules/incident/service/service-incident";
 import { FormIncident } from "@/modules/incident/ui/form-incident";
 import TableIncident from "@/modules/incident/ui/table/table-incident";
@@ -39,9 +37,7 @@ export default async function Page({ searchParams }: PageProps) {
             </DrawerCustom>
 
             <FormModal>
-
                 <FormDelete funtionDelete={repository.deleteIncident}></FormDelete>
-
             </FormModal>
 
 

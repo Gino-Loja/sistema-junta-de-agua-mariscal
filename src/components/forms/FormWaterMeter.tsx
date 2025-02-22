@@ -24,6 +24,8 @@ import { IWaterMeter } from '@/model/water-meter/WaterMeterRepository'
 import { createApiWaterMeter } from '@/services/waterMeterService'
 import { toast } from 'react-toastify'
 import { useAsyncList } from '@react-stately/data'
+import { error } from 'console'
+import { I18nProvider } from '@react-aria/i18n'
 
 
 const schema = z.object({
@@ -63,7 +65,6 @@ type WaterMeterInputs = z.infer<typeof schema>;
 export function FormWaterMeter() {
   const { type, data, closeModal } = useUserStore();
   const repositoryWaterMeter: IWaterMeter = createApiWaterMeter();
-  //console.log(type)
 
 
   const {
@@ -81,7 +82,7 @@ export function FormWaterMeter() {
 
 
   let list = useAsyncList<{ id: number; nombre: string; cedula: string }>({
-    initialFilterText: data?.nombre_usuario?.toString(),
+    initialFilterText: data?.nombre?.toString(),
 
     async load({ signal, filterText }) {
       const text = filterText || '';
@@ -97,7 +98,6 @@ export function FormWaterMeter() {
   });
 
 
-
   const onSubmit = handleSubmit((formData) => {
 
     if (type === "create") {
@@ -108,35 +108,32 @@ export function FormWaterMeter() {
       ).then((res) => {
         if (res.success) {
           closeModal();
-          toast.success('Lectura creada con éxito');
+          toast.success('Medidor creado con éxito');
         } else {
           closeModal();
-          toast.error('Algo salió mal, ya tienes lectura de ese mes');
+          toast.error('Algo salió mal, no se pudo crear el medidor');
         }
       });
     } else if (type === "update") {
 
 
-
-      
-
+      repositoryWaterMeter.updateWaterMeter(
+        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(getLocalTimeZone()) },
+        data?.id
+      ).then((res) => {
+        console.log(res)
+        if (res.success) {
+          closeModal();
+          toast.success('Medidor actualizado con éxito');
+        } else {
+          closeModal();
+          toast.error('Algo salió mal, no se pudo actualizar el medidor');
+        }
+      });
     }
 
   });
 
-  // useEffect(() => {
-  //   if (data?.usuario_id) {
-
-  //     params.set('user', data.nombre);
-  //     replace(`${pathname}?${params.toString()}`);
-  //   }
-
-  //   return () => {
-  //     params.delete('user');
-  //   }
-  // }, [data, params]);
-
-  //const selectedUser = users.find(user => user.id === data?.usuario_id);
 
   return (
     <form className='overflow-hidden' onSubmit={onSubmit}>
@@ -175,13 +172,13 @@ export function FormWaterMeter() {
                 size='sm'
                 items={list.items}
                 isLoading={list.isLoading}
-                inputValue={ list.filterText }
+                inputValue={list.filterText}
                 label="Seleccione un usuario"
                 placeholder="Busque el usuario..."
                 variant="bordered"
                 defaultSelectedKey={field.value?.toString()}
                 //selectedKey={field.value?.toString()}
-               // defaultInputValue={data?.nombre || ''}
+                // defaultInputValue={data?.nombre || ''}
                 //defaultSelectedKey={data?.usuario_id?.toString()}
 
                 // isInvalid={errors?.usuario_id?.message ? true : false}
@@ -246,16 +243,20 @@ export function FormWaterMeter() {
             control={control}
             defaultValue={data?.fecha_instalacion == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha_instalacion.toISOString())}
             render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="Fecha"
-                size="sm"
-                granularity="day"
-                isInvalid={errors?.fecha_instalacion?.message == undefined ? false : true}
-                errorMessage={errors?.fecha_instalacion?.message}
-                showMonthAndYearPickers
-              //defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
-              />
+
+              <I18nProvider
+                locale="es">
+                <DatePicker
+                  {...field}
+                  label="Fecha"
+                  size="sm"
+                  granularity="day"
+                  isInvalid={errors?.fecha_instalacion?.message == undefined ? false : true}
+                  errorMessage={errors?.fecha_instalacion?.message}
+                  showMonthAndYearPickers
+                />
+              </I18nProvider>
+
             )}
           />
 

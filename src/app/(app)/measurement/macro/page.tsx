@@ -40,8 +40,6 @@ export default async function Page({ searchParams }: PageProps) {
                 
             </FormModalDelete>
 
-
-
             <div className="flex flex-col sm:gap-4 pb-4">
                 <div className="flex items-center gap-4 px-4">
 
@@ -60,7 +58,7 @@ export default async function Page({ searchParams }: PageProps) {
                                         <CardAreaChartMeasurementMacro repository={repository} date={date}></CardAreaChartMeasurementMacro>
                                 {/* Stock section */}
                                 <div className="border rounded-lg p-6 shadow overflow-hidden">
-                                    <h2 className="text-lg font-semibold mb-1">Lecturas registradas</h2>
+                                    <h2 className="text-lg font-semibold mb-1">Lecturas macroMedidor</h2>
                                     <p className="text-sm text-gray-500 mb-4">
                                         Lista de Lecturas registradas
                                     </p>
@@ -73,7 +71,7 @@ export default async function Page({ searchParams }: PageProps) {
                                             <SelectParams options={[...sectors.data, { label: 'Todos', value: '' }]} ></SelectParams>
                                         </div> */}
 
-                                        <div className='hidden sm:block'>
+                                        <div className=''>
                                             <FiltersSearchSheets />
                                         </div>
 
@@ -105,6 +103,7 @@ async function CardAreaChartMeasurementMacro({ repository, date }: { repository:
     if (!getTotalAmountCostIncidetByYear.success) {
         return <div>Error al obtener los datos</div>
     }
+    console.log(getTotalAmountCostIncidetByYear.data)
 
     return (
 

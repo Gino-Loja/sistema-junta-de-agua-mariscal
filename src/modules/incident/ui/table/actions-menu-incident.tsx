@@ -4,6 +4,8 @@ import { VerticalDotsIcon } from "@/components/icons/VerticalDotsIcon ";
 import { useDeleteStore, useFormDrawer, useIncidentStore, useUserStore } from "@/lib/store";
 
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 export default function ActionsMenuIncident({ data }: { data: Incident }) {
 
@@ -11,7 +13,7 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
     const { setType, openModal } = useUserStore();
     const { setIncident } = useIncidentStore()
     const { setId } = useDeleteStore();
-    
+
 
     // console.log(data,"data")
     return (
@@ -29,6 +31,7 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
 
 
                     <DropdownItem
+                        startContent={<Pencil className="text-primary-500 h-4 w-4 " />}
 
                         key="update"
                         onPress={() => {
@@ -40,9 +43,10 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
                         Actualizar
                     </DropdownItem>
                     <DropdownItem
+                        startContent={<Trash2 className="text-danger-500 h-4 w-4" />}
 
                         key="delete"
-                        
+
                         onPress={() => {
                             setType("delete")
                             setId(data.id)
@@ -50,6 +54,23 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
                         }}
                     >
                         Eliminar
+                    </DropdownItem>
+
+                    <DropdownItem
+                        onPress={() => {
+                            setIncident(data)
+                        }}
+                        key={1}
+                        startContent={<Eye className="text-default-500 h-4 w-4" />}
+
+                    // onPress={() => {
+                    //     router.push(`/water-meter/${data.id}/`)
+                    // }}
+                    >
+
+                        <Link href={`/incident/${data.id}/`} className="flex items-center gap-2">
+                            <span>Ver Incidente</span>
+                        </Link>
                     </DropdownItem>
 
 

@@ -25,7 +25,7 @@ export function MacroMeasurementAreaChart({ data }: { data: { fecha: Date, consu
     // Format the dates in the data with time
     const formattedData = data.map(item => {
         try {
-            const dateTime = parseDateTime(item.fecha.toISOString());
+            const dateTime = parseDateTime(item.fecha.toDateString());
             return {
                 ...item,
                 fecha: `${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${String(dateTime.minute).padStart(2, '0')}`
