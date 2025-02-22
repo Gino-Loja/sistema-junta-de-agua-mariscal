@@ -73,12 +73,12 @@ export const SidebarWrapper = () => {
                 href="/water-meter"
               />
 
-              <SidebarItem
+              {/* <SidebarItem
 
                 isActive={pathname === "/payments"}
                 title="Payments"
                 icon={<PaymentsIcon />}
-              />
+              /> */}
               <CollapseItems
                 icon={<BalanceIcon />}
                 items={[{ name: "Facturar", href: "/invoice" },
