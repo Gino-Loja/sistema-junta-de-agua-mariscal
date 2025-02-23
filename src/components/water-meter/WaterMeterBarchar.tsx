@@ -28,7 +28,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function WaterMeterBarchar({ data }: { data: { tipo: string, cantidad: number }[] }) {
-    console.log("Rendering WaterMeterBarchar with data:", data);
 
     return (
         <Card  radius="sm" shadow="none" className="p-6 h-full transition-all duration-300 hover:shadow-md shadow border">

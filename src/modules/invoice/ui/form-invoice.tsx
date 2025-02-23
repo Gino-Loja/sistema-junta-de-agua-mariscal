@@ -109,7 +109,6 @@ export default function FormInvoice({ repositoryService,
 
 
     const repositoryWaterMeter: IWaterMeter = createApiWaterMeter();
-
     const [details, setDetails] = useState<Details[]>([]);
     const [description, setDescription] = useState<string>("");
     const [paymentMethodCode, setPaymentMethodCode] = useState<string>("20");
@@ -174,9 +173,6 @@ export default function FormInvoice({ repositoryService,
         }
     };
 
-
-
-
     const { data, type } = useUserStore();
 
     const {
@@ -215,83 +211,61 @@ export default function FormInvoice({ repositoryService,
 
     );
 
-    const onSubmit = handleSubmit((formData) => {
-        // if (type === "create") {
-        //     repository.insertMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()) }).then((res) => {
-        //         if (res.success) {
-        //             toast.success('Sesión asignada con éxito');
-        //             onClose()
-        //         } else {
-        //             toast.error('Algo salió mal,  no se pudo asignar la sesión');
-        //         }
-        //     });
-        // } else {
-        //     repository.updateMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()), multa_id: data?.id }).then((res) => {
-        //         if (res.success) {
-        //             toast.success('Sesión actualizada con éxito');
-        //             onClose()
-        //         } else {
-        //             toast.error('Algo salió mal,  no se pudo actualizar la sesión');
-        //         }
-        //     });
-        // }
+    // const onSubmit = handleSubmit((formData) => {
+    //     // if (type === "create") {
+    //     //     repository.insertMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()) }).then((res) => {
+    //     //         if (res.success) {
+    //     //             toast.success('Sesión asignada con éxito');
+    //     //             onClose()
+    //     //         } else {
+    //     //             toast.error('Algo salió mal,  no se pudo asignar la sesión');
+    //     //         }
+    //     //     });
+    //     // } else {
+    //     //     repository.updateMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()), multa_id: data?.id }).then((res) => {
+    //     //         if (res.success) {
+    //     //             toast.success('Sesión actualizada con éxito');
+    //     //             onClose()
+    //     //         } else {
+    //     //             toast.error('Algo salió mal,  no se pudo actualizar la sesión');
+    //     //         }
+    //     //     });
+    //     // }
 
 
 
-    });
-
+    // });
     let list = useAsyncList<{ id: number; nombre: string; cedula: string }>({
         async load({ signal, filterText }) {
             const text = filterText || '';
-            const res = await repositoryWaterMeter.getUserByName(text);
-            if (res.success) {
-                return {
-                    items: res.data, // res.data debe ser un arreglo de usuarios.
-                };
+            try {
+                const res = await repositoryWaterMeter.getUserByName(text);
+                if (res?.success) {
+                    return { items: res.data };
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
             }
-            return { items: [] }; // Asegúrate de devolver al menos un objeto con `items`.
+            return { items: [] };
         },
     });
 
-    const listService = useAsyncList<Service>({
+    // list services
+    let listService = useAsyncList<Service>({
         async load({ signal, filterText }) {
             const text = filterText || '';
-            const res = await repositoryService.getServive();
-            if (res.success) {
-                return {
-                    items: res.data, // res.data debe ser un arreglo de usuarios.
-                };
+            try {
+                const res = await repositoryService.getServive();
+                if (res?.success) {
+                    return { items: res.data };
+                }
+            } catch (error) {
+                console.error('Error fetching services:', error);
             }
-            return { items: [] }; // Asegúrate de devolver al menos un objeto con `items`.
+            return { items: [] };
         },
     });
-    // const listService = useMemo(() => {
-    //     return useAsyncList<Service>({
-    //         async load({ signal, filterText }) {
-    //             const text = filterText || '';
-    //             const res = await repositoryService.getServive();
-    //             if (res.success) {
-    //                 return {
-    //                     items: res.data, // res.data debe ser un arreglo de usuarios.
-    //                 };
-    //             }
-    //             return { items: [] }; // Asegúrate de devolver al menos un objeto con `items`.
-    //         },
-    //     });
-    // }, [repositoryService]); // Dependencias necesarias
 
-
-    // const loadServices = useCallback(async (filterText) => {
-    //     setLoading(true);
-    //     try {
-    //         const res = await repositoryService.getServive();
-    //         if (res.success) {
-    //             setServices(res.data);
-    //         }
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }, []);
 
     const addRowDetail = () => {
 
@@ -531,7 +505,6 @@ export default function FormInvoice({ repositoryService,
         return invoice;
     };
 
-    //console.log(createEmptydocumentInx`x`fo());
 
     return (
 
@@ -566,6 +539,7 @@ export default function FormInvoice({ repositoryService,
                                         </label>
                                         <Autocomplete
                                             id="cliente"
+                                            aria-label="Seleccione un cliente"
                                             className="max-w-xs"
                                             key="service-user"
                                             items={list.items}
@@ -796,6 +770,7 @@ export default function FormInvoice({ repositoryService,
                                                 <tr key={index} className="border-b">
                                                     <td className="w-5">
                                                         <Button
+                                                            aria-label="Detail delete"
                                                             isIconOnly
                                                             size="sm"
                                                             variant="light"
@@ -816,6 +791,8 @@ export default function FormInvoice({ repositoryService,
                                                     </td>
                                                     <td className="p-2">
                                                         <Autocomplete
+                                                            aria-label="Seleccione un servicio"
+
                                                             key={'service' + index}
                                                             items={listService.items}
                                                             isLoading={listService.isLoading}
@@ -843,6 +820,7 @@ export default function FormInvoice({ repositoryService,
                                                     {/* valor u */}
                                                     <td className="p-2">
                                                         <Input
+
                                                             type="number"
                                                             value={detail.price.toString()}
                                                             className="h-8"
@@ -852,6 +830,7 @@ export default function FormInvoice({ repositoryService,
                                                     {/* IVA*/}
                                                     <td className="p-2">
                                                         <Input
+                                                            aria-label="IVA"
                                                             type="number"
                                                             value={detail.rate.toString()}
                                                             className="h-8"
@@ -862,6 +841,7 @@ export default function FormInvoice({ repositoryService,
                                                     {/* % Desc*/}
                                                     <td className="p-2">
                                                         <Input
+                                                            aria-label="% Descuento"
                                                             type="number"
                                                             //value={detail.discount.toString()}
                                                             defaultValue="0.00"
@@ -873,6 +853,7 @@ export default function FormInvoice({ repositoryService,
 
                                                     <td className="p-2">
                                                         <Input
+                                                            aria-label="% Descuento total"
                                                             type="number"
                                                             value={((detail.price - (detail.subTotal / detail.quantity)) * detail.quantity).toString()}
                                                             className="h-8"
@@ -884,6 +865,7 @@ export default function FormInvoice({ repositoryService,
 
                                                     <td className="p-2">
                                                         <Input
+                                                            aria-label="% Descuento subtotal"
                                                             type="number"
                                                             value={detail.subTotal.toString()}
                                                             className="h-8"
@@ -898,6 +880,7 @@ export default function FormInvoice({ repositoryService,
 
                                 <Button
                                     radius="sm"
+                                    aria-label="Add Detail"
                                     className="mt-4 w-fit"
                                     onPress={addRowDetail}
                                     color="primary"
@@ -1026,6 +1009,7 @@ export default function FormInvoice({ repositoryService,
             </div>
             <div className="flex justify-end">
                 <Button
+                    aria-label="Send Invoice"
                     radius="sm"
                     className=" w-fit justify-self-end"
                     onPress={sendDataInvoice}

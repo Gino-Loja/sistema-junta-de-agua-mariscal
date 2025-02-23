@@ -146,7 +146,7 @@ async function GetRenderTotalWaterMeter({ repository, date }: { repository: ISer
 
   return (<StatsCard
     title="Consumo de agua"
-    value={totalWaterMeter.data + ' m3'}
+    value={totalWaterMeter.data + ' m³'}
     description={`Total de consumo de agua`}
   >
     <div className="p-3 rounded-full bg-primary-300 ">
@@ -189,7 +189,7 @@ async function GetRenderAmountInvoice({ repository, date }: { repository: IServi
 
   return (<StatsCard
     title="Dinero de planillas"
-    value={amountInvoice.data}
+    value={amountInvoice.data.toFixed(2)}
     description={`Dinero recaudado`}
   >
     <div className="p-3 rounded-full bg-success-500 ">

@@ -3,6 +3,7 @@ import { FormDelete } from "@/components/forms/form-delete";
 import Search from "@/components/forms/Search";
 import SelectParams from "@/components/forms/SelectParams";
 import DrawerCustom from "@/components/modal/drawer-custom";
+import FormModalDelete from "@/components/modal/form-modal-delete";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import { createApiIncidentRepository } from "@/modules/incident/service/service-incident";
 import { FormIncident } from "@/modules/incident/ui/form-incident";
@@ -36,9 +37,9 @@ export default async function Page({ searchParams }: PageProps) {
                 <FormIncident sectors={sectors.data}></FormIncident>
             </DrawerCustom>
 
-            <FormModal>
+            <FormModalDelete>
                 <FormDelete funtionDelete={repository.deleteIncident}></FormDelete>
-            </FormModal>
+            </FormModalDelete>
 
 
 

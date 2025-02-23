@@ -1,3 +1,4 @@
+'use server'
 import { createApiServiceInvoiceRepository } from "@/modules/invoice/service/service-invoice";
 import FormInvoice from "@/modules/invoice/ui/form-invoice";
 
@@ -25,7 +26,8 @@ export default async function Page() {
     return (
         <div className="flex flex-col gap-4 px-4 pb-4">
 
-            <FormInvoice paymentMethods={paymentMethods.data}
+            <FormInvoice 
+            paymentMethods={paymentMethods.data}
              informationCompany={informationCompany.data[0]}
               repositoryService={repository}
               numberInvoice={numberInvoice.data}

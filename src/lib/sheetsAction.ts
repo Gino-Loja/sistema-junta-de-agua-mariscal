@@ -181,7 +181,6 @@ export async function getCounterSheets(date: string, query: string): Promise<Que
         `, [date, query])).rows[0];
         return { success: true, data: sheets };
     } catch (error) {
-        console.log(error)
         return { success: false, error: `Error al obtener el total de usuarios: ${error}` };
     }
 }

@@ -48,7 +48,7 @@ export const columns: ColumnDef<Incident, any>[] = [
   
     cell: (info) => {
 
-      const formattedImageData = info.getValue().startsWith('data:image/png;base64,')
+      const formattedImageData = info.getValue().startsWith('data:image/')
         ? info.getValue()
         : `data:image/png;base64,${info.getValue()}`;
 

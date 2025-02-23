@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';
 import { createApiIncidentRepository } from '../service/service-incident';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 
 
@@ -64,6 +65,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
 
     const { incident } = useIncidentStore();
 
+
     const { onClose } = useFormDrawer();
 
     const { type } = useUserStore();
@@ -78,6 +80,9 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
         formState: { errors, isSubmitted },
     } = useForm<IncidentForm>({
         resolver: zodResolver(schema),
+        defaultValues: {
+            foto: incident?.foto,
+        }
 
     });
 
@@ -89,7 +94,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
 
         try {
             if (type === "create") {
-                console.log(data.foto)
+
                 const res = await repositoryIncident.insertIncident({ ...data, fecha: data.fecha.toDate(getLocalTimeZone()) });
                 if (res.success) {
                     toast.success('Incidente creado con éxito');
@@ -98,7 +103,13 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                     toast.error('Algo salió mal, no se pudo crear el incidente');
                 }
             } else if (type === "update") {
-                console.log(data)
+                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(getLocalTimeZone()), incident_id: Number(incident?.id) });
+                if (res.success) {
+                    toast.success('Incidente actualizado con éxito');
+                    onClose();
+                } else {
+                    toast.error('Algo salió mal, no se pudo actualizar el incidente' + res.error);
+                }
             }
 
         } catch (error) {
@@ -326,7 +337,18 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                         <p className="text-sm text-gray-500">Adjunte una imagen del incidente</p>
                     </CardHeader>
                     <CardBody>
-                        <ImagePreview imageData={previewImage} />
+                        {/* <ImagePreview imageData={previewImage} /> */}
+                        <Image
+                            src={previewImage ?
+                                previewImage.startsWith('data:image/')
+                                    ? previewImage
+                                    : `data:image/png;base64,${previewImage}`
+                                : "placeholder.svg"}
+                            alt="Vista previa"
+                            className="max-w-full h-auto rounded-lg mx-auto m-3"
+                            width={300}
+                            height={300}
+                        />
 
 
                         <Controller
@@ -337,7 +359,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             render={({ field }) => (
                                 <Input
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/jpeg, image/png"
                                     onChange={handleImageChange}
                                     className="block w-full text-sm text-gray-500
                                             file:mr-4 file:py-2 file:px-4
@@ -376,7 +398,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                         size="lg"
                         className="px-8"
                     >
-                        Registrar Incidente
+                        {type === "create" ? "Registrar Incidente" : "Actualizar Incidente"}
                     </Button>
                 </div>
             </form>

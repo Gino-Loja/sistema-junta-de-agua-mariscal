@@ -1,11 +1,11 @@
 'use client'
 
 import { VerticalDotsIcon } from "@/components/icons/VerticalDotsIcon ";
-import { useFormDrawer, useUserStore } from "@/lib/store";
+import {  useUserStore } from "@/lib/store";
 
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
-import { Invoice } from "../../types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ActionInvoice({data}: any) {
 
@@ -14,6 +14,7 @@ export default function ActionInvoice({data}: any) {
 
 
     const { setData } = useUserStore();
+    const router = useRouter();
 
 
     // console.log(data,"data")
@@ -36,6 +37,7 @@ export default function ActionInvoice({data}: any) {
                         key="update"
                         onPress={() => {
                             setData(data)
+                            router.push(`/invoice/${data.id}/`)
                         }}
                     >
                         <Link href={`/invoice/${data.id}/`} className="flex items-center gap-2">

@@ -16,6 +16,11 @@ module.exports = {
   //   ]
   // },output: "standalone",
   output: "standalone",
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
 
   async headers() {
     return [

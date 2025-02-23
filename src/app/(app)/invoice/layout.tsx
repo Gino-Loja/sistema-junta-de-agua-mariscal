@@ -9,7 +9,7 @@ export default function DashboardLayout({
     return <section>
         <NavigationTabs links={
             [{
-                url: "/invoice/",
+                url: "/invoice",
                 title: "Factura",
                 icon: <ScrollText />,
             },

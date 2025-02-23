@@ -6,13 +6,15 @@ import { useDeleteStore, useFormDrawer, useIncidentStore, useUserStore } from "@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ActionsMenuIncident({ data }: { data: Incident }) {
 
     const { onOpen } = useFormDrawer();
     const { setType, openModal } = useUserStore();
     const { setIncident } = useIncidentStore()
-    const { setId } = useDeleteStore();
+    const { setId, openModalDelete } = useDeleteStore();
+    const router = useRouter();
 
 
     // console.log(data,"data")
@@ -50,7 +52,7 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
                         onPress={() => {
                             setType("delete")
                             setId(data.id)
-                            openModal()
+                            openModalDelete()
                         }}
                     >
                         Eliminar
@@ -59,6 +61,7 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
                     <DropdownItem
                         onPress={() => {
                             setIncident(data)
+                            router.push(`/incident/${data.id}/`)
                         }}
                         key={1}
                         startContent={<Eye className="text-default-500 h-4 w-4" />}

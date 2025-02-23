@@ -69,6 +69,7 @@ export const insertIncident = async (formData: { usuario_id: number; fecha: Date
 };
 
 export const updateIncident = async (formData: { usuario_id: number; fecha: Date, sector_id: number; descripcion: string; foto: string; costo: number; incident_id: number }): Promise<QueryResultError<Incident[]>> => {
+    const fotoBuffer = Buffer.from(formData.foto.split(',')[1], 'base64');
 
     try {
         const incidents: Incident[] = (await pool.query(`
@@ -80,11 +81,11 @@ export const updateIncident = async (formData: { usuario_id: number; fecha: Date
                 sector_id = $3,
                 descripcion = $4,
                 foto = $5,
-                costo = $6,
+                costo = $6
             WHERE 
                 id = $7
                 
-        `, [formData.usuario_id, formData.fecha, formData.sector_id, formData.descripcion, formData.foto, formData.costo, formData.incident_id])).rows; // Formateamos la fecha con año-mes-01
+        `, [formData.usuario_id, formData.fecha, formData.sector_id, formData.descripcion, fotoBuffer, formData.costo, formData.incident_id])).rows; // Formateamos la fecha con año-mes-01
         revalidatePath('/incident');
 
         return { success: true, data: incidents };

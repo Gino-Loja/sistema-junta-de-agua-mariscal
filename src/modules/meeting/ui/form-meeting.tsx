@@ -75,7 +75,6 @@ export default function FormMeeting() {
 
     const onSubmit = handleSubmit((formData) => {
 
-        console.log(type)
         if (type === "create") {
             repository.insertMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()) }).then((res) => {
                 if (res.success) {

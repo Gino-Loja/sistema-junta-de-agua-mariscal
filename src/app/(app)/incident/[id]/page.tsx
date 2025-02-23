@@ -34,7 +34,7 @@ export default function Page() {
   const hexToDataUrl = (hex: string) => {
 
 
-    return hex.startsWith('data:image/png;base64,')
+    return hex.startsWith('data:image/')
       ? hex
       : `data:image/png;base64,${hex}`;
 
@@ -65,7 +65,7 @@ export default function Page() {
         <Card className="w-full max-w-3xl  shadow-lg rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl">
           <div className="relative h-[400px] w-full overflow-hidden">
             <Image
-              src={hexToDataUrl(incident.foto) || "/placeholder.svg"}
+              src={hexToDataUrl(incident.foto) || "placeholder.svg"}
               alt="Incidente"
               width={400}
               height={400}

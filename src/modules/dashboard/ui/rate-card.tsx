@@ -32,14 +32,14 @@ export function RateCard({ rate  }: { rate: RateProps }) {
     },
     {
       label: "Metros base",
-      value: rate.metros_base + " m",
+      value: rate.metros_base + " m³",
       icon: Ruler,
       description: "Consumo base permitido",
       gradient: "bg-success-300"
     },
     {
       label: "Metros base exceso",
-      value: rate.metros_base_exceso + " m",
+      value: rate.metros_base_exceso + " m³",
       icon: BarChart2,
       description: "Límite de exceso permitido",
       gradient: "bg-danger"

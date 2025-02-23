@@ -83,7 +83,6 @@ export default function FormDigitalCert({ data, repository }: { data: DigitalCer
         //     certificado: base64String, // Asignar el Base64 sin el prefijo MIME
         // };
 
-        console.log(formData)
 
         // repository.updateDigitalCertificate(formData)
         //     .then((result) => {

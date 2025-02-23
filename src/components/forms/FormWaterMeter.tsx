@@ -121,7 +121,6 @@ export function FormWaterMeter() {
         { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(getLocalTimeZone()) },
         data?.id
       ).then((res) => {
-        console.log(res)
         if (res.success) {
           closeModal();
           toast.success('Medidor actualizado con éxito');

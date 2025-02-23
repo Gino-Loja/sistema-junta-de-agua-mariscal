@@ -61,7 +61,6 @@ export default function Page({ searchParams }: PageProps) {
 async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query }: { repository: IInvoiceRepository, selectedDate: string, start: number, end: number, query: string }) {
     const data = await repository.getCounterInvoiceByDate(selectedDate, query)
 
-    console.log(data)
 
     return (
         data.success &&
