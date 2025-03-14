@@ -1,7 +1,7 @@
 import { CircleChartCard } from "@/components/Bar-chart";
+import SelectParams from "@/components/filters-table/SelectParams";
 import { FormDelete } from "@/components/forms/form-delete";
 import Search from "@/components/forms/Search";
-import SelectParams from "@/components/forms/SelectParams";
 import DrawerCustom from "@/components/modal/drawer-custom";
 import FormModalDelete from "@/components/modal/form-modal-delete";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
@@ -77,7 +77,7 @@ export default async function Page({ searchParams }: PageProps) {
                                             <SelectParams options={[...sectors.data, { label: 'Todos', value: '' }]} ></SelectParams>
                                         </div>
 
-                                        <div className='hidden sm:block'>
+                                        <div className=''>
                                             <FiltersSearchSheets />
                                         </div>
 

@@ -1,4 +1,4 @@
-import { getAllUser, getAllUserBySector, getUsersInactivesActives, getListAllUser, getAllSector, createUser, updateUser, getUserPagination, getUserLogin } from "@/lib/userAction";
+import { getAllUser, getAllUserBySector, getUsersInactivesActives, getListAllUser, getAllSector, createUser, updateUser, getUserPagination, getUserLogin, getAllPagination } from "@/lib/userAction";
 import { IUserRepository } from "@/model/user-repository/UserRepository";
 
 export function createApiUserRepository(): IUserRepository {
@@ -11,6 +11,7 @@ export function createApiUserRepository(): IUserRepository {
         createUser,
         updateUser,
         getUserPagination,
+        getAllPagination
 
     };
 }

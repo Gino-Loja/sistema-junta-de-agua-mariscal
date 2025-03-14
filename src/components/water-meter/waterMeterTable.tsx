@@ -9,10 +9,16 @@ const TooltipWaterMeter = dynamic(() =>
 
 
 
-export default async function waterMeterTable({ repository, page, per_page, date, query, type, status }: { repository: IWaterMeter, page: string, per_page: string, date: string, query: string, type: string, status: string }) {
-  const data = per_page == '0'
-    ? await repository.getWaterMeter()
-    : await repository.getWaterMeterPagination(Number(page), Number(per_page), query, type, status);
+export default async function waterMeterTable({ repository, page, per_page, date, query, type, status }: {
+  repository: IWaterMeter,
+  page: string,
+  per_page: string,
+  date: string,
+  query: string,
+  type: string,
+  status: string
+}) {
+  const data = await repository.getWaterMeterPagination(Number(page), Number(per_page), query, type, status, date);
   return (
 
     <div>

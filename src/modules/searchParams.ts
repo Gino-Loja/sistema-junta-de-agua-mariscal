@@ -1,16 +1,22 @@
+import { ITEMS_PER_PAGE, TIME_ZONE } from '@/model/Definitions'
+import { now } from '@internationalized/date'
 import {
   parseAsString,
   parseAsInteger,
   createSearchParamsCache,
-  parseAsNumberLiteral
-} from  'nuqs/server'
+} from 'nuqs/server'
 
 export const coordinatesParsers = {
   query: parseAsString.withDefault(''),
   page: parseAsString.withDefault('1'),
-  per_page: parseAsString.withDefault('10'),
-  date: parseAsString.withDefault(new Date().toDateString()),  
+  per_page: parseAsString.withDefault(ITEMS_PER_PAGE.toString()),
+  date: parseAsString.withDefault(''),
   sector: parseAsString.withDefault(''),
-
+  year: parseAsInteger.withDefault(now(TIME_ZONE).year),
+  month: parseAsInteger.withDefault(now(TIME_ZONE).month),
+  from: parseAsString.withDefault(''),
+  to: parseAsString.withDefault(''),  
+  status: parseAsString.withDefault(''),
+  type: parseAsString.withDefault(''),
 }
 export const coordinatesCache = createSearchParamsCache(coordinatesParsers)

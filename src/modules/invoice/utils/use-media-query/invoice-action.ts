@@ -1,7 +1,6 @@
 'use server'
 import pool from "../../../../lib/db";
-import { revalidatePath } from 'next/cache';
-import { CounterMeeting, InformationCompany, Invoice, Meeting, PaymentMethod, Service, StatusAllMeeting } from "../../types";
+import {  InformationCompany, Invoice, PaymentMethod, Service } from "../../types";
 import { QueryResultError } from "@/model/types";
 
 
@@ -71,9 +70,9 @@ export const getNumberInvoice = async (): Promise<QueryResultError<number>> => {
     }
 };
 
-export const getInvoice = async (page: number, per_page: number, date: string, query: string): Promise<QueryResultError<Invoice[]>> => {
+export const getInvoice = async (page: number, per_page: number, date: string, query: string, month:number, year:number): Promise<QueryResultError<Invoice[]>> => {
     const offset = (page - 1) * per_page;
-
+    let dateQuery = date == "" ? null : date;
     try {
         const invoice: Invoice[] = (await pool.query(`
             SELECT 
@@ -91,23 +90,31 @@ export const getInvoice = async (page: number, per_page: number, date: string, q
                 facturas f
             INNER JOIN 
                 usuarios u ON f.usuario_id = u.id
-            WHERE 
-                date_trunc('month', f.fecha_emision) = date_trunc('month', $1::date)
-                AND ((u.nombre ILIKE '%' || $2 || '%'
+            WHERE
+                EXTRACT(YEAR FROM f.fecha_emision) = $3 AND
+                EXTRACT(MONTH FROM f.fecha_emision) = $4 AND
+
+                ($1::date IS NULL OR f.fecha_emision = $1)
+                 
+                 AND
+                 ((u.nombre ILIKE '%' || $2 || '%'
                 OR u.cedula ILIKE  '%' || $2 || '%'))
+
 
             ORDER BY 
             nombre_usuario ASC
             LIMIT ${per_page} OFFSET ${offset};
 
-        `, [date, query])).rows;
+        `, [dateQuery,  query, year, month])).rows;
         return { success: true, data: invoice };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
     }
 }
 
-export const getCounterInvoiceByDate = async (date: string, query: string): Promise<QueryResultError<{ total: number }>> => {
+export const getCounterInvoiceByDate = async (date: string, query: string,month:number, year:number): Promise<QueryResultError<{ total: number }>> => {
+    let dateQuery = date == "" ? null : date;
+
     try {
         const total: { total: number } = (await pool.query(`
             SELECT 
@@ -119,11 +126,14 @@ export const getCounterInvoiceByDate = async (date: string, query: string): Prom
                 usuarios u ON f.usuario_id = u.id
             
             WHERE 
-                date_trunc('month', f.fecha_emision) = date_trunc('month', $1::date)
-                AND ((u.nombre ILIKE '%' || $2 || '%'
+                EXTRACT(YEAR FROM f.fecha_emision) = $3 AND
+                EXTRACT(MONTH FROM f.fecha_emision) = $4 AND
+
+                ($1::date IS NULL OR f.fecha_emision = $1)             
+               AND ((u.nombre ILIKE '%' || $2 || '%'
                 OR u.cedula ILIKE  '%' || $2 || '%'))
 
-        `, [date, query])).rows[0];
+        `, [dateQuery, query, year, month])).rows[0];
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };

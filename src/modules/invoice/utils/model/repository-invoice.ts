@@ -7,7 +7,7 @@ export interface IInvoiceRepository {
     getInformationCompany: () => Promise<QueryResultError<InformationCompany[]>>;
     getPaymentMethods: () => Promise<QueryResultError<PaymentMethod[]>>;
     getNumberInvoice: () => Promise<QueryResultError<number>>;
-    getInvoice: (page: number, per_page: number, date: string, query: string) => Promise<QueryResultError<Invoice[]>>;
-    getCounterInvoiceByDate: (date: string, query: string) => Promise<QueryResultError<{ total: number }>>;
+    getInvoice: (page: number, per_page: number, date: string, query: string, month: number, year: number) => Promise<QueryResultError<Invoice[] >>;
+    getCounterInvoiceByDate: (date: string, query: string, month: number, year: number) => Promise<QueryResultError<{ total: number }>>;
 }
 

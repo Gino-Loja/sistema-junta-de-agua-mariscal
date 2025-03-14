@@ -26,6 +26,7 @@ import { toast } from 'react-toastify'
 import { useAsyncList } from '@react-stately/data'
 import { error } from 'console'
 import { I18nProvider } from '@react-aria/i18n'
+import { TIME_ZONE } from '@/model/Definitions'
 
 
 const schema = z.object({
@@ -104,7 +105,7 @@ export function FormWaterMeter() {
 
       repositoryWaterMeter.createWaterMeter(
 
-        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(getLocalTimeZone()) }
+        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(TIME_ZONE) }
       ).then((res) => {
         if (res.success) {
           closeModal();
@@ -118,7 +119,7 @@ export function FormWaterMeter() {
 
 
       repositoryWaterMeter.updateWaterMeter(
-        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(getLocalTimeZone()) },
+        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(TIME_ZONE) },
         data?.id
       ).then((res) => {
         if (res.success) {
@@ -240,7 +241,7 @@ export function FormWaterMeter() {
           <Controller
             name="fecha_instalacion"
             control={control}
-            defaultValue={data?.fecha_instalacion == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha_instalacion.toISOString())}
+            defaultValue={data?.fecha_instalacion == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha_instalacion.toISOString())}
             render={({ field }) => (
 
               <I18nProvider

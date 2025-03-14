@@ -12,6 +12,7 @@ import { ILecturesRepository } from "@/model/lecturas-repository/lecturasReposit
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { I18nProvider } from "@react-aria/i18n";
+import { TIME_ZONE } from "@/model/Definitions";
 
 // Definir el esquema de validación usando Zod
 //const schemaDate:DateValue = 
@@ -71,20 +72,11 @@ export default function FormMacro() {
 
     const onSubmit = handleSubmit((formData,) => {
         setIsLoading(true);
-        // Lógica para manejar la creación o actualización de la lectura
-        //console.log(formData)
-
-        //console.log(formData.fecha.toDate(getLocalTimeZone()))
-
-
         if (type === "create") {
 
-            //console.log(formData.fecha.toDate(getLocalTimeZone()), formData.lectura_actual)
-
             repositoryLectures.insertMeasurementMacro(
-                formData.fecha.toDate(getLocalTimeZone()), formData.lectura
+                formData.fecha.toDate(TIME_ZONE), formData.lectura
             ).then((res) => {
-
                 if (res.success) {
                     closeModal();
                     setIsLoading(false);
@@ -93,18 +85,16 @@ export default function FormMacro() {
             }).catch((err) => {
                 closeModal();
                 setIsLoading(false);
-
                 toast.error('Algo salió mal, no se pudo guardar la lectura', err);
             });;
 
         } else if (type === "update") {
             repositoryLectures.updateMeasurementMacro(
-                formData.fecha.toDate(getLocalTimeZone()), formData.lectura, formData.id!!
+                formData.fecha.toDate(TIME_ZONE), formData.lectura, formData.id!!
             ).then((res) => {
                 if (res.success) {
                     closeModal();
                     toast.success('Lectura actualizada con éxito');
-
                 }
             }).catch((err) => {
                 closeModal();
@@ -137,7 +127,7 @@ export default function FormMacro() {
                     name="fecha"
 
                     control={control}
-                    defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                     render={({ field }) => (
                         <I18nProvider
 

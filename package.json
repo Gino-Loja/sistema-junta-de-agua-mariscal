@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@date-fns/tz": "^1.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@internationalized/date": "^3.5.5",
     "@nextui-org/drawer": "^2.2.5",
@@ -20,6 +21,7 @@
     "@tanstack/react-table": "^8.20.5",
     "@types/pg": "^8.11.7",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.13.5",
     "install": "^0.13.0",

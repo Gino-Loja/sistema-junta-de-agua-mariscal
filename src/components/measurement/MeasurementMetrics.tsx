@@ -7,6 +7,8 @@ import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import LecturePieChart from "./MeasurementPieChart";
 
+import { QueryParams } from "@/modules/types";
+
 const months = [
   "Enero",
   "Febrero",
@@ -22,12 +24,13 @@ const months = [
   "Diciembre",
 ];
 
-export default async function MeasurementMetrics({ params }: { params: string }) {
+export default async function MeasurementMetrics({ year, month }: Omit<QueryParams, "page" | "per_page" | "date" | "from" | "to">) {
 
   const lectureRepository: ILecturesRepository = createApiLecturesRepository();
-  const consumedMeters = await lectureRepository.getComsumedMetersByMonths(params);
-  const consumedBySector = await lectureRepository.getConsumedBySector(params);
-  const date = new Date(params);
+  const consumedMeters = await lectureRepository.getComsumedMetersByMonths(month, year);
+  const consumedBySector = await lectureRepository.getConsumedBySector(year, month);
+  
+  
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -35,10 +38,10 @@ export default async function MeasurementMetrics({ params }: { params: string })
         <CardHeader className="grid grid-cols-1 gap-2" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
-            Consumo de {months[date.getMonth()]}
+            Consumo de {months[month-1]}
           </span>
 
-          <p className="text-base text-default-500 ">Consumo total de metros cúbicos en {months[date.getMonth()]} </p>
+          <p className="text-base text-default-500 ">Consumo total de metros cúbicos en {months[month-1]} </p>
 
         </CardHeader>
         <Divider></Divider>
@@ -73,11 +76,11 @@ export default async function MeasurementMetrics({ params }: { params: string })
         <CardHeader className="grid grid-cols-1 gap-2" >
           <span className="text-default-900 text-xl font-semibold justify-self-start">
             {" "}
-            Exceso de {months[date.getMonth()]}
+            Exceso de {months[month-1]}
 
           </span>
 
-          <p className="text-base text-default-500 ">Exceso total registrado en {months[date.getMonth()]} </p>
+          <p className="text-base text-default-500 ">Exceso total registrado en {months[month-1]} </p>
 
         </CardHeader>
         <Divider></Divider>

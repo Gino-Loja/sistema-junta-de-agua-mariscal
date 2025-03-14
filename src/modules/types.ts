@@ -16,3 +16,14 @@ export type CircleChartProps = {
     categories: string[];
     chartData: ChartData[];
 };
+
+
+export type QueryParams = {
+    page: string;
+    per_page: string;
+    date: string;
+    from: string;
+    to: string;
+    month: number;
+    year: number;
+};

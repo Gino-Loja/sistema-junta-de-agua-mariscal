@@ -10,6 +10,7 @@ import MetricSkeleton from '@/components/skeletons/SkeletomMetric';
 import BarChartSkeleton from '@/components/skeletons/BarChartSkeleton';
 import FiltersSearchSheets from '@/components/sheets/FiltersSearchSheets';
 import { Divider } from '@nextui-org/react';
+import { TIME_ZONE } from '@/model/Definitions';
 
 //import FormAddLecture from '@/components/forms/FormLecture';
 
@@ -21,7 +22,7 @@ export default function Page({ searchParams }: {
     searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
 }) {
     const repositorySheets: ISheetsRepository = createApiSheetsRepository();
-    const currentDate = now(getLocalTimeZone())
+    const currentDate = now(TIME_ZONE)
 
     // Si no existe el parámetro 'year' o 'month' en los searchParams, usa los valores actuales
     const date = searchParams.date || currentDate.toAbsoluteString();

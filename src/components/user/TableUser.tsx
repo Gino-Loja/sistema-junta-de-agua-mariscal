@@ -6,19 +6,13 @@ import { columns } from "./ColumnsUser";
 import { IUserRepository } from "@/model/user-repository/UserRepository";
 
 
-export default async function TableUser({ repository, page, per_page, query }: { repository: IUserRepository, page: string, per_page: string, query: string }) {
+export default async function TableUser({ repository, page, per_page, query, sector, estado }:
+  { repository: IUserRepository, page: string, per_page: string, query: string, sector: string, estado
+    : string
+   }) {
 
-  const users = per_page == '0'
-    ? await repository.getListAllUser()
-    : await repository.getUserPagination(Number(page), Number(per_page), query);
+  const users = await repository.getUserPagination(Number(page), Number(per_page), query, sector, estado);
 
-  const filtersConfig = [
-    {
-      columnItem: "sector_id",       // Filtrado para la columna "sector_id"
-      columnsFilter: ["1", "2"],// Valores de filtrado para "sector_id"
-      alias: ["Mariscal Sucre", "Nueva Ecuador"]
-    }
-  ];
 
   // if (isLoading) {
   //   return <SkeletonCustom />
@@ -33,10 +27,8 @@ export default async function TableUser({ repository, page, per_page, query }: {
           columns={columns}
           data={users.data}
           per_page={Number(per_page)}
-          filtersConfig={
-            filtersConfig
-          }
-          
+
+
         >
           <TooltipUser></TooltipUser>
         </CustomTable>

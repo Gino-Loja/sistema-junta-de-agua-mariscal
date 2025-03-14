@@ -7,9 +7,14 @@ import { Suspense } from 'react';
 import { IUserRepository } from '@/model/user-repository/UserRepository';
 import { createApiUserRepository } from '@/services/serviceUser';
 import PaginationControls from '@/components/table/PaginationControlsx';
-import { ITEMS_PER_PAGE } from '@/model/Definitions';
 import { Divider } from '@nextui-org/react';
 import Search from '@/components/forms/Search';
+import { PageProps } from '@/modules/types';
+import { coordinatesCache } from '@/modules/searchParams';
+import LoadingIcon from '@/components/icons/loading-icon';
+import { getSectors } from '@/modules/incident/utils/use-media-query';
+import SelectParams from '@/components/filters-table/SelectParams';
+import SelectStatus from '@/components/filters-table/selectStatus';
 
 const SkeletonCustom = dynamic(() =>
   import('@/components/skeletons/skeleton').then((mod) => mod.default)
@@ -25,25 +30,17 @@ const FormAddUser = dynamic(() =>
 const FormModal = dynamic(() =>
   import('@/components/modal/FormModal').then((mod) => mod.default)
 )
-type CustomSearchParams = { page: string, per_page: string, query: string }
 
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
-}) {
+export default async function Page({ searchParams }: PageProps) {
+  const { query, page, per_page, sector, status } = coordinatesCache.parse(searchParams)
+
   const repositoryUser: IUserRepository = createApiUserRepository();
   const sectores = await repositoryUser.getAllSector();
-
-
-  const page = searchParams['page'] ?? '1'
-  const per_page = searchParams['per_page'] ?? ITEMS_PER_PAGE
-  const query = searchParams['query'] ?? ''
   // mocked, skipped and limited in the real app
   const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
   const end = start + Number(per_page)
-  const data = await repositoryUser.getAllUser()
+  const data = await repositoryUser.getAllPagination(query, sector, status)
 
   return <div className='flex flex-col overflow-hidden gap-4 px-4 pb-4'>
     {sectores.success && (<FormModal
@@ -64,15 +61,37 @@ export default async function Page({
         <h1 className="text-2xl font-bold shrink p-1 max-w-42 border-divider rounded-xl">Lista de usuarios</h1>
       </div>
 
-      <div className='hidden sm:block w-1/3'>
+      <div className='min-w-[250px]' >
         <Search placeholder='Buscar usuario ...' />
+      </div>
+      <div className='min-w-[250px]'>
+        <SelectStatus key={'select-params-status'} options={[{
+          label: 'Activo',
+          value: 'activo'
+        },
+        {
+          label: 'Inactivo',
+          value: 'inactivo'
+        }]} />
+      </div>
+      <div className="w-full sm:w-80 min-w-[200px]">
+        <Suspense fallback={<LoadingIcon />}>
+          <GetSectorSelector />
+        </Suspense>
       </div>
     </div>
     <Divider />
 
     <Suspense key={page + query + per_page} fallback={<SkeletonCustom />}>
-      <TableUser repository={repositoryUser} page={page} per_page={per_page} query={query}></TableUser>
+      <TableUser repository={repositoryUser}
+        page={page}
+        per_page={per_page}
+        query={query}
+        sector={sector}
+        estado={status}
+      ></TableUser>
     </Suspense>
+
     {data && data.success && <PaginationControls total={data.data[0].total_usuarios} hasNextPage={end < data.data[0].total_usuarios}
       hasPrevPage={start > 0} />}
 
@@ -80,3 +99,10 @@ export default async function Page({
   </div>
 }
 
+async function GetSectorSelector() {
+  const sector = await getSectors();
+  return (
+    sector.success &&
+    <SelectParams key={'select-params-sector'} options={sector.data} />
+  )
+}

@@ -3,17 +3,19 @@ import MeasurementTable from "@/components/measurement/MeasurementTable";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { Suspense } from "react";
-import { now, getLocalTimeZone } from "@internationalized/date";
 
 import SkeletonCustom from '@/components/skeletons/skeleton';
 import PaginationControls from '@/components/table/PaginationControlsx';
-import { ITEMS_PER_PAGE } from '@/model/Definitions';
-import FiltersSearchSheets from '@/components/sheets/FiltersSearchSheets';
 import Search from '@/components/forms/Search';
 import { Divider } from '@nextui-org/react';
+import { PageProps } from '@/modules/types';
+import { coordinatesCache } from '@/modules/searchParams';
+import MonthYearSelector from '@/components/filters-table/MonthYearSelector';
+import { getSectors } from '@/modules/incident/utils/use-media-query';
+import SelectParams from '@/components/filters-table/SelectParams';
+import LoadingIcon from '@/components/icons/loading-icon';
 //import FormAddLecture from '@/components/forms/FormLecture';
 
-type CustomSearchParams = { date: string, page: string, per_page: string, query: string }
 
 
 const FormModal = dynamic(() =>
@@ -25,23 +27,13 @@ const FormAddLecture = dynamic(() =>
 
 
 
-export default async function Page({ searchParams }: {
-  searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
-}) {
+export default async function Page({ searchParams }: PageProps) {
 
 
   const repositoryLectures: ILecturesRepository = createApiLecturesRepository();
-
-  const currentDate = now(getLocalTimeZone())
+  const { date, query, page, per_page, year, month, sector } = coordinatesCache.parse(searchParams)
   // Si no existe el parámetro 'year' o 'month' en los searchParams, usa los valores actuales
-  const date = searchParams.date || currentDate.toAbsoluteString();
 
-  const page = searchParams['page'] ?? '1'
-  const per_page = searchParams['per_page'] ?? ITEMS_PER_PAGE
-  const query = searchParams['query'] ?? ''
-  // mocked, skipped and limited in the real app
-  const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
-  const end = start + Number(per_page)
 
   return (
     <div className='flex flex-col overflow-hidden gap-4 px-4 pb-4'>
@@ -56,31 +48,53 @@ export default async function Page({ searchParams }: {
       </div>
       <Divider />
 
-      <div className='flex flex-col sm:flex-row gap-2 justify-start sm:justify-between'>
+      <div className="flex flex-wrap gap-4 justify-center sm:justify-between items-center">
 
-        <div className='sm:w-80 w-full'>
+        <div className='w-80'>
           <Search placeholder='Buscar por nombre...' />
         </div>
 
-        <div className='hidden sm:block'>
-          <FiltersSearchSheets />
+        <div className="w-full sm:w-80 min-w-[200px]">
+          <Suspense fallback={<LoadingIcon />}>
+            <GetSectorSelector />
+          </Suspense>
         </div>
 
+        <div className="w-full sm:w-80 min-w-[200px]">
+          <MonthYearSelector />
+        </div>
       </div>
-      <Suspense key={page + per_page + query} fallback={<SkeletonCustom />}>
-        <MeasurementTable repository={repositoryLectures} page={page} per_page={per_page} date={date} query={query}></MeasurementTable>
+
+      <Suspense key={page + per_page + query + year + month} fallback={<SkeletonCustom />}>
+        <MeasurementTable
+          repository={repositoryLectures}
+          page={page} per_page={per_page}
+          date={date} month={month}
+          year={year} query={query}
+          sector={sector}
+        ></MeasurementTable>
       </Suspense>
 
-      <Suspense fallback={<div>cargando</div>}>
-        <FechtRenderPaginationControls repository={repositoryLectures} selectedDate={date} start={start} end={end} query={query} />
+      <Suspense key={page + per_page + query + year + month} fallback={<LoadingIcon />}>
+        <FechtRenderPaginationControls
+          repository={repositoryLectures}
+          page={page}
+          per_page={per_page}
+          month={month}
+          year={year}
+          sector={sector}
+          query={query} />
       </Suspense>
 
     </div>
   )
 }
 
-async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query }: { repository: ILecturesRepository, selectedDate: string, start: number, end: number, query: string }) {
-  const data = await repository.getCounterLectures(selectedDate, query)
+async function FechtRenderPaginationControls({ repository, query, month, year, sector, page, per_page }:
+  { repository: ILecturesRepository, query: string, month: number, year: number, sector: string, page: string, per_page: string }) {
+  const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
+  const end = start + Number(per_page)
+  const data = await repository.getCounterLectures(query, sector, month, year)
   return (
     data.success &&
     <PaginationControls
@@ -90,3 +104,10 @@ async function FechtRenderPaginationControls({ repository, selectedDate, start, 
   )
 }
 
+async function GetSectorSelector() {
+  const sector = await getSectors();
+  return (
+    sector.success &&
+    <SelectParams options={sector.data} />
+  )
+}

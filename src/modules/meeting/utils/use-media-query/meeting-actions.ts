@@ -5,9 +5,10 @@ import { CounterMeeting, Meeting, StatusAllMeeting } from "../../types";
 import { QueryResultError } from "@/model/types";
 
 
-export const getMeeting = async (date: string, query: string, currentPage: number, itemsPerPage: number): Promise<QueryResultError<Meeting[]>> => {
+export const getMeeting = async (date: string, query: string, currentPage: number, itemsPerPage: number, year: number, status: string): Promise<QueryResultError<Meeting[]>> => {
     const offset = (currentPage - 1) * itemsPerPage;
-
+    let queryStatus = status == "" ? null : status;
+    let queryDate = date == "" ? null : date;
     try {
         const meeting: Meeting[] = (await pool.query(`
             SELECT 
@@ -23,15 +24,17 @@ export const getMeeting = async (date: string, query: string, currentPage: numbe
             INNER JOIN 
                 usuarios u ON m.usuario_id = u.id
             WHERE 
-                date_trunc('month', m.fecha) = date_trunc('month', $1::date)
-                AND ((u.nombre ILIKE '%' || $2 || '%'
-                OR u.cedula ILIKE  '%' || $2 || '%'))
+                 ($4::date IS NULL OR m.fecha = $4) AND
+                ($3::text IS NULL OR m.estado = $3) AND
+                EXTRACT(YEAR FROM m.fecha) = $2 
+                AND ((u.nombre ILIKE '%' || $1 || '%'
+                OR u.cedula ILIKE  '%' || $1 || '%'))
 
             ORDER BY 
             nombre_usuario ASC
             LIMIT ${itemsPerPage} OFFSET ${offset};
                 
-        `, [date, query])).rows; // Formateamos la fecha con año-mes-01
+        `, [query, year, queryStatus, queryDate])).rows; // Formateamos la fecha con año-mes-01
         return { success: true, data: meeting };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
@@ -100,7 +103,7 @@ export const deleteMeeting = async (id: number): Promise<QueryResultError<boolea
     }
 };
 
-export const getTotalMeetingByStatus = async (date: string): Promise<QueryResultError<StatusAllMeeting[]>> => {
+export const getTotalMeetingByStatus = async (year: number): Promise<QueryResultError<StatusAllMeeting[]>> => {
     try {
         const total: StatusAllMeeting[] = (await pool.query(`
             select
@@ -109,11 +112,11 @@ export const getTotalMeetingByStatus = async (date: string): Promise<QueryResult
             from
             multas
             WHERE 
-                date_trunc('month', fecha) = date_trunc('month', $1::date)
-               
+            EXTRACT(YEAR FROM fecha) = $1 
+
             group by
             estado;
-        `, [date])).rows;
+        `, [year])).rows;
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
@@ -122,7 +125,8 @@ export const getTotalMeetingByStatus = async (date: string): Promise<QueryResult
 
 
 
-export const getCounterMeetingByDate = async (date: string, query: string): Promise<QueryResultError<CounterMeeting>> => {
+export const getCounterMeetingByDate = async (date: string, query: string, year:number): Promise<QueryResultError<CounterMeeting>> => {
+    let queryStatus = date == "" ? null : date;
     try {
         const total: CounterMeeting = (await pool.query(`
             SELECT 
@@ -134,18 +138,21 @@ export const getCounterMeetingByDate = async (date: string, query: string): Prom
                 usuarios u ON m.usuario_id = u.id
             
             WHERE 
-                date_trunc('month', m.fecha) = date_trunc('month', $1::date)
+
+                ($1::date IS NULL OR m.fecha = $1) 
+                AND EXTRACT(YEAR FROM fecha) = $3 
+
                 AND ((u.nombre ILIKE '%' || $2 || '%'
                 OR u.cedula ILIKE  '%' || $2 || '%'))
 
-        `, [date, query])).rows[0];
+        `, [queryStatus, query, year])).rows[0];
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
     }
 };
 
-export const getTotalAmount = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalAmount = async ( year: number): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
             select
@@ -155,9 +162,10 @@ export const getTotalAmount = async (date: string): Promise<QueryResultError<num
                 join tarifas_agua on true
             where
                 multas.estado = 'pagado'
-                and date_trunc('year', multas.fecha::date) = date_trunc('year', $1::date);
+                and 
+                EXTRACT(YEAR FROM fecha) = $1
 
-        `, [date])).rows[0].total_recaudado;
+        `, [year])).rows[0].total_recaudado;
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };

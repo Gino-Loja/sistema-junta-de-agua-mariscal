@@ -14,6 +14,7 @@ import { I18nProvider } from '@react-aria/i18n';
 import { createApiIncidentRepository } from '../service/service-incident';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { TIME_ZONE } from '@/model/Definitions';
 
 
 
@@ -95,7 +96,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
         try {
             if (type === "create") {
 
-                const res = await repositoryIncident.insertIncident({ ...data, fecha: data.fecha.toDate(getLocalTimeZone()) });
+                const res = await repositoryIncident.insertIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE) });
                 if (res.success) {
                     toast.success('Incidente creado con éxito');
                     onClose();
@@ -103,7 +104,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                     toast.error('Algo salió mal, no se pudo crear el incidente');
                 }
             } else if (type === "update") {
-                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(getLocalTimeZone()), incident_id: Number(incident?.id) });
+                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE), incident_id: Number(incident?.id) });
                 if (res.success) {
                     toast.success('Incidente actualizado con éxito');
                     onClose();
@@ -226,7 +227,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="fecha"
                                 control={control}
-                                defaultValue={incident?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(incident?.fecha.toISOString())}
+                                defaultValue={incident?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(incident?.fecha.toISOString())}
                                 render={({ field }) => (
                                     <I18nProvider locale="es">
                                         <DatePicker
@@ -237,7 +238,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                                             isInvalid={errors?.fecha?.message == undefined ? false : true}
                                             errorMessage={errors?.fecha?.message}
                                             showMonthAndYearPickers
-                                        //defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                                        //defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                                         />
                                     </I18nProvider>
 

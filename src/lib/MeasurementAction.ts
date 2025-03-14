@@ -67,7 +67,7 @@ export async function getALLMonthsLecturesByYear(year: string): Promise<QueryRes
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
     }
 }
-export async function getComsumedMetersByMonths(date: string): Promise<QueryResultError<{ exceso: number | null, consumo: number | null }>> {
+export async function getComsumedMetersByMonths(month: number, year: number): Promise<QueryResultError<{ exceso: number | null, consumo: number | null }>> {
     try {
         const consumo: { exceso: number | null, consumo: number | null } = (await pool.query(`
         SELECT
@@ -76,14 +76,15 @@ export async function getComsumedMetersByMonths(date: string): Promise<QueryResu
         FROM
         lecturas
         WHERE
-        date_trunc('month', fecha) = date_trunc('month', $1::date)
-        `, [date])).rows[0];
+        EXTRACT(YEAR FROM fecha) = $1 AND
+        EXTRACT(MONTH FROM fecha) = $2
+        `, [year, month])).rows[0];
         return { success: true, data: consumo };
     } catch (error) {
         return { success: false, error: `Error al obtener el consumo de metros: ${error}` };
     }
 }
-export async function getConsumedBySector(date: string): Promise<QueryResultError<{ sector: string, consumo: number }[]>> {
+export async function getConsumedBySector(year: number, month: number): Promise<QueryResultError<{ sector: string, consumo: number }[]>> {
 
     try {
         const lectures = (await pool.query(`
@@ -99,16 +100,17 @@ export async function getConsumedBySector(date: string): Promise<QueryResultErro
         JOIN
             sectores s ON u.sector_id = s.id
         WHERE
-            date_trunc('month', l.fecha) = date_trunc('month', $1::date)
+            EXTRACT(YEAR FROM l.fecha) = $1 AND
+            EXTRACT(MONTH FROM l.fecha) = $2
         GROUP BY
             s.nombre
-    `, [date])).rows;
+    `, [year, month])).rows;
         return { success: true, data: lectures };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
     }
 }
-export async function getComsumedMonthsByYear(date: string): Promise<QueryResultError<{ mes: string, consumo_total: number, exceso_total: number }[]>> {
+export async function getComsumedMonthsByYear(year: number): Promise<QueryResultError<{ mes: string, consumo_total: number, exceso_total: number }[]>> {
     try {
         const months = (await pool.query(`
                     SELECT 
@@ -131,12 +133,11 @@ export async function getComsumedMonthsByYear(date: string): Promise<QueryResult
             FROM 
                 lecturas
             WHERE 
-                extract(year from fecha) = extract( year from $1::date )
+                EXTRACT(YEAR FROM fecha) = $1
             GROUP BY 
                 EXTRACT(MONTH FROM fecha)
-            ORDER BY 
-                EXTRACT(MONTH FROM fecha);
-            `, [date])).rows;
+         
+            `, [year])).rows;
         return { success: true, data: months };
     } catch (error) {
         return { success: false, error: `Error al obtener el consumo: ${error}` };
@@ -179,18 +180,18 @@ export async function updateLecture(data: LecturesDto, id: number): Promise<Quer
     }
 }
 
-export async function getLecturesPagination(date: string,
+export async function getLecturesPagination(
     currentPage: number,
     itemsPerPage: number,
-    query: string): Promise<QueryResultError<Lectures[]>> {
+    query: string,
+    year: number,
+    month: number,
+    sector: string
+): Promise<QueryResultError<Lectures[]>> {
     //const offset = (currentPage - 1) * ITEMS_PER_PAGE;
     const offset = (currentPage - 1) * itemsPerPage;
 
-    // Si `itemsPerPage` es mayor que 0, aplicamos la paginación
-    // if (ITEMS_PER_PAGE > 0) {
-    //     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    //     query += ` LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
-    // }
+
     try {
         const lectures: Lectures[] = (await pool.query(`
             SELECT 
@@ -208,33 +209,51 @@ export async function getLecturesPagination(date: string,
                 usuarios u
             INNER JOIN 
                 medidores m ON u.id = m.usuario_id
+            INNER JOIN
+                sectores s ON u.sector_id = s.id
             LEFT JOIN 
-                lecturas l ON m.id = l.medidor_id AND date_trunc('month', l.fecha) = date_trunc('month', $1::date)
+                lecturas l ON m.id = l.medidor_id 
+                AND EXTRACT(MONTH FROM l.fecha) = $2
+                AND EXTRACT(YEAR FROM l.fecha) = $3
             WHERE 
-                 (u.nombre ILIKE '%' || $2 || '%'
-                OR u.cedula ILIKE  '%' || $2 || '%')
-            ORDER BY 
-            u.nombre ASC
-            LIMIT ${itemsPerPage} OFFSET ${offset}`, [date, query])).rows;
-           // console.log(lectures)
+                s.id::text ILIKE  '%' || $4 || '%' AND
+
+                (u.nombre ILIKE '%' || $1 || '%'
+                OR u.cedula ILIKE  '%' || $1 || '%')
+
+            ORDER BY u.nombre ASC
+
+            LIMIT ${itemsPerPage} OFFSET ${offset}`, [query, month, year, sector])).rows;
+        // console.log(lectures)
         return { success: true, data: lectures };
     } catch (error) {
+        console.log(error)
 
         return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
     }
 }
-export async function getCounterLectures(date: string, query: string): Promise<QueryResultError<{ total_lectures: number }>> {
+export async function getCounterLectures(
+    query: string,
+    sector: string = '',
+    month: number,
+    year: number): Promise<QueryResultError<{ total_lectures: number }>> {
     try {
         const lecture = (await pool.query(`
-            SELECT count(*) as total_lectures
+        SELECT count(*) as total_lectures
         FROM usuarios u
         JOIN medidores m ON u.id = m.usuario_id
-        LEFT JOIN lecturas l ON m.id = l.medidor_id AND date_trunc('month', l.fecha) = date_trunc('month', $1::date)
+        INNER JOIN sectores s ON u.sector_id = s.id
+        LEFT JOIN 
+            lecturas l ON m.id = l.medidor_id 
+            AND EXTRACT(MONTH FROM l.fecha) = $2
+            AND EXTRACT(YEAR FROM l.fecha) = $3
         WHERE 
-            (u.nombre ILIKE '%' || $2 || '%'
-            OR u.cedula ILIKE '%' || $2 || '%');
-        `, [date, query])).rows[0];
-      //  console.log(lecture)
+            s.id::text ILIKE  '%' || $4 || '%' AND
+
+            (u.nombre ILIKE '%' || $1 || '%'
+            OR u.cedula ILIKE '%' || $1 || '%');
+        `, [query, month, year, sector])).rows[0];
+        //  console.log(lecture)
         return { success: true, data: lecture };
     } catch (error) {
 
@@ -242,7 +261,7 @@ export async function getCounterLectures(date: string, query: string): Promise<Q
     }
 }
 
-export async function insertMeasurementMacro(date:Date, lectura:number): Promise<QueryResultError<boolean>> {
+export async function insertMeasurementMacro(date: Date, lectura: number): Promise<QueryResultError<boolean>> {
 
     try {
         const lecture: boolean = (await pool.query(`
@@ -261,7 +280,7 @@ export async function insertMeasurementMacro(date:Date, lectura:number): Promise
 
 }
 
-export async function updateMeasurementMacro(date:Date, lectura:number, id:number): Promise<QueryResultError<boolean>> {
+export async function updateMeasurementMacro(date: Date, lectura: number, id: number): Promise<QueryResultError<boolean>> {
 
     try {
         const lecture: boolean = (await pool.query(`
@@ -282,27 +301,45 @@ export async function updateMeasurementMacro(date:Date, lectura:number, id:numbe
     }
 }
 
-export const getMeasurementMacro = async (date:string,currentPage: number, itemsPerPage: number): Promise<QueryResultError<MeasurementMacro[]>> => {
+export const getMeasurementMacro = async (
+    currentPage: number,
+    itemsPerPage: number,
+    from: string,
+    to: string,
+    month: number,
+    year: number): Promise<QueryResultError<MeasurementMacro[]>> => {
     try {
         const offset = (currentPage - 1) * itemsPerPage;
         const lectures: MeasurementMacro[] = (await pool.query(`
-            SELECT *
+            SELECT id, fecha, lectura, consumo
             FROM
             lectura_macromedidor
-            where date_trunc('month', fecha) = date_trunc('month', $1::date)
+            WHERE  
+                    ( -- Filtrar por rango de fechas si $3 y $4 no son vacíos
+                    ($3 <> '' AND $4 <> '') 
+                    AND fecha >= TO_DATE($3, 'DD/MM/YYYY') 
+                    AND fecha < TO_DATE($4, 'DD/MM/YYYY') + INTERVAL '1 day'
+                    )
+                    OR 
+                    ( -- Filtrar por mes/año si no hay rango (parámetros vacíos)
+                    ($3 = '' AND $4 = '') 
+                    AND EXTRACT(MONTH FROM fecha) = $1 
+                    AND EXTRACT(YEAR FROM fecha) = $2
+                    )
             ORDER BY id DESC
             LIMIT ${itemsPerPage} OFFSET ${offset}
         
-        `, [date])).rows;
+        `, [month, year, from, to])).rows;
+
         return { success: true, data: lectures };
     } catch (error) {
         return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
     }
 }
 
-export const deleteMeasurementMacro = async (id: number):Promise<QueryResultError<boolean>> => {
+export const deleteMeasurementMacro = async (id: number): Promise<QueryResultError<boolean>> => {
     try {
-      
+
         await (pool.query(`
             DELETE FROM
             lectura_macromedidor
@@ -313,37 +350,46 @@ export const deleteMeasurementMacro = async (id: number):Promise<QueryResultErro
         return { success: true, data: true };
     } catch (error) {
         return { success: false, error: `Error al eliminar la lectura: ${error}` };
-    }    
+    }
 }
 
-export const getMeasurementMacroAreaChart = async (date:string): Promise<QueryResultError<{ fecha: Date, consumo: number }[]>> => {
+export const getMeasurementMacroAreaChart = async (from: string, to: string, month: number, year: number): Promise<QueryResultError<{ fecha: Date, consumo: number }[]>> => {
     try {
         const lectures: { fecha: Date, consumo: number }[] = (await pool.query(`
-            SELECT fecha, consumo
-            FROM
-            lectura_macromedidor
-            where date_trunc('month', fecha) = date_trunc('month', $1::date)
-            ORDER BY id ASC
-          
+           SELECT fecha, consumo
+                FROM lectura_macromedidor
+                WHERE 
+                    ( -- Filtrar por rango de fechas si $3 y $4 no son vacíos
+                    ($3 <> '' AND $4 <> '') 
+                    AND fecha >= TO_DATE($3, 'DD/MM/YYYY') 
+                    AND fecha < TO_DATE($4, 'DD/MM/YYYY') + INTERVAL '1 day'
+                    )
+                    OR 
+                    ( -- Filtrar por mes/año si no hay rango (parámetros vacíos)
+                    ($3 = '' AND $4 = '') 
+                    AND EXTRACT(MONTH FROM fecha) = $1 
+                    AND EXTRACT(YEAR FROM fecha) = $2
+                    )
+                ORDER BY id ASC;
         
-        `, [date])).rows;
+        `, [month, year, from, to])).rows;
         return { success: true, data: lectures };
     } catch (error) {
         return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
     }
 }
 
-export const getCounterMeasurementMacro = async (date:string): Promise<QueryResultError<{ total: number }>> =>{
+export const getCounterMeasurementMacro = async (date: string): Promise<QueryResultError<{ total: number }>> => {
 
 
     try {
-        const lecture:{ total: number } = (await pool.query(`
+        const lecture: { total: number } = (await pool.query(`
             SELECT count(*) as total
             FROM
             lectura_macromedidor
             where date_trunc('month', fecha) = date_trunc('month', $1::date)
         `, [date])).rows[0];
-      //  console.log(lecture)
+        //  console.log(lecture)
         return { success: true, data: lecture };
     } catch (error) {
 

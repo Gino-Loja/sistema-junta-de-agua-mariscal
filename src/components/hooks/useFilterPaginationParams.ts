@@ -1,9 +1,10 @@
 // hooks/useSearchParams.ts
+import { TIME_ZONE } from "@/model/Definitions";
 import { CustomSearchParams } from "@/model/types";
-import { getLocalTimeZone, now } from "@internationalized/date";
+import {  now } from "@internationalized/date";
 
 export  function useFilterPaginationParams(searchParams: Record<string, string | string[] | undefined> & CustomSearchParams) {
-  const currentDate = now(getLocalTimeZone());
+  const currentDate = now(TIME_ZONE);
 
   // Si no existe el parámetro 'date', usa la fecha actual
 

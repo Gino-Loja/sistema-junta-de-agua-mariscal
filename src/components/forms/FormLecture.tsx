@@ -11,6 +11,7 @@ import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { toast } from "react-toastify";
 import { I18nProvider } from "@react-aria/i18n";
+import { TIME_ZONE } from "@/model/Definitions";
 
 // Definir el esquema de validación usando Zod
 //const schemaDate:DateValue = 
@@ -22,7 +23,7 @@ const schema = z.object({
     // fecha: z.object().string().datetime().transform((str) => {
 
     //     console.log(str)
-    //     return  now(getLocalTimeZone())
+    //     return  now(TIME_ZONE)
     // }),
     fecha: z.preprocess((val) => {
         // Verificar si el valor es nulo o indefinido
@@ -81,13 +82,13 @@ export default function FormAddLecture() {
         // Lógica para manejar la creación o actualización de la lectura
         //console.log(formData)
 
-        //console.log(formData.fecha.toDate(getLocalTimeZone()))
+        //console.log(formData.fecha.toDate(TIME_ZONE))
 
 
         if (type === "create") {
 
             repositoryLectures.createLecture(
-                { fecha: formData.fecha.toDate(getLocalTimeZone()), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }
+                { fecha: formData.fecha.toDate(TIME_ZONE), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }
             ).then((res) => {
                 if (res.success) {
                     closeModal();
@@ -98,7 +99,7 @@ export default function FormAddLecture() {
                 }
             });
         } else if (type === "update") {
-            repositoryLectures.updateLecture({ fecha: formData.fecha.toDate(getLocalTimeZone()), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }, data?.id).then((res) => {
+            repositoryLectures.updateLecture({ fecha: formData.fecha.toDate(TIME_ZONE), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }, data?.id).then((res) => {
                 if (res.success) {
                     closeModal();
                     toast.success('Lectura actualizada con éxito');
@@ -142,7 +143,7 @@ export default function FormAddLecture() {
                 <Controller
                     name="fecha"
                     control={control}
-                    defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                     render={({ field }) => (
                         <I18nProvider
 
@@ -155,7 +156,7 @@ export default function FormAddLecture() {
                             isInvalid={errors?.fecha?.message == undefined ? false : true}
                             errorMessage={errors?.fecha?.message}
                             showMonthAndYearPickers
-                        //defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                        //defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                         />
                             </I18nProvider>
                     )}

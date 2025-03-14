@@ -64,6 +64,36 @@ export async function getAllUser(): Promise<QueryResultError<TotalUser[]>> {
     }
 }
 
+export async function getAllPagination(query: string, sector:string, estado:string): Promise<QueryResultError<TotalUser[]>> {
+    try {
+        const user: TotalUser[] = (await pool.query(`select
+        count(*) as total_usuarios
+        from
+        usuarios
+        WHERE
+         -- Filtro por estado (si estado está vacío, no se filtra)
+            ($3 = '' OR estado = CASE WHEN $3 = 'activo' THEN true ELSE false END)
+            
+            AND
+
+            -- Filtro por sector (solo si $2 no está vacío)
+           sector_id::text ILIKE '%' || $2 || '%'
+            
+            AND 
+            
+            -- Filtro por nombre o cédula (solo si $1 no está vacío)
+            ( nombre ILIKE '%' || $1 || '%' OR cedula ILIKE '%' || $1 || '%')
+        
+         
+        `,[query,sector, estado])).rows;
+
+        return { success: true, data: user };
+    } catch (error) {
+        return { success: false, error: `Error al obtener el total de usuarios: ${error}` };
+    }
+}
+
+
 export async function getAllSector(): Promise<QueryResultError<Sector[]>> {
     try {
         const sector: Sector[] = (await pool.query(`select
@@ -132,27 +162,36 @@ export async function updateUser(user: UserDto, id: number): Promise<QueryResult
     }
 }
 
-export async function getUserPagination(currentPage: number, itemsPerPage: number, query: string): Promise<QueryResultError<User[]>> {
+export async function getUserPagination(currentPage: number, itemsPerPage: number, query: string, sector: string, estado: string): Promise<QueryResultError<User[]>> {
 
     //const offset = (currentPage - 1) * ITEMS_PER_PAGE;
     const offset = (currentPage - 1) * itemsPerPage;
 
-
-    // Si `itemsPerPage` es mayor que 0, aplicamos la paginación
-    // if (ITEMS_PER_PAGE > 0) {
-    //     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    //     query += ` LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
-    // }
     try {
         const user: User[] = (await pool.query(`
-    SELECT * FROM usuarios
-    
-    WHERE
-    nombre ILIKE '%' || $1 || '%'
-    OR 
-    cedula ILIKE  '%' || $1 || '%'
+        SELECT *
+        FROM usuarios
+        WHERE 
+            -- Filtro por estado (si estado está vacío, no se filtra)
+            ($3 = '' OR estado = CASE WHEN $3 = 'activo' THEN true ELSE false END)
+            
+            AND
 
-    ORDER BY nombre ASC LIMIT ${itemsPerPage} OFFSET ${offset}`, [query])).rows;
+            -- Filtro por sector (solo si $2 no está vacío)
+           sector_id::text ILIKE '%' || $2 || '%'
+            
+            AND 
+            
+            -- Filtro por nombre o cédula (solo si $1 no está vacío)
+            ( nombre ILIKE '%' || $1 || '%' OR cedula ILIKE '%' || $1 || '%')
+        
+            
+             
+        ORDER BY nombre ASC 
+        LIMIT ${itemsPerPage} OFFSET ${offset}
+            
+    `, [query, sector, estado])).rows;
+
         return { success: true, data: user };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
@@ -162,7 +201,7 @@ export async function getUserPagination(currentPage: number, itemsPerPage: numbe
 
 export async function getUserLogin(username: string, password: string): Promise<{ id: string, name: string, email: string } | null> {
     try {
-        const user:{ id: string, name: string, email: string } = (await pool.query(`SELECT id::text, usuario as name, email FROM administradores WHERE usuario = $1 AND password_hash = $2`, [username, password])).rows[0];
+        const user: { id: string, name: string, email: string } = (await pool.query(`SELECT id::text, usuario as name, email FROM administradores WHERE usuario = $1 AND password_hash = $2`, [username, password])).rows[0];
         return user;
     } catch (error) {
         return null

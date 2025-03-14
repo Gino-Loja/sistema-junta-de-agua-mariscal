@@ -21,6 +21,7 @@ import { createApiWaterMeter } from "@/services/waterMeterService";
 import { IWaterMeter } from "@/model/water-meter/WaterMeterRepository";
 import { createApiMeetingRepository } from "../service/service-meeting";
 import { toast } from "react-toastify";
+import { TIME_ZONE } from "@/model/Definitions";
 
 const schema = z.object({
     usuario_id: z.preprocess((val) => {
@@ -76,7 +77,7 @@ export default function FormMeeting() {
     const onSubmit = handleSubmit((formData) => {
 
         if (type === "create") {
-            repository.insertMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()) }).then((res) => {
+            repository.insertMeeting({ ...formData, fecha: formData.fecha.toDate(TIME_ZONE) }).then((res) => {
                 if (res.success) {
                     toast.success('Sesión asignada con éxito');
                     onClose()
@@ -85,7 +86,7 @@ export default function FormMeeting() {
                 }
             });
         } else {
-            repository.updateMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()), multa_id: data?.id }).then((res) => {
+            repository.updateMeeting({ ...formData, fecha: formData.fecha.toDate(TIME_ZONE), multa_id: data?.id }).then((res) => {
                 if (res.success) {
                     toast.success('Sesión actualizada con éxito');
                     onClose()
@@ -168,7 +169,7 @@ export default function FormMeeting() {
                     <Controller
                         name="fecha"
                         control={control}
-                        defaultValue={data?.fecha == null ? now(getLocalTimeZone()) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                        defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
                         render={({ field }) => (
                             <DatePicker
                                 {...field}

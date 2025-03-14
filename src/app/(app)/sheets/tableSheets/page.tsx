@@ -6,7 +6,7 @@ import TableSheets from '@/components/sheets/TableSheets';
 import { ISheetsRepository } from '@/model/sheets-repository/sheetsRepository';
 import { createApiSheetsRepository } from '@/services/serviceSheets';
 import SkeletonCustom from '@/components/skeletons/skeleton';
-import { ITEMS_PER_PAGE } from '@/model/Definitions';
+import { ITEMS_PER_PAGE, TIME_ZONE } from '@/model/Definitions';
 import PaginationControls from '@/components/table/PaginationControlsx';
 import Search from '@/components/forms/Search';
 import FiltersSearchSheets from '@/components/sheets/FiltersSearchSheets';
@@ -26,7 +26,7 @@ export default function Page({ searchParams }: {
     searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
 }) {
     const repositorySheets: ISheetsRepository = createApiSheetsRepository();
-    const currentDate = now(getLocalTimeZone())
+    const currentDate = now(TIME_ZONE)
 
     // Si no existe el parámetro 'year' o 'month' en los searchParams, usa los valores actuales
     const date = searchParams.date || currentDate.toAbsoluteString();

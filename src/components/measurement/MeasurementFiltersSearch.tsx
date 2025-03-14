@@ -1,11 +1,11 @@
 'use client'
-import { Lectures, Months, Years } from "@/model/types";
 import {
-    Select, SelectItem, DatePicker
+     DatePicker
 } from "@nextui-org/react";
 import { usePathname, useSearchParams, useRouter, useParams } from "next/navigation";
 import { now, getLocalTimeZone, parseAbsoluteToLocal } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
+import { TIME_ZONE } from "@/model/Definitions";
 
 
 export default function MeasurementFiltersSearch() {
@@ -13,7 +13,7 @@ export default function MeasurementFiltersSearch() {
 
     const searchParams = useSearchParams();
     const search = searchParams.get('date');
-    let dateParams = search != null ? parseAbsoluteToLocal(new Date(search).toISOString()) : now(getLocalTimeZone());
+    let dateParams = search != null ? parseAbsoluteToLocal(new Date(search).toISOString()) : now(TIME_ZONE);
 
 
     const pathname = usePathname();

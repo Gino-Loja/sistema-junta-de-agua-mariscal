@@ -2,8 +2,6 @@
 import {
     DatePicker
 } from "@nextui-org/react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { now, getLocalTimeZone, parseAbsoluteToLocal } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
 import { useQueryStates } from 'nuqs'
 import { coordinatesParsers } from '@/modules/searchParams';
@@ -12,10 +10,10 @@ export default function FiltersSearchSheets() {
     //const date = new Date(Date.now());
     const [{ date }, setCoordinates] = useQueryStates(coordinatesParsers, {
         history: 'replace',
-        shallow: false  
+        shallow: false
     });
-    
-    let dateParams = date != null ? parseAbsoluteToLocal(new Date(date).toISOString()) : now(getLocalTimeZone());
+
+    //let dateParams = date != null ? parseAbsoluteToLocal(now(TIME_ZONE).toAbsoluteString()) : now(TIME_ZONE);
 
     const handleFilterChange = (year: string, month: string, day: string) => {
         setCoordinates({ date: `${year}-${month}-${day}` })
@@ -27,7 +25,6 @@ export default function FiltersSearchSheets() {
                 label="Filtro por fecha"
                 granularity="day"
                 showMonthAndYearPickers
-                defaultValue={dateParams}
                 labelPlacement={'outside-left'}
                 onChange={(date) => {
                     if (date) {
@@ -36,6 +33,17 @@ export default function FiltersSearchSheets() {
                     }
                 }}
             />
+            {
+                date &&
+                <span className="flex items-center gap-2 cursor-pointer">
+                    <span onClick={() => {
+                        setCoordinates({ date: null , page: null })
+                    }
+                    } className="capitalize text-sm underline decoration-sky-500">Limpiar filtro</span>
+                </span>
+
+            }
+
 
         </I18nProvider>
 

@@ -1,3 +1,4 @@
+import MonthYearSelector from "@/components/filters-table/MonthYearSelector";
 import Search from "@/components/forms/Search";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import SkeletonCustom from "@/components/skeletons/skeleton";
@@ -12,7 +13,7 @@ import { Suspense } from "react";
 
 export default function Page({ searchParams }: PageProps) {
 
-    const { date, query, page, per_page } = coordinatesCache.parse(searchParams)
+    const { date, query, page, per_page, month, year } = coordinatesCache.parse(searchParams)
     const repositoryInvoice = createApiServiceInvoiceRepository();
     const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
     const end = start + Number(per_page)
@@ -22,7 +23,7 @@ export default function Page({ searchParams }: PageProps) {
 
             <div className='flex flex-row gap-2 justify-between'>
                 <div>
-                    <h1 className="text-2xl font-bold shrink p-1 border-divider rounded-xl">Lista de Planillas</h1>
+                    <h1 className="text-2xl font-bold shrink p-1 border-divider rounded-xl">Lista de Facturas emitidas</h1>
                 </div>
             </div>
             <Divider />
@@ -33,8 +34,11 @@ export default function Page({ searchParams }: PageProps) {
                     <Search placeholder='Buscar por nombre...' />
                 </div>
 
-                <div className='hidden sm:block'>
+                <div >
                     <FiltersSearchSheets />
+                </div>
+                <div>
+                    <MonthYearSelector/>
                 </div>
 
             </div>
@@ -46,11 +50,22 @@ export default function Page({ searchParams }: PageProps) {
                     per_page={per_page}
                     date={date}
                     query={query}
+                    month={month}
+                    year={year}
+
                 />
             </Suspense>
 
             <Suspense fallback={<div>cargando</div>}>
-                <FechtRenderPaginationControls repository={repositoryInvoice} selectedDate={date} start={start} end={end} query={query} />
+                <FechtRenderPaginationControls 
+                repository={repositoryInvoice}
+                 selectedDate={date} 
+                 start={start} 
+                 end={end} 
+                 query={query} 
+                 month={month}
+                 year={year}
+                 />
             </Suspense>
         </div>
 
@@ -58,8 +73,8 @@ export default function Page({ searchParams }: PageProps) {
     )
 }
 
-async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query }: { repository: IInvoiceRepository, selectedDate: string, start: number, end: number, query: string }) {
-    const data = await repository.getCounterInvoiceByDate(selectedDate, query)
+async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query, month, year }: { repository: IInvoiceRepository, selectedDate: string, start: number, end: number, query: string, month: number, year: number }) {
+    const data = await repository.getCounterInvoiceByDate(selectedDate, query,month, year);
 
 
     return (

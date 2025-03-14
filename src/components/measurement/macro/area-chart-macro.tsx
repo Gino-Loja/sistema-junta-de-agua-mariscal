@@ -31,7 +31,6 @@ export function MacroMeasurementAreaChart({ data }: { data: { fecha: Date, consu
                 fecha: `${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${String(dateTime.minute).padStart(2, '0')}`
             };
         } catch (e) {
-            console.log('Error parsing date:', e);
             return {
                 ...item,
                 fecha: item.fecha.toLocaleString()

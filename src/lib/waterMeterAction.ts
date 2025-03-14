@@ -3,6 +3,8 @@
 import { QueryResultError, WaterMeter, WaterMeterDto } from "@/model/types";
 import pool from "./db";
 import { revalidatePath } from "next/cache";
+import { TIME_ZONE } from "@/model/Definitions";
+import { now } from "@internationalized/date";
 
 export async function getWaterMeter(): Promise<QueryResultError<WaterMeter[]>> {
     try {
@@ -31,51 +33,66 @@ export async function getWaterMeter(): Promise<QueryResultError<WaterMeter[]>> {
     }
 }
 
-export async function getWaterMeterPagination(currentPage: number,
+export async function getWaterMeterPagination(
+    currentPage: number,
     itemsPerPage: number,
     query: string,
     type: string,
-    status: string
+    status: string,
+    date: string
 ): Promise<QueryResultError<WaterMeter[]>> {
     const offset = (currentPage - 1) * itemsPerPage;
+    let conditions: string[] = [];
+
+    if (date) {
+        // Se usa DATE() para comparar solo la parte de la fecha
+        conditions.push(`DATE(m.fecha_instalacion) = DATE('${date}')`);
+    }
+
 
     try {
         const waterMeters: WaterMeter[] = (await pool.query(
             `SELECT 
-                m.id,
-                m.numero_serie,
-                m.tipo,
-                m.fecha_instalacion,
-                u.nombre AS nombre,
-                usuario_id,
-                detalle,
-                m.estado,
-                u.cedula
-            FROM 
-                medidores m
-            JOIN 
-                usuarios u ON m.usuario_id = u.id
-            
-            WHERE 
-                    u.nombre ILIKE '%' || $1 || '%' OR
-                    u.cedula ILIKE '%' || $1 || '%' OR
-                    m.tipo ILIKE '%' || $1 || '%'  OR
-                    m.estado ILIKE '%' || $1 || '%'
-            ORDER BY 
-                u.nombre ASC
-            LIMIT ${itemsPerPage}
-            OFFSET ${offset};
-
-`, [query]
+            m.id,
+            m.numero_serie,
+            m.tipo,
+            m.fecha_instalacion,
+            u.nombre AS nombre,
+            usuario_id,
+            detalle,
+            m.estado,
+            u.cedula
+        FROM 
+            medidores m
+        JOIN 
+            usuarios u ON m.usuario_id = u.id 
+        WHERE 
+            ${conditions.length ? conditions[0] + ' AND ' : ''}
+            (u.nombre ILIKE '%' || $1 || '%' OR
+            u.cedula ILIKE '%' || $1 || '%') AND
+            m.tipo ILIKE '%' || $2 || '%' AND
+            ($3 = '' OR m.estado ILIKE $3)
+        ORDER BY 
+            u.nombre ASC
+        LIMIT ${itemsPerPage}
+        OFFSET ${offset};
+        `, [query, type, status]
         )).rows;
+
         return { success: true, data: waterMeters };
     } catch (error) {
         return { success: false, error: `Error al obtener todos los medidores: ${error}` };
     }
 }
 
-export async function getCounterMeterWater(query: string, status: string, type: string): Promise<QueryResultError<{ total_water_meters: number }>> {
 
+export async function getCounterMeterWater(query: string, status: string, type: string, date: string): Promise<QueryResultError<{ total_water_meters: number }>> {
+    let conditions: string[] = [];
+
+    if (date) {
+        // Se usa DATE() para comparar solo la parte de la fecha
+        conditions.push(`DATE(m.fecha_instalacion) = DATE('${date}')`);
+    }
     try {
         const waterMeters = (await pool.query(
 
@@ -84,10 +101,14 @@ export async function getCounterMeterWater(query: string, status: string, type: 
             JOIN usuarios u ON m.usuario_id = u.id
             
             WHERE  
-                    u.nombre ILIKE '%' || $1 || '%' OR
-                    u.cedula ILIKE '%' || $1 || '%' OR
-                    m.tipo ILIKE '%' || $1 || '%'  OR
-                    m.estado ILIKE '%' || $1 || '%' `, [query]
+            ${conditions.length ? conditions[0] + ' AND ' : ''}
+            (u.nombre ILIKE '%' || $1 || '%' OR
+            u.cedula ILIKE '%' || $1 || '%') AND
+            m.tipo ILIKE '%' || $2 || '%' AND
+            ($3 = '' OR m.estado ILIKE $3)
+            `,
+
+            [query, type, status]
         )).rows[0];
         return { success: true, data: waterMeters };
     } catch (error) {

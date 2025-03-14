@@ -20,9 +20,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
   const handleSearch = useDebouncedCallback((term: string) => {
     if (term) {
-      setCoordinates({ query: term })
+      setCoordinates({ query: term,page: null })
     } else {
-      setCoordinates({ query: null })
+      setCoordinates({ query: null, page: null })
     }
   }, 100);
 

@@ -32,6 +32,7 @@ import { useState } from "react";
 import { IInvoiceRepository } from "../utils/model";
 import { I18nProvider } from "@react-aria/i18n";
 import React from "react";
+import { TIME_ZONE } from "@/model/Definitions";
 
 const schema = z.object({
     usuario_id: z.preprocess((val) => {
@@ -116,7 +117,7 @@ export default function FormInvoice({ repositoryService,
 
     const [dateInvoice, setDateInvoice] = React.useState<DateValue | null>(() => {
         // Obtener la fecha y hora actuales en la zona horaria local
-        const localNow = now(getLocalTimeZone());
+        const localNow = now(TIME_ZONE);
         // Convertir a un formato ISO 8601 compatible sin la zona horaria entre corchetes
         const isoString = localNow.toString().split("[")[0]; // Remover la parte de la zona horaria extendida
         // Convertir a un valor DateValue local
@@ -211,30 +212,6 @@ export default function FormInvoice({ repositoryService,
 
     );
 
-    // const onSubmit = handleSubmit((formData) => {
-    //     // if (type === "create") {
-    //     //     repository.insertMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()) }).then((res) => {
-    //     //         if (res.success) {
-    //     //             toast.success('Sesión asignada con éxito');
-    //     //             onClose()
-    //     //         } else {
-    //     //             toast.error('Algo salió mal,  no se pudo asignar la sesión');
-    //     //         }
-    //     //     });
-    //     // } else {
-    //     //     repository.updateMeeting({ ...formData, fecha: formData.fecha.toDate(getLocalTimeZone()), multa_id: data?.id }).then((res) => {
-    //     //         if (res.success) {
-    //     //             toast.success('Sesión actualizada con éxito');
-    //     //             onClose()
-    //     //         } else {
-    //     //             toast.error('Algo salió mal,  no se pudo actualizar la sesión');
-    //     //         }
-    //     //     });
-    //     // }
-
-
-
-    // });
     let list = useAsyncList<{ id: number; nombre: string; cedula: string }>({
         async load({ signal, filterText }) {
             const text = filterText || '';
