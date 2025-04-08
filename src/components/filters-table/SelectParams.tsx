@@ -18,6 +18,8 @@ export default function SelectParams({ options }: { options: { label: string, va
         <div className="flex items-center gap-2">
             <label className="text-sm font-medium text-center">Sectores</label>
             <Select
+             size='sm'
+                radius='sm'
                 selectedKeys={[sector]}
                 placeholder="Selecciona un sector"
                 onChange={handleSelectionChange}

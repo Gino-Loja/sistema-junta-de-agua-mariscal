@@ -2,8 +2,7 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { VerticalDotsIcon } from "../icons/VerticalDotsIcon ";
 import { useUserStore, } from "@/lib/store";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Sheets, WaterMeter } from "@/model/types";
+import { Sheets } from "@/model/types";
 import Link from "next/link";
 
 interface ActionsProps<T> {
@@ -13,7 +12,6 @@ interface ActionsProps<T> {
 export function ActionSheet<T>({ data }: ActionsProps<T>) {
     const { setData, setType, openModal } = useUserStore();
 
-    const router = useRouter()
 
 
     // console.log(data,"data")
@@ -43,14 +41,10 @@ export function ActionSheet<T>({ data }: ActionsProps<T>) {
                     </DropdownItem>
 
                     <DropdownItem
-                                            key={'link'}
-
-                    // onPress={() => {
-                    //     router.push(`/water-meter/${data.id}/`)
-                    // }}
+                    key={'link'}
                     >
 
-                        <Link href={`/sheets/${data.id}/`} className="flex items-center gap-2">
+                        <Link href={`/sheets/${data.usuario_id}/`} className="flex items-center gap-2">
                             <span>Ver Planillas</span>
                         </Link>
                     </DropdownItem>

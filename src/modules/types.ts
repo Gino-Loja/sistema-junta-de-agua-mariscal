@@ -24,6 +24,10 @@ export type QueryParams = {
     date: string;
     from: string;
     to: string;
-    month: number;
+    month: number | null;
     year: number;
+    query: string;
+    status: string;
+    type: string;
+    sector: string;
 };

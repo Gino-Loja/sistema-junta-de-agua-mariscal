@@ -2,16 +2,19 @@
 import pool from '@/lib/db';
 import { QueryResultError } from '@/model/types';
 import { revalidatePath } from 'next/cache';
-
-
 export const getIncidents = async (
     date: string,
     query: string,
     currentPage: number,
     itemsPerPage: number,
-    sectorId: string
+    sectorId: string,
+    year: number,
+    month: number | null
 ): Promise<QueryResultError<Incident[]>> => {
     const offset = (currentPage - 1) * itemsPerPage;
+    let queryDate = date == "" ? null : date;
+    let querySectorID = sectorId == "" ? null : Number(sectorId);
+
     try {
         const incidents: Incident[] = (await pool.query(`
             SELECT 
@@ -32,22 +35,21 @@ export const getIncidents = async (
             INNER JOIN
                 sectores s ON i.sector_id = s.id
             WHERE 
-                date_trunc('year', i.fecha) = date_trunc('year', $1::date)
-                AND 
-                (u.nombre ILIKE '%' || $2 || '%'  )
-                AND
-                (s.id::text ILIKE  '%' || $3 || '%')
-
+                EXTRACT(YEAR FROM i.fecha) = $4 
+                AND ($5::integer IS NULL OR EXTRACT(MONTH FROM i.fecha) = $5)
+                AND ($1::date IS NULL OR i.fecha = $1::date)
+                AND (u.nombre ILIKE '%' || $2 || '%' )
+                AND ($3::integer IS NULL OR i.sector_id = $3)
             ORDER BY 
-            nombre_usuario ASC
+                nombre_usuario ASC
             LIMIT ${itemsPerPage} OFFSET ${offset};
-                
-        `, [date, query, sectorId])).rows; // Formateamos la fecha con año-mes-01
+        `, [queryDate, query, querySectorID, year, month])).rows;
         return { success: true, data: incidents };
     } catch (error) {
         return { success: false, error: `Error al obtener los incidentes: ${error}` };
     }
 };
+
 
 export const insertIncident = async (formData: { usuario_id: number; fecha: Date, sector_id: number; descripcion: string; foto: string; costo: number; }): Promise<QueryResultError<Incident[]>> => {
 
@@ -97,7 +99,7 @@ export const updateIncident = async (formData: { usuario_id: number; fecha: Date
 export const deleteIncident = async (id: number): Promise<QueryResultError<boolean>> => {
 
     try {
-         (await pool.query(`
+        (await pool.query(`
             DELETE FROM 
                 incidentes
             WHERE 
@@ -111,43 +113,42 @@ export const deleteIncident = async (id: number): Promise<QueryResultError<boole
     }
 };
 
-export const getTotalAmountCostIncidetByYear = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalAmountCostIncidetByYear = async (year: number, month: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
             select
                 coalesce(sum(costo), 0) as total
             from
                 incidentes
-            where
-                date_trunc('year', fecha::date) = date_trunc('year', $1::date);
-
-        `, [date])).rows[0].total;
+            WHERE
+                EXTRACT(YEAR FROM fecha) = $1 AND
+                $2::integer IS NULL OR EXTRACT(MONTH FROM fecha) = $2
+        `, [year, month])).rows[0].total;
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
     }
 };
 
-export const getTotalIncidentByYear = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalIncidentByYear = async (year: number, month: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
             select
-              
                 coalesce(count(*), 0) as total
-
             from
                 incidentes
             where
-                date_trunc('year', fecha::date) = date_trunc('year', $1::date);
+                EXTRACT(YEAR FROM fecha) = $1 AND
+                $2::integer IS NULL OR EXTRACT(MONTH FROM fecha) = $2
 
-        `, [date])).rows[0].total;
+        `, [year, month])).rows[0].total;
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
     }
 };
 
-export const getTotalIncidentBySector = async (date: string): Promise<QueryResultError<{  name: string, value: number }[]>> => {
+export const getTotalIncidentBySector = async (year: number, month: number | null): Promise<QueryResultError<{ name: string, value: number }[]>> => {
     try {
         const total = (await pool.query(`
             select
@@ -159,12 +160,14 @@ export const getTotalIncidentBySector = async (date: string): Promise<QueryResul
             inner join
                 sectores s on incidentes.sector_id = s.id
             where
-                date_trunc('year', incidentes.fecha::date) = date_trunc('year', $1::date)
+                
+                EXTRACT(YEAR FROM fecha) = $1 AND
+                $2::integer IS NULL OR EXTRACT(MONTH FROM fecha) = $2
             group by
                 s.id,
                 s.nombre
 
-        `, [date])).rows;
+        `, [year, month])).rows;
         return { success: true, data: total };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
@@ -186,3 +189,30 @@ export const getSectors = async (): Promise<QueryResultError<{ value: string, la
         return { success: false, error: `Error al obtener los sectores: ${error}` };
     }
 };
+
+export const getCounterIncidentPagination = async (date: string, query: string, sectorId: string, year: number, month: number | null): Promise<QueryResultError<number>> => {
+    let queryDate = date == "" ? null : date;
+    let querySectorID = sectorId == "" ? null : Number(sectorId);
+    try {
+        const counter: number = (await pool.query(`
+            SELECT 
+                count(*) as total
+            FROM 
+                incidentes i
+            INNER JOIN 
+                usuarios u ON i.usuario_id = u.id
+            INNER JOIN
+                sectores s ON i.sector_id = s.id
+            WHERE 
+                EXTRACT(YEAR FROM i.fecha) = $4 
+                AND ($5::integer IS NULL OR EXTRACT(MONTH FROM i.fecha) = $5)
+                AND ($1::date IS NULL OR i.fecha = $1::date)
+                AND (u.nombre ILIKE '%' || $2 || '%' )
+                AND ($3::integer IS NULL OR i.sector_id = $3)
+
+        `, [queryDate, query, querySectorID, year, month ])).rows[0].total;
+        return { success: true, data: counter };
+    } catch (error) {
+        return { success: false, error: `Error al obtener los datos: ${error}` };
+    }
+};  

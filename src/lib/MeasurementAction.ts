@@ -354,42 +354,44 @@ export const deleteMeasurementMacro = async (id: number): Promise<QueryResultErr
 }
 
 export const getMeasurementMacroAreaChart = async (from: string, to: string, month: number, year: number): Promise<QueryResultError<{ fecha: Date, consumo: number }[]>> => {
+    let queryFrom = from == '' ? null : from;
+    let queryTo = to == '' ? null : to;
+
     try {
         const lectures: { fecha: Date, consumo: number }[] = (await pool.query(`
            SELECT fecha, consumo
                 FROM lectura_macromedidor
                 WHERE 
-                    ( -- Filtrar por rango de fechas si $3 y $4 no son vacíos
-                    ($3 <> '' AND $4 <> '') 
-                    AND fecha >= TO_DATE($3, 'DD/MM/YYYY') 
-                    AND fecha < TO_DATE($4, 'DD/MM/YYYY') + INTERVAL '1 day'
-                    )
-                    OR 
-                    ( -- Filtrar por mes/año si no hay rango (parámetros vacíos)
-                    ($3 = '' AND $4 = '') 
-                    AND EXTRACT(MONTH FROM fecha) = $1 
-                    AND EXTRACT(YEAR FROM fecha) = $2
-                    )
+                EXTRACT(MONTH FROM fecha) = $1 AND
+                EXTRACT(YEAR FROM fecha) = $2 AND
+                (TO_DATE($3, 'DD/MM/YYYY') IS NULL OR fecha >= TO_DATE($3, 'DD/MM/YYYY')) AND
+                (TO_DATE($4, 'DD/MM/YYYY') IS NULL OR fecha < TO_DATE($4, 'DD/MM/YYYY') + INTERVAL '1 day')
                 ORDER BY id ASC;
         
-        `, [month, year, from, to])).rows;
+        `, [month, year, queryFrom, queryTo])).rows;
         return { success: true, data: lectures };
     } catch (error) {
         return { success: false, error: `Error al obtener todos las lecturas: ${error}` };
     }
 }
 
-export const getCounterMeasurementMacro = async (date: string): Promise<QueryResultError<{ total: number }>> => {
+export const getCounterMeasurementMacro = async ( month: number, year: number, from: string, to: string): Promise<QueryResultError<{ total: number }>> => {
 
+    let queryFrom = from == '' ? null : from;
+    let queryTo = to == '' ? null : to;
 
     try {
         const lecture: { total: number } = (await pool.query(`
             SELECT count(*) as total
             FROM
             lectura_macromedidor
-            where date_trunc('month', fecha) = date_trunc('month', $1::date)
-        `, [date])).rows[0];
-        //  console.log(lecture)
+            WHERE 
+            EXTRACT(MONTH FROM fecha) = $1 AND
+            EXTRACT(YEAR FROM fecha) = $2 AND
+            (TO_DATE($3, 'DD/MM/YYYY') IS NULL OR fecha >= TO_DATE($3, 'DD/MM/YYYY')) AND
+            (TO_DATE($4, 'DD/MM/YYYY') IS NULL OR fecha < TO_DATE($4, 'DD/MM/YYYY') + INTERVAL '1 day')
+            
+        `, [month, year, queryFrom, queryTo])).rows[0];
         return { success: true, data: lecture };
     } catch (error) {
 

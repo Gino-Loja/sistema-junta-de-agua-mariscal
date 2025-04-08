@@ -5,10 +5,16 @@ import dynamic from "next/dynamic";
 
 
 
-export default async function TableSheets({ repository, page, per_page, date, query }: { repository: ISheetsRepository, page: string, per_page: string, date: string, query:string }) {
-  const sheets = per_page == '0'
-    ? await repository.getSheetsByYearsAndMonths(date)
-    : await repository.getSheetsPagination(date, Number(page), Number(per_page), query);
+export default async function TableSheets({ repository, page, per_page, date, query, year, month, status }: { repository: ISheetsRepository, page: string, per_page: string, date: string, query: string, year: number, month: number, status: string }) {
+  const sheets = await repository.getSheetsPagination(
+    date,
+    Number(page),
+    Number(per_page),
+    query,
+    year,
+    month,
+    status
+  );
   return (
 
     <div>

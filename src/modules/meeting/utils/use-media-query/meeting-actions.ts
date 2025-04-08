@@ -24,7 +24,7 @@ export const getMeeting = async (date: string, query: string, currentPage: numbe
             INNER JOIN 
                 usuarios u ON m.usuario_id = u.id
             WHERE 
-                 ($4::date IS NULL OR m.fecha = $4) AND
+                ($4::date IS NULL OR m.fecha = $4) AND
                 ($3::text IS NULL OR m.estado = $3) AND
                 EXTRACT(YEAR FROM m.fecha) = $2 
                 AND ((u.nombre ILIKE '%' || $1 || '%'
@@ -113,7 +113,6 @@ export const getTotalMeetingByStatus = async (year: number): Promise<QueryResult
             multas
             WHERE 
             EXTRACT(YEAR FROM fecha) = $1 
-
             group by
             estado;
         `, [year])).rows;

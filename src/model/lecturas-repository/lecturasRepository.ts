@@ -2,9 +2,9 @@ import { Lectures, LecturesDto, MeasurementMacro, Months, QueryResultError, Year
 
 export interface ILecturesRepository {
     getLecturesByYearsAndMonths: (date: string) => Promise<QueryResultError<Lectures[]>>;
-    getComsumedMetersByMonths: (month: number, year: number) => Promise<QueryResultError<{ exceso: number | null, consumo: number | null }>>;
+    getComsumedMetersByMonths: (month: number|null, year: number) => Promise<QueryResultError<{ exceso: number | null, consumo: number | null }>>;
     getALLMonthsLecturesByYear: (year: string) => Promise<QueryResultError<Months[]>>;
-    getConsumedBySector: (year: number, month: number) => Promise<QueryResultError<{ sector: string, consumo: number }[]>>;
+    getConsumedBySector: (year: number, month: number|null) => Promise<QueryResultError<{ sector: string, consumo: number }[]>>;
     getComsumedMonthsByYear: (year: number) => Promise<QueryResultError<{ mes: string, consumo_total: number, exceso_total: number }[]>>;
 
     createLecture: (data: LecturesDto) => Promise<QueryResultError<boolean>>;
@@ -16,7 +16,7 @@ export interface ILecturesRepository {
     updateMeasurementMacro: (date: Date, lectura: number, id: number) => Promise<QueryResultError<boolean>>;
     deleteMeasurementMacro: (id: number) => Promise<QueryResultError<boolean>>;
     getMeasurementMacroAreaChart: ( from: string, to: string,  month: number, year: number) => Promise<QueryResultError<{ fecha: Date, consumo: number }[]>>;
-    getCounterMeasurementMacro: (date: string) => Promise<QueryResultError<{ total: number }>>;
+    getCounterMeasurementMacro: (month: number, year: number, from: string, to: string) => Promise<QueryResultError<{ total: number }>>;
 
 
 }

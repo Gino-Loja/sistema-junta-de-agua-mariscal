@@ -74,6 +74,8 @@ export default function WeekSelector() {
   return (
     <div className="w-full sm:w-80 min-w-[200px]">
       <Select
+       size='sm'
+        radius='sm'
         placeholder="Seleccione un rango de fechas"
         onChange={(e) => handleSelectWeek(e.target.value)}
         //selectedKeys={selectedWeek ? [selectedWeek.weekNumber.toString()] : undefined}

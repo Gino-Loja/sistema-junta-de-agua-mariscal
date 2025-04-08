@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, SelectItem, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import { ChevronDown } from 'lucide-react';
-import { now, getWeeksInMonth, getDayOfWeek } from "@internationalized/date";
+import { now } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
 import { useQueryStates } from 'nuqs';
 import { coordinatesParsers } from '@/modules/searchParams';
@@ -78,18 +78,20 @@ export function MonthYearSelector({
 
     // Get month names using the provided locale
     const getMonthName = (monthIndex: number, localeCode: string = 'es-EC') => {
-        const date = new Date(now(TIME_ZONE).toDate());
+        // Crear la fecha con el día 1 para evitar desbordes
+        const date = new Date(now(TIME_ZONE).year, 0, 1);
         date.setMonth(monthIndex);
         return date.toLocaleString(localeCode, { month: 'long' });
     };
+
 
     const formattedDate = () => {
         const localeCode = locale === 'es' ? 'es-EC' : 'en-US';
         const date = new Date(now(TIME_ZONE).toDate());
         date.setMonth(selectedMonth);
         date.setFullYear(selectedYear);
-        
-        if(!viewMonth){
+
+        if (!viewMonth) {
             return date.toLocaleString(localeCode, {
                 year: 'numeric'
             });
@@ -127,8 +129,8 @@ export function MonthYearSelector({
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[180px] p-2 backdrop-blur-xl rounded-xl">
-                    <div className="w-full flex flex-col gap-4">
 
+                    <div className="w-full flex flex-col gap-4">
                         {
                             viewMonth && <div className="space-y-2 w-full">
                                 <p className="text-sm font-medium text-default-500">

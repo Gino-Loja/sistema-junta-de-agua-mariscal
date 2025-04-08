@@ -201,7 +201,7 @@ async function RenderSelectWaterMeter({ data }: { data: WaterMeter[] }) {
         <SelectWaterMeter waterMeter={data} />
       </div>
 
-      <div className='hidden sm:block'>
+      <div className=''>
         <FiltersSearchSheets />
       </div>
     </div>

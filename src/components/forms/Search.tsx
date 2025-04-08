@@ -29,6 +29,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   return (
 
     <Input
+      radius='sm'
       placeholder={placeholder}
       value={query} // Cambia de defaultValue a value
       onChange={(e) => handleSearch(e.target.value)}

@@ -1,5 +1,5 @@
 import { IServiceIncidentRepository } from "../utils/model";
-import { deleteIncident, getIncidents, getSectors, getTotalAmountCostIncidetByYear, getTotalIncidentBySector, getTotalIncidentByYear, insertIncident, updateIncident } from "../utils/use-media-query";
+import { deleteIncident, getIncidents, getSectors, getTotalAmountCostIncidetByYear, getTotalIncidentBySector, getTotalIncidentByYear, insertIncident, updateIncident,getCounterIncidentPagination } from "../utils/use-media-query";
 
 export function createApiIncidentRepository(): IServiceIncidentRepository {
     return {
@@ -10,7 +10,9 @@ export function createApiIncidentRepository(): IServiceIncidentRepository {
       getIncidents,
       insertIncident,      
       updateIncident,
-      getSectors
+      getSectors,
+      getCounterIncidentPagination
+
 
     };
 }

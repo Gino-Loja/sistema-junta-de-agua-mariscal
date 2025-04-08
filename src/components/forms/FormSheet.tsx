@@ -10,10 +10,8 @@ import { createApiSheetsRepository } from "@/services/serviceSheets";
 import { useUserStore } from '@/lib/store';
 
 
-
-
 export default function FormAddSheet() {
-  const { type, data, closeModal } = useUserStore();
+  const {  data, closeModal } = useUserStore();
 
   const schema = z.object({
     id: z.number(),
@@ -35,8 +33,6 @@ export default function FormAddSheet() {
       id: data?.id,
     }
   });
-
-  //console.log(data)
 
   const repositorySheets: ISheetsRepository = createApiSheetsRepository();
   const onSubmit = handleSubmit((formData) => {

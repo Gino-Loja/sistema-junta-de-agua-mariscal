@@ -1,3 +1,4 @@
+import { QueryParams } from "../types";
 
 type Incident = {
   id: number;           // Identificador único del incidente
@@ -12,3 +13,5 @@ type Incident = {
 };
 
 type IncidentDto = Omit<Incident, "id" | "nombre_usuario"  | "nombre_sector"  >
+
+export type IncidentParams = Omit<QueryParams, "from" | "to"  | "status" | "type">;

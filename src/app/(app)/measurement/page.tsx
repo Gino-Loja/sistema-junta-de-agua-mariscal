@@ -11,12 +11,15 @@ import { Divider } from "@nextui-org/react";
 import MonthYearSelector from "@/components/filters-table/MonthYearSelector";
 import { coordinatesCache } from "@/modules/searchParams";
 import { PageProps } from "@/modules/types";
+import { now } from "@internationalized/date";
+import { TIME_ZONE } from "@/model/Definitions";
 
-type CustomSearchParams = { date: string, page: string, per_page: string }
 
 
 export default async function Page({ searchParams }: PageProps) {
   const { date, year, month } = coordinatesCache.parse(searchParams)
+  const safeMonth = month ?? now(TIME_ZONE).month;
+
   
 
   const repositoryLectures: ILecturesRepository = createApiLecturesRepository();
@@ -35,9 +38,9 @@ export default async function Page({ searchParams }: PageProps) {
       </div>
       <Divider />
       <Suspense key={month} fallback={<MetricSkeleton />}>
-        <MeasurementMetric year={year} month={month}></MeasurementMetric>
+        <MeasurementMetric year={year} month={safeMonth}></MeasurementMetric>
       </Suspense>
-      <Suspense key={month + 1} fallback={<BarChartSkeleton />}>
+      <Suspense key={safeMonth + 1} fallback={<BarChartSkeleton />}>
         <FetchAndRenderComsumedMonthsByYear repository={repositoryLectures} year={year}></FetchAndRenderComsumedMonthsByYear>
       </Suspense>
 

@@ -24,11 +24,12 @@ const months = [
   "Diciembre",
 ];
 
-export default async function MeasurementMetrics({ year, month }: Omit<QueryParams, "page" | "per_page" | "date" | "from" | "to">) {
+export default async function MeasurementMetrics({ year, month }: { year: number, month: number }) {
 
   const lectureRepository: ILecturesRepository = createApiLecturesRepository();
   const consumedMeters = await lectureRepository.getComsumedMetersByMonths(month, year);
   const consumedBySector = await lectureRepository.getConsumedBySector(year, month);
+
   
   
 

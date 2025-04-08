@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 
 
-export const getTotalInvoice = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalInvoice = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
@@ -15,7 +15,7 @@ export const getTotalInvoice = async (date: string): Promise<QueryResultError<nu
             from
                 public.facturas
             where
-                date_trunc('year', fecha_emision::date) = date_trunc('year', $1::date);
+             ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha_emision) = $1)
 
         `, [date])).rows[0].total;
         return { success: true, data: total };
@@ -25,7 +25,7 @@ export const getTotalInvoice = async (date: string): Promise<QueryResultError<nu
 };
 
 
-export const getTotalIncident = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalIncident = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
@@ -36,7 +36,8 @@ export const getTotalIncident = async (date: string): Promise<QueryResultError<n
             from
                 incidentes
             where
-                date_trunc('year', fecha::date) = date_trunc('year', $1::date);
+                ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha) = $1)
+
 
         `, [date])).rows[0].total;
         return { success: true, data: total };
@@ -45,7 +46,7 @@ export const getTotalIncident = async (date: string): Promise<QueryResultError<n
     }
 };
 
-export const getTotalSheets = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalSheets = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
@@ -54,7 +55,8 @@ export const getTotalSheets = async (date: string): Promise<QueryResultError<num
             from
                 planillas
             where
-                date_trunc('year', fecha_emision::date) = date_trunc('year', $1::date);
+             ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha_emision) = $1)
+
 
         `, [date])).rows[0].total;
         return { success: true, data: total };
@@ -63,7 +65,7 @@ export const getTotalSheets = async (date: string): Promise<QueryResultError<num
     }
 };
 
-export const getTotalWaterMeter = async (date: string): Promise<QueryResultError<number>> => {
+export const getTotalWaterMeter = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
@@ -72,7 +74,7 @@ export const getTotalWaterMeter = async (date: string): Promise<QueryResultError
                 from
                     public.lecturas
                 where
-                date_trunc('year', fecha::date) = date_trunc('year', $1::date);
+             ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha) = $1)
            
 
         `, [date])).rows[0].total;
@@ -99,16 +101,16 @@ export const getTotalUser = async (): Promise<QueryResultError<number>> => {
     }
 };
 
-export const getAmountInvoice = async (date: string): Promise<QueryResultError<number>> => {
+export const getAmountInvoice = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
             select
-                coalesce(sum(total_pagar), 0) as total
+                coalesce(sum(total_pagar-valor_abonado), 0) as total
             from
                 public.planillas
             where
-                date_trunc('year', fecha_emision::date) = date_trunc('year', $1::date);
+             ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha_emision) = $1)
 
         `, [date])).rows[0].total;
         return { success: true, data: total };
@@ -119,7 +121,7 @@ export const getAmountInvoice = async (date: string): Promise<QueryResultError<n
 
 
 
-export const getAmountIncident = async (date: string): Promise<QueryResultError<number>> => {
+export const getAmountIncident = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
@@ -129,7 +131,7 @@ export const getAmountIncident = async (date: string): Promise<QueryResultError<
             from
                 incidentes
             where
-                date_trunc('year', fecha::date) = date_trunc('year', $1::date);
+             ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha) = $1)
 
         `, [date])).rows[0].total;
         return { success: true, data: total };
@@ -138,7 +140,7 @@ export const getAmountIncident = async (date: string): Promise<QueryResultError<
     }
 };
 
-export const getAmountSheets = async (date: string): Promise<QueryResultError<number>> => {
+export const getAmountSheets = async (date: number | null): Promise<QueryResultError<number>> => {
     try {
         const total: number = (await pool.query(`
            
@@ -147,7 +149,7 @@ export const getAmountSheets = async (date: string): Promise<QueryResultError<nu
             from
                 planillas
             where
-                date_trunc('year', fecha_emision::date) = date_trunc('year', $1::date);
+             ($1::integer IS NULL OR EXTRACT(YEAR FROM fecha_emision) = $1)
 
         `, [date])).rows[0].total;
         return { success: true, data: total };

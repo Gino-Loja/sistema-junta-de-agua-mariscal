@@ -15,13 +15,10 @@ import LoadingIcon from '@/components/icons/loading-icon';
 import { getSectors } from '@/modules/incident/utils/use-media-query';
 import SelectParams from '@/components/filters-table/SelectParams';
 import SelectStatus from '@/components/filters-table/selectStatus';
+import SkeletonMetricUser from '@/components/skeletons/SkeletonsMetricUser';
+import SkeletonCustom from '@/components/skeletons/skeleton';
 
-const SkeletonCustom = dynamic(() =>
-  import('@/components/skeletons/skeleton').then((mod) => mod.default)
-)
-const SkeletonMetricUser = dynamic(() =>
-  import('@/components/skeletons/SkeletonsMetricUser').then((mod) => mod.default)
-)
+
 
 const FormAddUser = dynamic(() =>
   import('@/components/forms/FormUser').then((mod) => mod.default)
@@ -60,11 +57,13 @@ export default async function Page({ searchParams }: PageProps) {
       <div>
         <h1 className="text-2xl font-bold shrink p-1 max-w-42 border-divider rounded-xl">Lista de usuarios</h1>
       </div>
+    </div>
 
-      <div className='min-w-[250px]' >
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-10">
+      <div className="col-span-1 sm:col-span-2">
         <Search placeholder='Buscar usuario ...' />
       </div>
-      <div className='min-w-[250px]'>
+      <div className="col-span-1 md:col-start-3">
         <SelectStatus key={'select-params-status'} options={[{
           label: 'Activo',
           value: 'activo'
@@ -74,12 +73,14 @@ export default async function Page({ searchParams }: PageProps) {
           value: 'inactivo'
         }]} />
       </div>
-      <div className="w-full sm:w-80 min-w-[200px]">
+      <div className="col-span-1 md:col-start-4">
         <Suspense fallback={<LoadingIcon />}>
           <GetSectorSelector />
         </Suspense>
       </div>
     </div>
+
+
     <Divider />
 
     <Suspense key={page + query + per_page} fallback={<SkeletonCustom />}>

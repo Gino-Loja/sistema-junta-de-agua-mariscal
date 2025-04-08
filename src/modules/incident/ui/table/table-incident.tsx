@@ -1,12 +1,16 @@
 import CustomTable from "@/components/table/CustomTable";
 import { columns } from "./column-incident";
 import { createApiIncidentRepository } from "../../service/service-incident";
-import AddIncident from "./add-incident";
+import { IncidentParams } from "../../types";
+import dynamic from "next/dynamic";
 
+const AddIncident = dynamic(() => import('./add-incident').then((mod) => mod.default));
 
-export default async function TableInvoice({ page, per_page, date, query , sector}: { page: string, per_page: string, date: string, query: string, sector:string }) {
+export default async function TableInvoice(props: IncidentParams) {
     const repository = createApiIncidentRepository();
-    const incidents =  await repository.getIncidents(date, query, Number(page), Number(per_page), sector);
+    const { date, query, page, per_page, sector, year, month } = props;
+    const incidents =  await repository.getIncidents(date, query, Number(page), Number(per_page), sector, year, month);
+
     return (
         <div className="p-1">
             {incidents.success &&

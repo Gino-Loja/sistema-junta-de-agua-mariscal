@@ -10,11 +10,13 @@ import FormModalDelete from "@/components/modal/form-modal-delete";
 
 import SkeletonCustom from "@/components/skeletons/skeleton";
 import PaginationControls from "@/components/table/PaginationControlsx";
+import { TIME_ZONE } from "@/model/Definitions";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 
 import { coordinatesCache } from "@/modules/searchParams";
 import { PageProps } from "@/modules/types";
 import { createApiLecturesRepository } from "@/services/serviceMeasurement";
+import { now } from "@internationalized/date";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 const FormModal = dynamic(() =>
@@ -22,9 +24,10 @@ const FormModal = dynamic(() =>
 )
 export default async function Page({ searchParams }: PageProps) {
     const { date, query, page, per_page, from, to, month, year } = coordinatesCache.parse(searchParams)
+    const safeMonth = month ?? now(TIME_ZONE).month;
+    
     const repository = createApiLecturesRepository();
-    const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
-    const end = start + Number(per_page)
+
 
 
     return (
@@ -57,7 +60,7 @@ export default async function Page({ searchParams }: PageProps) {
                                     from={from}
                                     to={to}
                                     year={year}
-                                    month={month}
+                                    month={safeMonth}
                                 ></CardAreaChartMeasurementMacro>
                                 {/* Stock section */}
                                 <div className="border rounded-lg p-6 shadow overflow-hidden">
@@ -86,14 +89,21 @@ export default async function Page({ searchParams }: PageProps) {
                                                 date={date}
                                                 from={from}
                                                 to={to}
-                                                month={month}
+                                                month={safeMonth}
                                                 year={year}
 
                                             ></MeasurementMacroTable>
                                         </Suspense>
                                     </div>
                                     <Suspense fallback={<LoadingIcon />}>
-                                        <FechtRenderPaginationControls repository={repository} selectedDate={date} start={start} end={end} query={query} />
+                                        <FechtRenderPaginationControls repository={repository}
+                                            year={year}
+                                            month={safeMonth}
+                                            from={from}
+                                            to={to}
+                                            page={page}
+                                            per_page={per_page}
+                                         />
                                     </Suspense>
                                 </div>
                                 {/* Product Category section */}
@@ -123,8 +133,10 @@ async function CardAreaChartMeasurementMacro({ repository, from, to, month, year
 }
 
 
-async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query }: { repository: ILecturesRepository, selectedDate: string, start: number, end: number, query: string }) {
-    const data = await repository.getCounterMeasurementMacro(selectedDate)
+async function FechtRenderPaginationControls({ repository, year, month, from, to, page, per_page }: { repository: ILecturesRepository, year: number, month: number, from: string, to: string, page: string, per_page: string }) {
+    const data = await repository.getCounterMeasurementMacro(month, year,from, to);
+    const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
+    const end = start + Number(per_page)
     return (
         data.success &&
         <PaginationControls

@@ -1,48 +1,15 @@
 "use client";
 
-import type { ButtonProps, CardProps } from "@nextui-org/react";
+import type { CardProps } from "@nextui-org/react";
 
 import React from "react";
 import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell } from "recharts";
 import {
     Card,
-    Button,
-    Select,
-    SelectItem,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownTrigger,
     cn,
 } from "@nextui-org/react";
 import { CircleChartProps } from "@/modules/types";
 
-
-// const data: CircleChartProps[] = [
-//     {
-//         title: "Traffic Sources",
-//         categories: ["Search", "Direct", "Social", "Referral"],
-//         color: "warning",
-//         chartData: [
-//             { name: "Search", value: 400 },
-//             { name: "Direct", value: 300 },
-//             { name: "Social", value: 300 },
-//             { name: "Referral", value: 200 },
-//         ],
-//     },
-
-
-// ];
-
-// export default function BarChartCustom() {
-//     return (
-//         <dl className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-//             {data.map((item, index) => (
-//                 <CircleChartCard key={index} {...item} />
-//             ))}
-//         </dl>
-//     );
-// }
 
 const formatTotal = (total: number) => {
     return total >= 1000 ? `${(total / 1000).toFixed(1)}K` : total;
@@ -73,7 +40,7 @@ const formatTotal = (total: number) => {
             <div className="flex h-full flex-wrap items-center justify-center gap-x-2 lg:flex-nowrap">
                 <ResponsiveContainer
                     className="[&_.recharts-surface]:outline-none"
-                    height={150}
+                    height={260}
                     width="100%"
                 >
                     <PieChart accessibilityLayer margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>

@@ -1,22 +1,31 @@
 import SelectStatus from "@/components/filters-table/selectStatus";
 import TypeSelector from "@/components/filters-table/TypeSelector";
-import { FormDelete } from "@/components/forms/form-delete";
-import { FormWaterMeter } from "@/components/forms/FormWaterMeter";
 import Search from "@/components/forms/Search";
-import { useFilterPaginationParams } from "@/components/hooks/useFilterPaginationParams";
-import FormModalDelete from "@/components/modal/form-modal-delete";
-import FormModal from "@/components/modal/FormModal";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import SkeletonCustom from "@/components/skeletons/skeleton";
 import PaginationControls from "@/components/table/PaginationControlsx";
 import WaterMeterTable from "@/components/water-meter/waterMeterTable";
-import { CustomSearchParams } from "@/model/types";
 import { IWaterMeter } from "@/model/water-meter/WaterMeterRepository";
 import { coordinatesCache } from "@/modules/searchParams";
 import { PageProps } from "@/modules/types";
 import { createApiWaterMeter } from "@/services/waterMeterService";
 import { Divider } from "@nextui-org/react";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
+
+const FormModal = dynamic(() =>
+  import('@/components/modal/FormModal').then((mod) => mod.default)
+)
+const FormWaterMeter = dynamic(() =>
+  import('@/components/forms/FormWaterMeter').then((mod) => mod.FormWaterMeter)
+)
+const FormModalDelete = dynamic(() =>
+  import('@/components/modal/form-modal-delete').then((mod) => mod.default)
+)
+const FormDelete = dynamic(() =>
+  import('@/components/forms/form-delete').then((mod) => mod.FormDelete)
+)
+
 
 
 //type ExtendedSearchParams = CustomSearchParams & { type: string };
@@ -41,44 +50,36 @@ export default async function Page({ searchParams }: PageProps) {
     </FormModalDelete>
 
     <div className='flex flex-row gap-2 justify-between'>
-      <div>
+      <div className="w-full">
         <h1 className="text-2xl font-bold shrink p-1 border-divider rounded-xl">Lista de Medidores</h1>
-        <div className="flex flex-wrap gap-4 justify-center sm:justify-between items-center">
-          <div className='sm:w-80 w-full'>
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 ">
+          <div className="w-full sm:col-span-2">
             <Search placeholder='Buscar por nombre...' />
           </div>
-          <div className='sm:w-80 w-full'>
+          <div className="w-full sm:col-start-3">
             <SelectStatus options={[{
               label: 'Activo',
               value: 'Activo'
-            },
-            {
+            }, {
               label: 'Inactivo',
               value: 'Inactivo'
             }]} />
           </div>
-
-          <div className='sm:w-80 w-full'>
+          <div className="w-full sm:col-start-4">
             <TypeSelector options={[{
               label: 'Industrial',
               value: 'Industrial'
-            },
-            {
+            }, {
               label: 'Domestico',
               value: 'Domestico'
-            },
-            {
+            }, {
               label: 'Otro',
               value: 'Otro'
             }]} />
           </div>
-
-          <div className='sm:w-80 w-full'>
+          <div className="w-full sm:col-start-5">
             <FiltersSearchSheets />
           </div>
-
-
-
         </div>
 
 

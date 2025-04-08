@@ -4,15 +4,14 @@ import { Popover, PopoverTrigger, PopoverContent, Button, Input }
 import { ListFilter } from 'lucide-react';
 
 interface FiltersGroupProps {
-    statusComponentx: JSX.Element;
-    dateComponentx: JSX.Element;
+    children: JSX.Element;
+
 }
 export default function FiltersGroup({
-    statusComponentx,
-    dateComponentx
+    children
 }: FiltersGroupProps) {
     return (
-        <Popover >
+        <Popover radius='sm'>
             <PopoverTrigger>
                 <Button isIconOnly>
                     <ListFilter className="h-4 w-4" />
@@ -27,8 +26,7 @@ export default function FiltersGroup({
                         </p>
                         <div className="px-1 py-2 w-full">
                             <div className="flex flex-col justify-start gap-2 w-full">
-                                {statusComponentx}
-                                {dateComponentx}
+                                {children}
                             </div>
                         </div>
                     </div>

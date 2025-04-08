@@ -18,6 +18,7 @@ export default function TypeSelector({ options }: { options: { label: string, va
         <div className="flex items-center gap-2">
             <label className="text-sm font-medium text-center">Tipo de Medidor</label>
             <Select
+                radius='sm'
                 selectedKeys={[type]}
                 placeholder="Selecciona un estado"
                 onChange={handleSelectionChange}

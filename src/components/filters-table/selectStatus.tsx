@@ -15,19 +15,20 @@ export default function SelectStatus({ options }: { options: { label: string, va
     };
 
     return (
-        <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-center">Estado</label>
-            <Select
-                selectedKeys={[status]}
-                placeholder="Selecciona un estado"
-                onChange={handleSelectionChange}
-                className="w-full"
-            >
-                {options.map((option) => (
-                    <SelectItem key={option.value}>{option.label}</SelectItem>
-                ))}
-            </Select>
-        </div>
+        <Select
+            aria-label="Selecciona un estado"
+            label="Selecciona un estado"
+
+            size='sm'
+            radius='sm'
+            selectedKeys={[status]}
+            placeholder="Selecciona un estado"
+            onChange={handleSelectionChange}
+        >
+            {options.map((option) => (
+                <SelectItem key={option.value}>{option.label}</SelectItem>
+            ))}
+        </Select>
 
 
 

@@ -3,8 +3,7 @@
 import { QueryResultError, WaterMeter, WaterMeterDto } from "@/model/types";
 import pool from "./db";
 import { revalidatePath } from "next/cache";
-import { TIME_ZONE } from "@/model/Definitions";
-import { now } from "@internationalized/date";
+
 
 export async function getWaterMeter(): Promise<QueryResultError<WaterMeter[]>> {
     try {
@@ -366,3 +365,4 @@ export async function getCounterMeterWaterbyId(id_usuario: number, id_medidor: n
         return { success: false, error: `Error al obtener el consumo del medidor: ${error}` };
     }
 }
+

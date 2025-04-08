@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic'
 
 import { Suspense } from "react";
-import { now, getLocalTimeZone } from "@internationalized/date";
 import TableSheets from '@/components/sheets/TableSheets';
 import { ISheetsRepository } from '@/model/sheets-repository/sheetsRepository';
 import { createApiSheetsRepository } from '@/services/serviceSheets';
@@ -11,6 +10,11 @@ import PaginationControls from '@/components/table/PaginationControlsx';
 import Search from '@/components/forms/Search';
 import FiltersSearchSheets from '@/components/sheets/FiltersSearchSheets';
 import { Divider } from '@nextui-org/react';
+import { PageProps } from '@/modules/types';
+import { coordinatesCache } from '@/modules/searchParams';
+import MonthYearSelector from '@/components/filters-table/MonthYearSelector';
+import { now } from '@internationalized/date';
+import SelectStatus from '@/components/filters-table/selectStatus';
 //import FormAddLecture from '@/components/forms/FormLecture';
 
 
@@ -20,26 +24,15 @@ const FormModal = dynamic(() =>
 const FormAddSheet = dynamic(() =>
     import('@/components/forms/FormSheet').then((mod) => mod.default)
 )
-type CustomSearchParams = { date: string, page: string, per_page: string, query: string }
 
-export default function Page({ searchParams }: {
-    searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
-}) {
+export default async function Page({ searchParams }: PageProps) {
+
+    const { date, query, page, per_page, year, status, month } = coordinatesCache.parse(searchParams)
     const repositorySheets: ISheetsRepository = createApiSheetsRepository();
-    const currentDate = now(TIME_ZONE)
-
     // Si no existe el parámetro 'year' o 'month' en los searchParams, usa los valores actuales
-    const date = searchParams.date || currentDate.toAbsoluteString();
-    const page = searchParams['page'] ?? '1'
-    const query = searchParams['query'] ?? ''
-    const per_page = searchParams['per_page'] ?? ITEMS_PER_PAGE
     // mocked, skipped and limited in the real app
-    const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
-    const end = start + Number(per_page)
+    const currentMonth = month == null ? now(TIME_ZONE).month : month;
 
-
-    //console.log('Mes:', month);
-    //console.log(Number(page) * Number(per_page))
     return (
         <div className='flex flex-col overflow-hidden gap-4 px-4 pb-4'>
             <FormModal>
@@ -49,18 +42,30 @@ export default function Page({ searchParams }: {
                 <div>
                     <h1 className="text-2xl font-bold shrink p-1 border-divider rounded-xl">Lista de Planillas</h1>
                 </div>
+                <div>
+                    <MonthYearSelector />
+                </div>
             </div>
             <Divider />
 
-            <div className='flex flex-col sm:flex-row gap-2 justify-start sm:justify-between'>
+            <div className='flex flex-col sm:flex-row gap-2 justify-start sm:justify-between mb-3'>
 
                 <div className='sm:w-80 w-full'>
                     <Search placeholder='Buscar por nombre...' />
                 </div>
 
-                <div className='hidden sm:block'>
+                <div className='sm:w-80 w-full'>
+                    <SelectStatus options={[
+                        { label: 'Pagado', value: 'pagada' },
+                        { label: 'Pendiente', value: 'pendiente' }
+                    ]} />
+                </div>
+
+                <div className='sm:w-80 w-full'>
                     <FiltersSearchSheets />
                 </div>
+
+
 
             </div>
 
@@ -71,19 +76,41 @@ export default function Page({ searchParams }: {
                     per_page={per_page}
                     date={date}
                     query={query}
-                />
+                    year={year}
+                    month={currentMonth}
+                    status={status} />
+
+
             </Suspense>
 
             <Suspense fallback={<div>cargando</div>}>
-                <FechtRenderPaginationControls repository={repositorySheets} selectedDate={date} start={start} end={end} query={query} />
+                <FechtRenderPaginationControls
+                    repository={repositorySheets}
+                    selectedDate={date}
+                    page={Number(page)}
+                    per_page={Number(per_page)}
+                    query={query}
+                    year={year}
+                    month={currentMonth}
+                    status={status} />
             </Suspense>
         </div>
     )
 }
 
 
-async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query }: { repository: ISheetsRepository, selectedDate: string, start: number, end: number, query:string }) {
-    const data = await repository.getCounterSheets(selectedDate, query)
+async function FechtRenderPaginationControls({ repository, selectedDate, page, per_page, query, year, month, status }: { repository: ISheetsRepository, selectedDate: string, page: number, per_page: number, query: string, year: number, month: number, status: string }) {
+
+    const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
+    const end = start + Number(per_page)
+
+    const data = await repository.getCounterSheets(
+        selectedDate,
+        query,
+        year,
+        month,
+        status
+    )
     return (
         data.success &&
         <PaginationControls

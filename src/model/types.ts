@@ -73,8 +73,10 @@ export type Sheets = {
   exceso: number;                // Exceso de agua registrado
   nombre: string;        // Nombre del usuario asociado al medidor
   medidor_id: number;            // ID del medidor
+  usuario_id: number;            // ID del usuario asociado al medidor
 };
-export type SheetDto = Omit<Sheets, "medidor_id" | "id_lectura" | "fecha_emision" | "total_pagar" | "total_consumo" | "total_exceso" | "consumo" | "exceso" | "nombre">
+export type SheetDto = Omit<Sheets, "medidor_id" | "id_lectura" | "fecha_emision" | "total_pagar" | "total_consumo" | "total_exceso" | "consumo" | "exceso" | "nombre" | "usuario_id">
+
 
 export type MonthlyRevenue = {
   total_recaudado: number;

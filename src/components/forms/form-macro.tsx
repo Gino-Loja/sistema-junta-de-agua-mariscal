@@ -69,7 +69,6 @@ export default function FormMacro() {
 
     const repositoryLectures: ILecturesRepository = createApiLecturesRepository();
 
-
     const onSubmit = handleSubmit((formData,) => {
         setIsLoading(true);
         if (type === "create") {

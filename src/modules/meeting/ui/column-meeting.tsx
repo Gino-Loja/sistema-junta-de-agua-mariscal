@@ -14,7 +14,7 @@ export const columns: ColumnDef<Meeting, any>[] =  [
 
       {
         header: "id",
-        accessorKey: "Id",
+        accessorKey: "id",
       },
       {
         header: "Nombre",

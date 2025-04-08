@@ -8,7 +8,6 @@ export default function StatusSkeleton() {
             <div className="h-8 bg-default-200 rounded w-1/2"></div>
             <div className="h-8 bg-default-200 rounded w-1/2"></div>
 
-
           </div>
         ))}
       </div>

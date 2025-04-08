@@ -8,7 +8,7 @@ export default function AddMeeting() {
     const { setData, setType } = useUserStore();
 
     return (
-        <Tooltip content="Agregar Usuario">
+        <Tooltip placement="right-start" content="Agregar Multa">
             <Button radius="full" onPress={() => {
                 setType("create")
                 setData(null)

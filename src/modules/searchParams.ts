@@ -13,10 +13,15 @@ export const coordinatesParsers = {
   date: parseAsString.withDefault(''),
   sector: parseAsString.withDefault(''),
   year: parseAsInteger.withDefault(now(TIME_ZONE).year),
-  month: parseAsInteger.withDefault(now(TIME_ZONE).month),
+  month: parseAsInteger,
   from: parseAsString.withDefault(''),
   to: parseAsString.withDefault(''),  
   status: parseAsString.withDefault(''),
   type: parseAsString.withDefault(''),
+  wm: parseAsInteger,
+  yr: parseAsInteger,
 }
+
+
+
 export const coordinatesCache = createSearchParamsCache(coordinatesParsers)

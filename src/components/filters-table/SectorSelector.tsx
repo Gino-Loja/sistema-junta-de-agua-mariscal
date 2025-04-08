@@ -8,6 +8,8 @@ export default  async function SectorSelector({ sectors }: { sectors: { value: s
     return (
         <div className=" w-40">
             <Select 
+                radius='sm'
+                 size='sm'
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                     console.log(e.target.value)
                     

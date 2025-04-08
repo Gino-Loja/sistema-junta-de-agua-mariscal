@@ -3,11 +3,13 @@ import Search from "@/components/forms/Search";
 import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import SkeletonCustom from "@/components/skeletons/skeleton";
 import PaginationControls from "@/components/table/PaginationControlsx";
+import { TIME_ZONE } from "@/model/Definitions";
 import { createApiServiceInvoiceRepository } from "@/modules/invoice/service/service-invoice";
 import TableInvoice from "@/modules/invoice/ui/table/table-invoice";
 import { IInvoiceRepository } from "@/modules/invoice/utils/model";
 import { coordinatesCache } from "@/modules/searchParams";
 import { PageProps } from "@/modules/types";
+import { now } from "@internationalized/date";
 import { Divider } from "@nextui-org/react";
 import { Suspense } from "react";
 
@@ -15,8 +17,8 @@ export default function Page({ searchParams }: PageProps) {
 
     const { date, query, page, per_page, month, year } = coordinatesCache.parse(searchParams)
     const repositoryInvoice = createApiServiceInvoiceRepository();
-    const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
-    const end = start + Number(per_page)
+    const safeMonth = month ?? now(TIME_ZONE).month;
+
     return (
 
         <div className='flex flex-col overflow-hidden gap-4 px-4 pb-4'>
@@ -38,7 +40,7 @@ export default function Page({ searchParams }: PageProps) {
                     <FiltersSearchSheets />
                 </div>
                 <div>
-                    <MonthYearSelector/>
+                    <MonthYearSelector />
                 </div>
 
             </div>
@@ -50,22 +52,22 @@ export default function Page({ searchParams }: PageProps) {
                     per_page={per_page}
                     date={date}
                     query={query}
-                    month={month}
+                    month={safeMonth}
                     year={year}
 
                 />
             </Suspense>
 
             <Suspense fallback={<div>cargando</div>}>
-                <FechtRenderPaginationControls 
-                repository={repositoryInvoice}
-                 selectedDate={date} 
-                 start={start} 
-                 end={end} 
-                 query={query} 
-                 month={month}
-                 year={year}
-                 />
+                <FechtRenderPaginationControls
+                    repository={repositoryInvoice}
+                    selectedDate={date}
+                    page={page}
+                    per_page={per_page}
+                    query={query}
+                    month={safeMonth}
+                    year={year}
+                />
             </Suspense>
         </div>
 
@@ -73,9 +75,10 @@ export default function Page({ searchParams }: PageProps) {
     )
 }
 
-async function FechtRenderPaginationControls({ repository, selectedDate, start, end, query, month, year }: { repository: IInvoiceRepository, selectedDate: string, start: number, end: number, query: string, month: number, year: number }) {
-    const data = await repository.getCounterInvoiceByDate(selectedDate, query,month, year);
-
+async function FechtRenderPaginationControls({ repository, selectedDate, page, per_page, query, month, year }: { repository: IInvoiceRepository, selectedDate: string, page: string, per_page: string, query: string, month: number, year: number }) {
+    const data = await repository.getCounterInvoiceByDate(selectedDate, query, month, year);
+    const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
+    const end = start + Number(per_page)
 
     return (
         data.success &&
