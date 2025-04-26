@@ -7,6 +7,10 @@ import { Suspense } from "react";
 
 export default function Page() {
     const repositoryWaterMeter: IWaterMeter = createApiWaterMeter();
+    
+    
+    
+
     return (
         <div className="px-4 h-full ">
             <div className='flex flex-col gap-4'>
@@ -50,6 +54,7 @@ export default function Page() {
 }
 
 async function renderWaterMeterByType({ repository }: { repository: IWaterMeter }) {
+
     const waterMeterByType = await repository.getWaterMeterbyType();
     return (waterMeterByType.success && <WaterMeterBarchar data={waterMeterByType.data} />)
 }

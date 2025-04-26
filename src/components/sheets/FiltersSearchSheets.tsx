@@ -7,7 +7,6 @@ import { useQueryStates } from 'nuqs'
 import { coordinatesParsers } from '@/modules/searchParams';
 
 export default function FiltersSearchSheets() {
-    //const date = new Date(Date.now());
     const [{ date }, setCoordinates] = useQueryStates(coordinatesParsers, {
         history: 'replace',
         shallow: false
@@ -29,7 +28,6 @@ export default function FiltersSearchSheets() {
                 onChange={(date) => {
                     if (date) {
                         handleFilterChange(date.year.toString(), date.month.toString(), date.day.toString());
-
                     }
                 }}
             />

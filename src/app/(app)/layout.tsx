@@ -9,9 +9,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return <>
-
     <NextTopLoader />
-
     <Layout>
       <NuqsAdapter >
         {children}

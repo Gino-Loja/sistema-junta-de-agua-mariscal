@@ -6,7 +6,7 @@ import InputField from "./InputField";
 import { Button, Input } from "@nextui-org/react";
 import { useUserStore } from "@/lib/store";
 import { DatePicker } from "@nextui-org/react";
-import { getLocalTimeZone, now, parseAbsoluteToLocal, DateValue } from "@internationalized/date";
+import {  now, parseAbsoluteToLocal, DateValue } from "@internationalized/date";
 import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { toast } from "react-toastify";
@@ -62,7 +62,6 @@ export default function FormMacro() {
     } = useForm<Inputs>({
         resolver: zodResolver(schema),
         defaultValues: {
-
             id: data?.id
         },
     });

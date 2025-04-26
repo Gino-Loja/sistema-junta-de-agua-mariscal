@@ -1,7 +1,8 @@
+'use client'
 import { useUserStore } from "@/lib/store";
 import { Sheets } from "@/model/types";
 import { Button } from "@nextui-org/react";
-import { CreditCard, Receipt } from "lucide-react";
+import { Receipt } from "lucide-react";
 
 export default function PaymentButtonSheet({ sheets }: { sheets: Sheets }) {
     const { setData, setType, openModal } = useUserStore();

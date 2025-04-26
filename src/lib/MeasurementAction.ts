@@ -26,8 +26,6 @@ export const getLecturesByYearsAndMonths = async (date: string): Promise<QueryRe
             LEFT JOIN 
                 lecturas l ON m.id = l.medidor_id 
                 AND date_trunc('month', l.fecha) = date_trunc('month', $1::date)
-
-                
         `, [date])).rows; // Formateamos la fecha con año-mes-01
         return { success: true, data: lectures };
     } catch (error) {

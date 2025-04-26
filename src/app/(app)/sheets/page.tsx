@@ -13,8 +13,7 @@ import { TIME_ZONE } from '@/model/Definitions';
 import { PageProps } from '@/modules/types';
 import { coordinatesCache } from '@/modules/searchParams';
 import MonthYearSelector from '@/components/filters-table/MonthYearSelector';
-import MonthSelector from '@/components/filters-table/MonthSelector';
-import YearSelector from '@/components/filters-table/YearSelector';
+
 
 //import FormAddLecture from '@/components/forms/FormLecture';
 

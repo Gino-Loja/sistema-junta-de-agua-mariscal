@@ -1,6 +1,6 @@
 'use client';
 
-import { WaterMeter } from "@/model/types";
+import { WaterMeter, WaterMeterById } from "@/model/types";
 import { Chip, ChipProps } from "@nextui-org/react";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -11,15 +11,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   '2': 'default',
 };
 
-export const IDcolumns: ColumnDef<{
-  id: number,
-  fecha: Date,
-  consumo: number,
-  lectura_anterior: number,
-  lectura_actual: number,
-  exceso: number,
-  medidor_id: number
-}, any>[] = [
+export const IDcolumns: ColumnDef<WaterMeterById, any>[] = [
   {
     header: "ID",
     accessorKey: "id",
@@ -27,7 +19,7 @@ export const IDcolumns: ColumnDef<{
   {
     header: "Fecha",
     accessorKey: "fecha",
-    accessorFn: (row) => row.fecha ? row.fecha.toLocaleDateString() : null,
+   
   },
   {
     header: "Lectura Anterior",

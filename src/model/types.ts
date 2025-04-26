@@ -1,3 +1,4 @@
+import { Database } from "@/supabase";
 import { SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
@@ -103,18 +104,10 @@ export const monthsInSpanish = [
 export type CustomSearchParams = { date: string, page: string, per_page: string, query: string, type:string , status:string, user: string, medidor: string }
 
 
-export type WaterMeter = {
-  id: number;
-  fecha_instalacion: Date;
-  numero_serie: string;
-  usuario_id: number;
-  nombre: string;
-  detalle: string;
-  estado: string;
-  tipo: string;
-  cedula: string;
-}
-export type WaterMeterDto = Omit<WaterMeter, "nombre" | "id" | "cedula" >
+export type WaterMeter = Database["public"]["Views"]["vista_medidores_usuarios"]["Row"] 
+export type WaterMeterDto = Database["public"]["Tables"]["medidores"]["Update"] 
+export type WaterMeterCreate = Database["public"]["Tables"]["medidores"]["Insert"]
+export type WaterMeterById = Database["public"]["Functions"]["get_water_meter_lectures_by_id"]["Returns"][number]
 
 
 export type MeasurementMacro = {

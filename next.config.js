@@ -15,12 +15,16 @@ module.exports = {
   //     },
   //   ]
   // },output: "standalone",
+  // env: {
+  //   NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL,
+  //   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+  // },
   output: "standalone",
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '5mb',
-    },
-  },
+  // experimental: {
+  //   serverActions: {
+  //     bodySizeLimit: '5mb',
+  //   },
+  // },
 
   async headers() {
     return [

@@ -51,7 +51,7 @@ export const columns: ColumnDef<WaterMeter, any>[] = [
   {
     header: "Fecha Instalacion",
     accessorKey: "fecha_instalacion",
-    accessorFn: (row) => row.fecha_instalacion ? row.fecha_instalacion.toLocaleDateString() : null,
+    accessorFn: (row) => row.fecha_instalacion 
 
   },
   {

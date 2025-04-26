@@ -2,7 +2,12 @@
 import pool from "../../../../lib/db";
 import { revalidatePath } from 'next/cache';
 import { QueryResultError } from "@/model/types";
-import { Company, DigitalCert } from "../../types";
+import { Administrators, Company, DigitalCert } from "../../types";
+import { createClient } from "@/lib/supabase/server";
+import { Database } from "@/supabase";
+import { getPagination } from "@/utils/getPagination";
+
+
 
 
 export const getCompany = async (): Promise<QueryResultError<Company[]>> => {
@@ -65,8 +70,8 @@ export const updateCompany = async (formData: Company): Promise<QueryResultError
         return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
     }
 };
-            
-    
+
+
 
 export const getDigitalCertificate = async (): Promise<QueryResultError<DigitalCert[]>> => {
 
@@ -109,3 +114,63 @@ export const updateDigitalCertificate = async (formData: DigitalCert): Promise<Q
         return { success: false, error: `Error al actualizar el certificado digital: ${error}` };
     }
 };
+
+export const getAdministrator = async (date: string, search: string, status: string, currentPage: number, itemsPerPage: number): Promise<QueryResultError<Administrators[]>> => {
+    const supabase = await createClient();
+    const { from, to } = getPagination(currentPage, itemsPerPage);
+
+    try {
+        let query = supabase
+            .from("administradores_con_email")
+            .select("*")
+            .ilike("nombres", `%${search}%`)
+            .range(from, to);
+
+        if (status !== "") { query = query.eq("estado", status) }
+        if (date !== "") { query = query.eq("fecha_creacion", date) }
+
+        const { error, data } = await query
+
+        if (error) {
+            return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+        }
+        return { success: true, data: data };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+    }
+
+};
+
+export const getCountAdministrator = async (date: string, search: string, status: string): Promise<QueryResultError<number>> => {
+    // let queryStatus = status == "" ? null : status;
+    const supabase = await createClient();
+
+    try {
+        let query = supabase
+            .from("administradores_con_email")
+            .select("*", { count: 'exact' })
+            // .eq("estado", status)
+            // .eq("fecha_creacion", date)
+            .ilike("nombres", `%${search}%`)
+
+        if (status !== "") { query = query.eq("estado", status) }
+        if (date !== "") { query = query.eq("fecha_creacion", date) }
+
+
+        const { error, count } = await query
+
+
+        if (error) {
+            return { success: false, error: `Error al obtener todos los administradores: ${error.message}` };
+        }
+
+
+        return { success: true, data: count! };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+    }
+
+};
+
+
+

@@ -1,5 +1,4 @@
 
-import { useFilterPaginationParams } from "@/components/hooks/useFilterPaginationParams";
 import SelectWaterMeter from "@/components/water-meter/id/SelectMedidor";
 import WaterMeterDisplay from "@/components/water-meter/id/WaterMeterDisplay";
 import { getCounterMeterWaterbyId, getWaterMeterById, getWaterMeterConsumptionById, getWaterMeterExcessById } from "@/lib/waterMeterAction";
@@ -11,23 +10,27 @@ import FiltersSearchSheets from "@/components/sheets/FiltersSearchSheets";
 import PaginationControls from "@/components/table/PaginationControlsx";
 import { Activity, Calendar, ChevronLeft, Droplet, Gauge, Hash } from 'lucide-react'
 import Link from 'next/link'
-import Test from "./test";
+import { coordinatesCache } from "@/modules/searchParams";
+import YearSelector from "@/components/filters-table/YearSelector";
 
 export default async function Page({ params, searchParams }: {
   params: { id: string },
   searchParams: Record<string, string | string[] | undefined> & CustomSearchParams
 }) {
 
-  const { medidor, page, per_page, date, start, end } = useFilterPaginationParams(searchParams);
+  const { year, page, query, status, per_page, wm } = coordinatesCache.parse(searchParams);
+  
   const data = await getWaterMeterById(Number(params.id));
-  const counterRow = await getCounterMeterWaterbyId(Number(params.id), Number(medidor), date);
+
+  const counterRow = await getCounterMeterWaterbyId(Number(params.id), Number(wm), 2025);
 
 
   if (!data.success) return <div>Error al obtener el medidor</div>
   if (!counterRow.success) return <div>Error la cantidad de lecturas del medidor</div>
 
-
-  const matchedMedidor = data.data.find((item) => item.id === Number(medidor));
+  const matchedMedidor = data.data.find((item) => item.id === Number(wm));
+  const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
+  const end = start + Number(per_page)
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -77,10 +80,10 @@ export default async function Page({ params, searchParams }: {
                   <p className="text-gray-500 mb-6">Consumo y exceso del medidor seleccionado</p>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="bg-gradient-to-br  rounded-xl p-6">
-                      <RenderWaterMeterDetails id={medidor} />
+                      <RenderWaterMeterDetails id={wm!} />
                     </div>
                     <div className="bg-gradient-to-br  rounded-xl p-6">
-                      <RenderWaterMeterDetailsExcess id={medidor} />
+                      <RenderWaterMeterDetailsExcess id={wm!} />
                     </div>
                   </div>
                 </section>
@@ -98,8 +101,8 @@ export default async function Page({ params, searchParams }: {
                     Lista de las lecturas registradas en el medidor seleccionado
                   </p>
                   <div className="overflow-hidden">
-                    <Suspense key={page + per_page + medidor + date} fallback={<>cargando ...</>}>
-                      <WaterMeterTableById page={page} per_page={per_page} date={date} id_medidor={medidor} id_usuario={params.id} />
+                    <Suspense key={page + per_page + wm + year} fallback={<>cargando ...</>}>
+                      <WaterMeterTableById page={page} per_page={per_page} date={year} id_medidor={wm!} id_usuario={params.id} />
                     </Suspense>
                     <Suspense fallback={<div>cargando</div>}>
                       <div className="mt-3">
@@ -163,7 +166,7 @@ export default async function Page({ params, searchParams }: {
                       <Calendar className="h-5 w-5 text-gray-400" />
                       <div>
                         <p className="text-sm text-gray-500">Fecha de instalación</p>
-                        <p className="font-medium">{matchedMedidor?.fecha_instalacion.toLocaleDateString()}</p>
+                        <p className="font-medium">{matchedMedidor?.fecha_instalacion}</p>
                       </div>
                     </div>
                   </div>
@@ -194,6 +197,7 @@ export default async function Page({ params, searchParams }: {
 
 
 async function RenderSelectWaterMeter({ data }: { data: WaterMeter[] }) {
+
   //const waterMeterByType = await repository.getWaterMeterbyType();
   return (
     <div className="flex w-96	items-center gap-2 md:ml-auto">
@@ -201,15 +205,15 @@ async function RenderSelectWaterMeter({ data }: { data: WaterMeter[] }) {
         <SelectWaterMeter waterMeter={data} />
       </div>
 
-      <div className=''>
-        <FiltersSearchSheets />
+      <div className='w-2/3'>
+        <YearSelector />
       </div>
     </div>
 
   )
 }
 
-async function RenderWaterMeterDetails({ id }: { id: string }) {
+async function RenderWaterMeterDetails({ id }: { id: number }) {
   const data = await getWaterMeterConsumptionById(Number(id));
   return (
     <div>
@@ -222,7 +226,7 @@ async function RenderWaterMeterDetails({ id }: { id: string }) {
   )
 }
 
-async function RenderWaterMeterDetailsExcess({ id }: { id: string }) {
+async function RenderWaterMeterDetailsExcess({ id }: { id: number }) {
   const data = await getWaterMeterExcessById(Number(id));
   //console.log(id)
   return (

@@ -18,11 +18,10 @@ export default function SelectStatus({ options }: { options: { label: string, va
         <Select
             aria-label="Selecciona un estado"
             label="Selecciona un estado"
-
+            labelPlacement='outside-left'
             size='sm'
             radius='sm'
             selectedKeys={[status]}
-            placeholder="Selecciona un estado"
             onChange={handleSelectionChange}
         >
             {options.map((option) => (

@@ -19,7 +19,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import InputField from './InputField'
 import { useUserStore } from '@/lib/store'
-import { getLocalTimeZone, now, parseAbsoluteToLocal } from '@internationalized/date'
+import { now, parseDate } from '@internationalized/date'
 import { IWaterMeter } from '@/model/water-meter/WaterMeterRepository'
 import { createApiWaterMeter } from '@/services/waterMeterService'
 import { toast } from 'react-toastify'
@@ -49,7 +49,7 @@ const schema = z.object({
     }
     // Si no, intentamos convertirlo a un `DateValue` usando `parseAbsoluteToLocal`
     if (typeof val === 'string' || val instanceof Date) {
-      return parseAbsoluteToLocal(new Date(val).toISOString());
+      return parseDate(new Date(val).toISOString());
     }
     return null;
   }, z.custom<DateValue>((data) => {
@@ -100,12 +100,12 @@ export function FormWaterMeter() {
 
 
   const onSubmit = handleSubmit((formData) => {
+    // console.log(formData.fecha_instalacion.toDate(TIME_ZONE).toDateString())
+    // console.log(formData.fecha_instalacion.toDate(TIME_ZONE).toISOString())
 
     if (type === "create") {
-
       repositoryWaterMeter.createWaterMeter(
-
-        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(TIME_ZONE) }
+        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(TIME_ZONE).toISOString() },
       ).then((res) => {
         if (res.success) {
           closeModal();
@@ -119,7 +119,7 @@ export function FormWaterMeter() {
 
 
       repositoryWaterMeter.updateWaterMeter(
-        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(TIME_ZONE) },
+        { ...formData, fecha_instalacion: formData.fecha_instalacion.toDate(TIME_ZONE).toISOString() },
         data?.id
       ).then((res) => {
         if (res.success) {
@@ -127,7 +127,7 @@ export function FormWaterMeter() {
           toast.success('Medidor actualizado con éxito');
         } else {
           closeModal();
-          toast.error('Algo salió mal, no se pudo actualizar el medidor');
+          toast.error(res.error);
         }
       });
     }
@@ -241,7 +241,7 @@ export function FormWaterMeter() {
           <Controller
             name="fecha_instalacion"
             control={control}
-            defaultValue={data?.fecha_instalacion == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha_instalacion.toISOString())}
+            defaultValue={data?.fecha_instalacion == null ? now(TIME_ZONE) : parseDate(data?.fecha_instalacion)}
             render={({ field }) => (
 
               <I18nProvider

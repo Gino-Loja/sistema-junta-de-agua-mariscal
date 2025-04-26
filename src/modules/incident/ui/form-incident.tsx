@@ -1,13 +1,12 @@
 'use client'
 
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, {  useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Card, CardHeader, CardBody, Input, Button, Textarea, Autocomplete, AutocompleteItem, Select, SelectItem, DatePicker, DateValue } from "@nextui-org/react";
-import ImagePreview from './image-preview';
 import { useFormDrawer, useIncidentStore, useUserStore } from '@/lib/store';
 import { useAsyncList } from '@react-stately/data';
 import { createApiWaterMeter } from '@/services/waterMeterService';
-import { getLocalTimeZone, now, parseAbsoluteToLocal } from '@internationalized/date';
+import {  now, parseAbsoluteToLocal } from '@internationalized/date';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';

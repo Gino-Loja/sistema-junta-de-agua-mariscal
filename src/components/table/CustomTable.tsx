@@ -11,11 +11,8 @@ import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-
   DropdownItem,
   DropdownSection,
-  Input,
-  Divider,
 
 } from "@nextui-org/react";
 import {
@@ -34,10 +31,6 @@ import { capitalize } from "@/utils/uppercaseletter";
 import { TableCustomProps } from "./ICustomTable";
 import type { Selection } from "@nextui-org/react";
 import DataTableFilterCustom from "./DataTableFilterCustom";
-
-
-
-
 
 export default function TableCustom<T>({ data, columns, per_page, filtersConfig, childrenFilterForCalendarTable, children }: TableCustomProps<T>) {
 
@@ -105,7 +98,6 @@ export default function TableCustom<T>({ data, columns, per_page, filtersConfig,
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu
-
                   aria-label="Table Columns"
                   closeOnSelect={false}
                   selectionMode="multiple"
@@ -147,10 +139,7 @@ export default function TableCustom<T>({ data, columns, per_page, filtersConfig,
               )}
             </div>
 
-
           </div>
-
-
 
           <div className="flex justify-between">
 
