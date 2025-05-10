@@ -5,7 +5,6 @@ import { Suspense } from "react";
 import MeasurementMetric from "@/components/measurement/MeasurementMetrics";
 import { MeasurementBarChart } from "@/components/measurement/MeasurementBarChart";
 import MetricSkeleton from '@/components/skeletons/SkeletomMetric';
-import BarChartSkeleton from '@/components/skeletons/BarChartSkeleton';
 
 import { Divider } from "@nextui-org/react";
 import MonthYearSelector from "@/components/filters-table/MonthYearSelector";
@@ -17,7 +16,7 @@ import { TIME_ZONE } from "@/model/Definitions";
 
 
 export default async function Page({ searchParams }: PageProps) {
-  const { date, year, month } = coordinatesCache.parse(searchParams)
+  const {  year, month,page, per_page } = coordinatesCache.parse(searchParams)
   const safeMonth = month ?? now(TIME_ZONE).month;
 
   
@@ -37,10 +36,10 @@ export default async function Page({ searchParams }: PageProps) {
         </div>
       </div>
       <Divider />
-      <Suspense key={month} fallback={<MetricSkeleton />}>
+      <Suspense key={safeMonth+"-"+year} fallback={<MetricSkeleton />}>
         <MeasurementMetric year={year} month={safeMonth}></MeasurementMetric>
       </Suspense>
-      <Suspense key={safeMonth + 1} fallback={<BarChartSkeleton />}>
+      <Suspense key={`${safeMonth}-${year}-${page}-${per_page}`} fallback={<MetricSkeleton />}>
         <FetchAndRenderComsumedMonthsByYear repository={repositoryLectures} year={year}></FetchAndRenderComsumedMonthsByYear>
       </Suspense>
 

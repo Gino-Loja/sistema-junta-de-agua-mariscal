@@ -10,10 +10,10 @@ export const columns: ColumnDef<Lectures, any>[] =
             header: "ID",
             accessorKey: "id",
         },
-        {
-            header: "Id Usuario",
-            accessorKey: "usuario_id",
-        },
+        // {
+        //     header: "Id Usuario",
+        //     accessorKey: "usuario_id",
+        // },
         {
             header: "Nombre",
             accessorKey: "nombre",
@@ -31,7 +31,7 @@ export const columns: ColumnDef<Lectures, any>[] =
         {
             header: "Fecha de lectura",
             accessorKey: "fecha",
-            accessorFn: (row) => row.fecha ? row.fecha.toLocaleDateString() : null,
+            accessorFn: (row) => row.fecha ,
               // Verifica si 'fecha' no es null
             cell: (info) => {
                 return (

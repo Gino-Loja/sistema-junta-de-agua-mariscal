@@ -2,7 +2,7 @@
 import { Listbox, ListboxItem, ListboxSection } from "@nextui-org/react";
 
 type ListSheetsPendingProps = {
-    fecha: Date,
+    fecha: string,
     valor_abonado: number,
     total_pagar: number,
     id: number
@@ -32,7 +32,7 @@ export default function ListSheetsPending({ data }: { data: ListSheetsPendingPro
             {data.map((item) =>
                 <ListboxItem className="flex justify-between items-center border-sm" key={item.id}  >
                     <div>
-                        <p className="text-sm">{formatFecha(item.fecha)}</p>
+                        <p className="text-sm">{formatFecha(new Date(item.fecha))}</p>
                         <p className="text-md font-semibold">
                             ${item.total_pagar.toString() ? item.total_pagar.toFixed(2) : "0.00"}
                         </p>

@@ -29,6 +29,7 @@ export default async function MeasurementMetrics({ year, month }: { year: number
   const lectureRepository: ILecturesRepository = createApiLecturesRepository();
   const consumedMeters = await lectureRepository.getComsumedMetersByMonths(month, year);
   const consumedBySector = await lectureRepository.getConsumedBySector(year, month);
+  // console.log("consumedMeters", consumedMeters);
 
   
   
@@ -69,7 +70,16 @@ export default async function MeasurementMetrics({ year, month }: { year: number
         <Divider></Divider>
         <CardBody className="flex flex-cols items-center justify-center mt-0 pt-0 overflow-hidden">
           <div className="transition duration-700 ease-in-out hover:scale-110 min-w-72 min-h-36 flex flex-col items-center justify-center" >
-            {consumedBySector.success && <LecturePieChart sectors={consumedBySector.data}></LecturePieChart>}
+
+            {consumedBySector.success &&
+
+              consumedBySector.data.length > 0 ?
+              <LecturePieChart sectors={consumedBySector.data}></LecturePieChart>: <div>
+                <p className="text-muted-foreground">No Existen lecturas para este mes</p>
+              </div>
+            }
+            
+            
           </div>
         </CardBody>
       </Card>

@@ -65,26 +65,28 @@ export function MonthSelector({ value, locale = 'es' }: MonthSelectorProps) {
     };
 
     return (
-            <Select
-                size='sm'
-                radius='sm'
-                aria-label="Selecciona el mes"
-                label="Selecciona el mes"
-                onChange={handleMonthChange}
-                // classNames={{
-                //     trigger: "backdrop-blur-xl",
-                //     listbox: "overflow-y-auto backdrop-blur-xl"
-                // }}
-                // scrollShadowProps={{
-                //     isEnabled: false,
-                // }}
-            >
-                {MONTHS[locale].map((monthName, index) => (
-                    <SelectItem key={(monthName.value).toString()} value={(monthName.value).toString()}>
-                        {monthName.label}
-                    </SelectItem>
-                ))}
-            </Select>
+        <Select
+            size='sm'
+            radius='sm'
+            aria-label="Selecciona el mes"
+            label="Selecciona el mes"
+            onChange={handleMonthChange}
+            labelPlacement='outside-left'
+
+        // classNames={{
+        //     trigger: "backdrop-blur-xl",
+        //     listbox: "overflow-y-auto backdrop-blur-xl"
+        // }}
+        // scrollShadowProps={{
+        //     isEnabled: false,
+        // }}
+        >
+            {MONTHS[locale].map((monthName, index) => (
+                <SelectItem key={(monthName.value).toString()} value={(monthName.value).toString()}>
+                    {monthName.label}
+                </SelectItem>
+            ))}
+        </Select>
     );
 }
 

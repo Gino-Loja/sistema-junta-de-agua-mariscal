@@ -4,6 +4,7 @@ import { Chip } from "@nextui-org/react";
 import { MeasurementMacro } from "@/model/types";
 import { CustomActions } from "@/components/modal/Actions";
 import { ActionsMenuMeasurement } from "./action-menu-measurement";
+import { formatToEcuadorTime } from "@/utils/getPagination";
 
 
 export const columns: ColumnDef<MeasurementMacro, any>[] =
@@ -18,9 +19,7 @@ export const columns: ColumnDef<MeasurementMacro, any>[] =
             accessorKey: "fecha",
             accessorFn: (row) => {
                 // Verifica si 'fecha' no es null y formatea fecha y hora
-                return row.fecha
-                    ? `${row.fecha.toLocaleDateString()} ${row.fecha.toLocaleTimeString()}`
-                    : null;
+                return formatToEcuadorTime(row.fecha).toDate().toLocaleString('es-EC');
             },
             cell: (info) => {
                 return (

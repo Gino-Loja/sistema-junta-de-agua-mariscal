@@ -88,7 +88,7 @@ export default function FormAddLecture() {
         if (type === "create") {
 
             repositoryLectures.createLecture(
-                { fecha: formData.fecha.toDate(TIME_ZONE), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }
+                { fecha: formData.fecha.toDate(TIME_ZONE).toISOString(), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }
             ).then((res) => {
                 if (res.success) {
                     closeModal();
@@ -99,7 +99,7 @@ export default function FormAddLecture() {
                 }
             });
         } else if (type === "update") {
-            repositoryLectures.updateLecture({ fecha: formData.fecha.toDate(TIME_ZONE), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }, data?.id).then((res) => {
+            repositoryLectures.updateLecture({ fecha: formData.fecha.toDate(TIME_ZONE).toISOString(), lectura_actual: formData.lectura_actual, medidor_id: formData.medidor_id, }, data?.id).then((res) => {
                 if (res.success) {
                     closeModal();
                     toast.success('Lectura actualizada con éxito');

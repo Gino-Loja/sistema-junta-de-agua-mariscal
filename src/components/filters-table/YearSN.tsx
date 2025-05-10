@@ -67,6 +67,8 @@ export function YearSN({
                     size='sm'
                     aria-label="Selecciona el año"
                     label="Selecciona el año"
+                    labelPlacement='outside-left'
+
                     //defaultSelectedKeys={[selectedYear !== null ? selectedYear.toString() : ""]}
                     onChange={handleYearChange}
                     

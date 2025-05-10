@@ -21,7 +21,7 @@ export const columns: ColumnDef<Sheets, any>[] =  [
       },
       {
         header: "Fecha de Emisión",
-        accessorFn: (row) => row.fecha_emision ? row.fecha_emision.toLocaleDateString() : null,  // Verifica si 'fecha' no es null
+        accessorFn: (row) => row.fecha_emision ,  // Verifica si 'fecha' no es null
         accessorKey: "fecha_emision",
       },
       {
@@ -59,25 +59,25 @@ export const columns: ColumnDef<Sheets, any>[] =  [
       {
         header: "Tarifa base",
         accessorKey: "total_consumo",
-        accessorFn: (row) => row.total_consumo.toFixed(2) + "$",  // Verifica si 'fecha' no es null
+        accessorFn: (row) => row.total_consumo?.toFixed(2) + "$",  // Verifica si 'fecha' no es null
 
       },
       {
         header: "Valor de Exceso",
         accessorKey: "total_exceso",
         accessorFn: (row) => {
-          return row.total_exceso.toFixed(2) + "$"
+          return row.total_exceso?.toFixed(2) + "$"
         },  // Verifica si 'fecha' no es null
       },
       {
         header: "Total a pagar",
         accessorKey: "total_pagar",
-        accessorFn: (row) => row.total_pagar.toFixed(2) + "$"
+        accessorFn: (row) => row.total_pagar?.toFixed(2) + "$"
       },
       {
         header: "Cancelado",
         accessorKey: "valor_abonado",
-        accessorFn: (row) => row.valor_abonado.toFixed(2) + "$",  // Verifica si 'fecha' no es null
+        accessorFn: (row) => row.valor_abonado?.toFixed(2) + "$",  // Verifica si 'fecha' no es null
 
       },
       {

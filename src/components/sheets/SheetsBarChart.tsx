@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { monthsInSpanish } from '@/model/types';
 
 interface InputData {
-    mes: Date;
+    mes: string;
     sector_nombre: string;
     total_recaudado: number;
     total_deuda: number;
@@ -60,13 +60,15 @@ export function SheetsBarChart({ data }: { data: InputData[] }) {
         return totals;
     }, [data]);
 
+
+
     // Transformamos los datos para incluir ambas métricas por fecha y sector.
     const transformData = (data: InputData[]): TransformedData[] => {
         const result: { [key: string]: TransformedData } = {};
         data.forEach(({ mes, sector_nombre, total_recaudado, total_deuda }) => {
-            const fechaKey = mes.toISOString().split('T')[0];
+            const fechaKey = mes.toString().split('T')[0];
             if (!result[fechaKey]) {
-                result[fechaKey] = { mes };
+                result[fechaKey] = { mes: new Date(mes) };
             }
             result[fechaKey][`${sector_nombre}_recaudado`] = total_recaudado;
             result[fechaKey][`${sector_nombre}_deuda`] = total_deuda;

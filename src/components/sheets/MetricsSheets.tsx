@@ -14,7 +14,6 @@ export default async function MetricSheets({ year, month }: { year: number, mont
   const calculeRevenue = await sheetsRepository.getCalculateMonthlyRevenue(year, month);
   const revenueBySector = await sheetsRepository.getRevenueBySector(year, month);
   const percentageRevenueByStatus = await sheetsRepository.percentageRevenueByStatus(year, month);
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-rows-auto">
       <Card shadow="sm" >

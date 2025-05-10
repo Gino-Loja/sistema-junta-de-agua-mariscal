@@ -57,7 +57,7 @@ export default function FormAddSheet() {
             Planilla {data?.id}
           </h3>
 
-          <p className="text-small text-default-500">Fecha: {data?.fecha_emision.toLocaleDateString()}</p>
+          <p className="text-small text-default-500">Fecha: {data?.fecha_emision}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="bordered">
@@ -161,7 +161,7 @@ export default function FormAddSheet() {
       </div>
       <div className="flex justify-between items-center">
         <span className="text-small text-default-500">
-          Actualizado: {data?.fecha_actualizacion !== null ? data?.fecha_actualizacion.toLocaleDateString() : data?.fecha_emision.toLocaleDateString()}
+          Actualizado: {data?.fecha_actualizacion !== null ? data?.fecha_actualizacion : data?.fecha_emision}
         </span>
       </div>
     </div>

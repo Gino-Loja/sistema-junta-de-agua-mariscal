@@ -14,9 +14,9 @@ import MonthYearSelector from '@/components/filters-table/MonthYearSelector';
 import { getSectors } from '@/modules/incident/utils/use-media-query';
 import SelectParams from '@/components/filters-table/SelectParams';
 import LoadingIcon from '@/components/icons/loading-icon';
+import { now } from '@internationalized/date';
+import { TIME_ZONE } from '@/model/Definitions';
 //import FormAddLecture from '@/components/forms/FormLecture';
-
-
 
 const FormModal = dynamic(() =>
   import('@/components/modal/FormModal').then((mod) => mod.default)
@@ -24,14 +24,12 @@ const FormModal = dynamic(() =>
 const FormAddLecture = dynamic(() =>
   import('@/components/forms/FormLecture').then((mod) => mod.default)
 )
-
-
-
 export default async function Page({ searchParams }: PageProps) {
 
 
   const repositoryLectures: ILecturesRepository = createApiLecturesRepository();
   const { date, query, page, per_page, year, month, sector } = coordinatesCache.parse(searchParams)
+  const safeMonth = month ?? now(TIME_ZONE).month; // Si no existe el parámetro 'month' en los searchParams, usa el mes actual
   // Si no existe el parámetro 'year' o 'month' en los searchParams, usa los valores actuales
 
 
@@ -69,18 +67,18 @@ export default async function Page({ searchParams }: PageProps) {
         <MeasurementTable
           repository={repositoryLectures}
           page={page} per_page={per_page}
-          date={date} month={month}
+          date={date} month={safeMonth}
           year={year} query={query}
           sector={sector}
         ></MeasurementTable>
       </Suspense>
 
-      <Suspense key={page + per_page + query + year + month} fallback={<LoadingIcon />}>
+      <Suspense key={page  + query + year + month} fallback={<LoadingIcon />}>
         <FechtRenderPaginationControls
           repository={repositoryLectures}
           page={page}
           per_page={per_page}
-          month={month}
+          month={safeMonth}
           year={year}
           sector={sector}
           query={query} />

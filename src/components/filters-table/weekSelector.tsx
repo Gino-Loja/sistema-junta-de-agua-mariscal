@@ -7,6 +7,7 @@ import { TZDate } from "@date-fns/tz";
 import { TIME_ZONE } from "@/model/Definitions";
 import { coordinatesParsers } from "@/modules/searchParams";
 import { useQueryStates } from "nuqs";
+import { now } from "@internationalized/date";
 
 /** Estructura de una semana */
 interface WeekRange {
@@ -50,7 +51,8 @@ export default function WeekSelector() {
     shallow: false,
   });
   //http://localhost:3000/measurement/macro?from=10-03-2025&to=16-03-2025
-  const weeks = getWeeksOfMonth(year, month);
+  let safeMonth = month ??  now(TIME_ZONE).month; // Si no existe el parámetro 'month' en los searchParams, usa el mes actual
+  const weeks = getWeeksOfMonth(year, safeMonth);
   const [selectedWeek, setSelectedWeek] = useState<WeekRange | null>(null);
 
   // Manejador que recibe el valor (weekNumber) seleccionado en el Select
@@ -67,8 +69,12 @@ export default function WeekSelector() {
     const week = weeks.find((w) => w.weekNumber === Number(selectedKey));
     if (week) {
       setSelectedWeek(week);
-      setCoordinates({ from: week.start.toLocaleDateString('es-EC'), to: week.end.toLocaleDateString('es-EC') });
-    }
+      // solo quiero la fecha 2024-12-31 y no 2024-12-31T23:59:59.999-05:00
+
+      setCoordinates({
+        from: week.start.toISOString().split('T')[0],
+        to: week.end.toISOString().split('T')[0],
+    });    }
   };
 
   return (

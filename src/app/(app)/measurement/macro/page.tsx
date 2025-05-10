@@ -1,4 +1,3 @@
-import { CircleChartCard } from "@/components/Bar-chart";
 import MonthYearSelector from "@/components/filters-table/MonthYearSelector";
 import WeekSelector from "@/components/filters-table/weekSelector";
 import { FormDelete } from "@/components/forms/form-delete";
@@ -23,7 +22,7 @@ const FormModal = dynamic(() =>
     import('@/components/modal/FormModal').then((mod) => mod.default)
 )
 export default async function Page({ searchParams }: PageProps) {
-    const { date, query, page, per_page, from, to, month, year } = coordinatesCache.parse(searchParams)
+    const { date, page, per_page, from, to, month, year } = coordinatesCache.parse(searchParams)
     const safeMonth = month ?? now(TIME_ZONE).month;
     
     const repository = createApiLecturesRepository();
@@ -121,9 +120,12 @@ export default async function Page({ searchParams }: PageProps) {
 
 async function CardAreaChartMeasurementMacro({ repository, from, to, month, year }: { repository: ILecturesRepository, from: string, to: string, month: number, year: number }) {
     const getTotalAmountCostIncidetByYear = await repository.getMeasurementMacroAreaChart(from, to, month, year);
+    // console.log(getTotalAmountCostIncidetByYear)
+
     if (!getTotalAmountCostIncidetByYear.success) {
         return <div>Error al obtener los datos</div>
     }
+
 
     return (
 

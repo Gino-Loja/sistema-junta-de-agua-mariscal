@@ -1,7 +1,6 @@
 'use server';
 
 import { QueryResultError, WaterMeter, WaterMeterById, WaterMeterCreate, WaterMeterDto } from "@/model/types";
-import pool from "./db";
 import { revalidatePath } from "next/cache";
 import { createClient } from "./supabase/server";
 import { getPagination } from "@/utils/getPagination";

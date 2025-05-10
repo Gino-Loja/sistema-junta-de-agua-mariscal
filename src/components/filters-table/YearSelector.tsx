@@ -66,6 +66,7 @@ export function YearSelector({
                         disallowEmptySelection
                         aria-label="Selecciona el año"
                         label="Selecciona el año"
+                        labelPlacement='outside-left'
                         selectedKeys={[selectedYear.toString()]}
                         
                         onChange={handleYearChange}

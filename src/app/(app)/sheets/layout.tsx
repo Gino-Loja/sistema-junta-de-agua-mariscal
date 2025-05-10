@@ -17,5 +17,6 @@ export default function DashboardLayout({
             }]
         } ></NavigationTabs>
         {children}
+
     </section>
 }

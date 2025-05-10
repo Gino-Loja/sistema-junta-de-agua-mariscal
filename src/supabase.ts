@@ -193,6 +193,18 @@ export type Database = {
           {
             foreignKeyName: "facturas_usuario_id_fkey"
             columns: ["usuario_id"]
+            referencedRelation: "sheet_by_users"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "facturas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_years_and_months"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "facturas_usuario_id_fkey"
+            columns: ["usuario_id"]
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
@@ -232,6 +244,18 @@ export type Database = {
             columns: ["sector_id"]
             referencedRelation: "sectores"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidentes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_users"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "incidentes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_years_and_months"
+            referencedColumns: ["usuario_id"]
           },
           {
             foreignKeyName: "incidentes_usuario_id_fkey"
@@ -276,33 +300,33 @@ export type Database = {
       }
       lecturas: {
         Row: {
-          consumo: number
-          exceso: number
+          consumo: number | null
+          exceso: number | null
           fecha: string
           id: number
           lectura_actual: number
-          lectura_anterior: number
-          medidor_id: number | null
+          lectura_anterior: number | null
+          medidor_id: number
           mes_truncado: string | null
         }
         Insert: {
-          consumo: number
-          exceso?: number
+          consumo?: number | null
+          exceso?: number | null
           fecha?: string
           id?: never
           lectura_actual: number
-          lectura_anterior: number
-          medidor_id?: number | null
+          lectura_anterior?: number | null
+          medidor_id: number
           mes_truncado?: string | null
         }
         Update: {
-          consumo?: number
-          exceso?: number
+          consumo?: number | null
+          exceso?: number | null
           fecha?: string
           id?: never
           lectura_actual?: number
-          lectura_anterior?: number
-          medidor_id?: number | null
+          lectura_anterior?: number | null
+          medidor_id?: number
           mes_truncado?: string | null
         }
         Relationships: [
@@ -311,6 +335,18 @@ export type Database = {
             columns: ["medidor_id"]
             referencedRelation: "medidores"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consumos_medidor_id_fkey"
+            columns: ["medidor_id"]
+            referencedRelation: "sheet_by_users"
+            referencedColumns: ["medidor_id"]
+          },
+          {
+            foreignKeyName: "consumos_medidor_id_fkey"
+            columns: ["medidor_id"]
+            referencedRelation: "sheet_by_years_and_months"
+            referencedColumns: ["medidor_id"]
           },
           {
             foreignKeyName: "consumos_medidor_id_fkey"
@@ -349,6 +385,18 @@ export type Database = {
           usuario_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_users"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_years_and_months"
+            referencedColumns: ["usuario_id"]
+          },
           {
             foreignKeyName: "medidor_usuario_id_fkey"
             columns: ["usuario_id"]
@@ -404,6 +452,18 @@ export type Database = {
           {
             foreignKeyName: "multas_usuario_id_fkey"
             columns: ["usuario_id"]
+            referencedRelation: "sheet_by_users"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "multas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_years_and_months"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "multas_usuario_id_fkey"
+            columns: ["usuario_id"]
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
@@ -411,35 +471,35 @@ export type Database = {
       }
       planillas: {
         Row: {
-          estado: string | null
+          estado: string
           fecha_actualizacion: string | null
           fecha_emision: string | null
           id: number
           id_lectura: number | null
-          total_consumo: number | null
-          total_exceso: number | null
+          total_consumo: number
+          total_exceso: number
           total_pagar: number | null
           valor_abonado: number | null
         }
         Insert: {
-          estado?: string | null
+          estado: string
           fecha_actualizacion?: string | null
           fecha_emision?: string | null
           id?: never
           id_lectura?: number | null
-          total_consumo?: number | null
-          total_exceso?: number | null
+          total_consumo: number
+          total_exceso: number
           total_pagar?: number | null
           valor_abonado?: number | null
         }
         Update: {
-          estado?: string | null
+          estado?: string
           fecha_actualizacion?: string | null
           fecha_emision?: string | null
           id?: never
           id_lectura?: number | null
-          total_consumo?: number | null
-          total_exceso?: number | null
+          total_consumo?: number
+          total_exceso?: number
           total_pagar?: number | null
           valor_abonado?: number | null
         }
@@ -561,37 +621,37 @@ export type Database = {
         Row: {
           cedula: string
           direccion: string
-          email: string | null
+          email: string
           estado: boolean
           fecha_creacion: string
           id: number
           nombre: string
-          sector_id: number | null
-          telefono: string | null
+          sector_id: number
+          telefono: string
           tipo: string
         }
         Insert: {
           cedula: string
           direccion: string
-          email?: string | null
+          email: string
           estado?: boolean
           fecha_creacion?: string
           id?: never
           nombre: string
-          sector_id?: number | null
-          telefono?: string | null
+          sector_id: number
+          telefono: string
           tipo?: string
         }
         Update: {
           cedula?: string
           direccion?: string
-          email?: string | null
+          email?: string
           estado?: boolean
           fecha_creacion?: string
           id?: never
           nombre?: string
-          sector_id?: number | null
-          telefono?: string | null
+          sector_id?: number
+          telefono?: string
           tipo?: string
         }
         Relationships: [
@@ -618,6 +678,74 @@ export type Database = {
         }
         Relationships: []
       }
+      get_all_user_by_sector: {
+        Row: {
+          numero_usuarios: number | null
+          sector_nombre: string | null
+        }
+        Relationships: []
+      }
+      get_users_inactives_actives: {
+        Row: {
+          estado: boolean | null
+          numero_usuarios: number | null
+        }
+        Relationships: []
+      }
+      sheet_by_users: {
+        Row: {
+          cedula: string | null
+          consumo: number | null
+          estado: string | null
+          exceso: number | null
+          fecha_actualizacion: string | null
+          fecha_emision: string | null
+          id: number | null
+          id_lectura: number | null
+          medidor_id: number | null
+          nombre: string | null
+          total_consumo: number | null
+          total_exceso: number | null
+          total_pagar: number | null
+          usuario_id: number | null
+          valor_abonado: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_lectura_id"
+            columns: ["id_lectura"]
+            referencedRelation: "lecturas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sheet_by_years_and_months: {
+        Row: {
+          cedula: string | null
+          consumo: number | null
+          estado: string | null
+          exceso: number | null
+          fecha_actualizacion: string | null
+          fecha_emision: string | null
+          id: number | null
+          id_lectura: number | null
+          medidor_id: number | null
+          nombre: string | null
+          total_consumo: number | null
+          total_exceso: number | null
+          total_pagar: number | null
+          usuario_id: number | null
+          valor_abonado: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_lectura_id"
+            columns: ["id_lectura"]
+            referencedRelation: "lecturas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vista_medidores_usuarios: {
         Row: {
           cedula: string | null
@@ -634,6 +762,18 @@ export type Database = {
           {
             foreignKeyName: "medidor_usuario_id_fkey"
             columns: ["usuario_id"]
+            referencedRelation: "sheet_by_users"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "sheet_by_years_and_months"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
@@ -641,6 +781,26 @@ export type Database = {
       }
     }
     Functions: {
+      get_consumo_by_sector_year_month: {
+        Args: {
+          anio: number
+          mes: number
+        }
+        Returns: {
+          sector: string
+          consumo: number
+        }[]
+      }
+      get_consumo_exceso_by_year_month: {
+        Args: {
+          anio: number
+          mes: number
+        }
+        Returns: {
+          consumo: number
+          exceso: number
+        }[]
+      }
       get_counter_meter_water_by_id: {
         Args: {
           usuario_id_param: number
@@ -648,6 +808,156 @@ export type Database = {
           anio_param: number
         }
         Returns: number
+      }
+      get_lectures_counter_all: {
+        Args: {
+          termino_busqueda: string
+          fecha_inicio: string
+          fecha_fin: string
+          param_sector_id?: number
+        }
+        Returns: number
+      }
+      get_lectures_user_pagination: {
+        Args: {
+          termino_busqueda: string
+          fecha_inicio: string
+          fecha_fin: string
+        }
+        Returns: {
+          nombre: string
+          numero_serie: string
+          medidor_id: number
+          usuario_id: number
+          fecha: string
+          lectura_anterior: number
+          lectura_actual: number
+          consumo: number
+          exceso: number
+          id: number
+          sector_id: number
+        }[]
+      }
+      get_macro_measurements_by_date_range_area_chart: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+          p_from?: string
+          p_to?: string
+        }
+        Returns: {
+          fecha: string
+          consumo: number
+        }[]
+      }
+      get_macro_measurements_count: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+          p_from?: string
+          p_to?: string
+        }
+        Returns: number
+      }
+      get_measurement_macro_by_date_range: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+          p_from?: string
+          p_to?: string
+        }
+        Returns: {
+          id: number
+          fecha: string
+          lectura: number
+          consumo: number
+        }[]
+      }
+      get_monthly_consumo_exceso_by_year: {
+        Args: {
+          anio: number
+        }
+        Returns: {
+          mes: string
+          consumo_total: number
+          exceso_total: number
+        }[]
+      }
+      get_pending_planillas_by_user: {
+        Args: {
+          p_usuario_id: number
+          p_medidor_id: number
+          p_from?: string
+          p_to?: string
+        }
+        Returns: {
+          fecha: string
+          valor_abonado: number
+          total_pagar: number
+          id: number
+        }[]
+      }
+      get_sheets_calculate_monthly_revenue: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: {
+          total_recaudado: number
+          total_pagar: number
+        }[]
+      }
+      get_sheets_count_by_users: {
+        Args: {
+          p_usuario_id: number
+          p_medidor_id: number
+          p_estado?: string
+          p_from?: string
+          p_to?: string
+          p_fecha_especifica?: string
+        }
+        Returns: number
+      }
+      get_sheets_counter: {
+        Args: {
+          p_search_term: string
+          p_fecha_inicio: string
+          p_fecha_fin: string
+          p_estado?: string
+          p_fecha_especifica?: string
+        }
+        Returns: number
+      }
+      get_sheets_percentage_revenue_by_status: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: {
+          porcentaje_planilla_pagadas: number
+        }[]
+      }
+      get_sheets_recaudado_by_month_sector: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: {
+          mes: string
+          sector_nombre: string
+          total_recaudado: number
+          total_deuda: number
+        }[]
+      }
+      get_sheets_revenue_by_sector: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: {
+          sector_nombre: string
+          total_recaudado: number
+        }[]
       }
       get_water_meter_by_estatus: {
         Args: Record<PropertyKey, never>
@@ -696,6 +1006,16 @@ export type Database = {
           lectura_actual: number
           exceso: number
           medidor_id: number
+        }[]
+      }
+      obtener_medidores_por_usuario: {
+        Args: {
+          p_usuario_id: number
+        }
+        Returns: {
+          id: number
+          estado: string
+          tipo: string
         }[]
       }
       year_extract: {

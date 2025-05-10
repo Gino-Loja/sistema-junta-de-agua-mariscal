@@ -102,6 +102,7 @@ export default async function Page({ searchParams }: PageProps) {
 
 async function GetSectorSelector() {
   const sector = await getSectors();
+  
   return (
     sector.success &&
     <SelectParams key={'select-params-sector'} options={sector.data} />

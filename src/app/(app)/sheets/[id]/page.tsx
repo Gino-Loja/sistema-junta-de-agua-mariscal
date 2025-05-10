@@ -18,8 +18,7 @@ export default async function Page({ params, searchParams }: {
   params: { id: string },
   searchParams: Record<string, string | string[] | undefined>
 }) {
-  const { date, page, query, status, per_page, yr, month, wm } = coordinatesCache.parse(searchParams);
-
+  const { date, page, status, per_page, yr, month, wm } = coordinatesCache.parse(searchParams);
 
   const repositorySheets: ISheetsRepository = createApiSheetsRepository();
   const user = await repositorySheets.getUserById(Number(params.id));
@@ -39,8 +38,8 @@ export default async function Page({ params, searchParams }: {
       </FormModal>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full mb-4">
         {/* Cuadro 1 (Información del usuario) */}
-        <div className=" flex justify-between items-center sm:col-auto">
-          <div>
+        <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-2">
+          <div className=" ">
             <h2 className="text-2xl font-semibold w-full ">{user.data.nombre}</h2>
             <p className="text-gray-700">
               Cédula: <span className="font-medium">{user.data.cedula}</span>

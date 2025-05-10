@@ -132,7 +132,7 @@ export const getAdministrator = async (date: string, search: string, status: str
         const { error, data } = await query
 
         if (error) {
-            return { success: false, error: `Error al obtener todos los usuarios: ${error}` };
+            return { success: false, error: `Error: ${error.message}` };
         }
         return { success: true, data: data };
     } catch (error) {
@@ -161,7 +161,7 @@ export const getCountAdministrator = async (date: string, search: string, status
 
 
         if (error) {
-            return { success: false, error: `Error al obtener todos los administradores: ${error.message}` };
+            return { success: false, error: `Error: ${error.message}` };
         }
 
 

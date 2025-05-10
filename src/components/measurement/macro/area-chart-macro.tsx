@@ -2,7 +2,7 @@
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-import { parseDateTime } from '@internationalized/date';
+import { formatToEcuadorTime } from '@/utils/getPagination';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -19,13 +19,18 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export function MacroMeasurementAreaChart({ data }: { data: { fecha: Date, consumo: number }[] }) {
+export function MacroMeasurementAreaChart({ data }: { data: { fecha: string, consumo: number }[] }) {
     const { theme } = useTheme();
+    // let date = parseZonedDateTime('2025-03-01T00:00:00');
+    // let dateTime = toTimeZone(date, TIME_ZONE);
     
     // Format the dates in the data with time
     const formattedData = data.map(item => {
         try {
-            const dateTime = parseDateTime(item.fecha.toDateString());
+            // const date = parseZonedDateTime(item.fecha);
+
+            // Convierte a la zona horaria de Ecuador
+            const dateTime = formatToEcuadorTime(item.fecha);
             
             return {
                 ...item,

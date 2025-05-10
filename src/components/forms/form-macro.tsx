@@ -125,7 +125,7 @@ export default function FormMacro() {
                     name="fecha"
 
                     control={control}
-                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha)}
                     render={({ field }) => (
                         <I18nProvider
 
