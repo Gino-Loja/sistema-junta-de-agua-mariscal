@@ -193,6 +193,12 @@ export type Database = {
           {
             foreignKeyName: "facturas_usuario_id_fkey"
             columns: ["usuario_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "facturas_usuario_id_fkey"
+            columns: ["usuario_id"]
             referencedRelation: "sheet_by_users"
             referencedColumns: ["usuario_id"]
           },
@@ -215,7 +221,6 @@ export type Database = {
           costo: number | null
           descripcion: string | null
           fecha: string
-          foto: string | null
           id: number
           sector_id: number | null
           usuario_id: number | null
@@ -224,7 +229,6 @@ export type Database = {
           costo?: number | null
           descripcion?: string | null
           fecha?: string
-          foto?: string | null
           id?: never
           sector_id?: number | null
           usuario_id?: number | null
@@ -233,7 +237,6 @@ export type Database = {
           costo?: number | null
           descripcion?: string | null
           fecha?: string
-          foto?: string | null
           id?: never
           sector_id?: number | null
           usuario_id?: number | null
@@ -242,8 +245,20 @@ export type Database = {
           {
             foreignKeyName: "incidentes_sector_id_fkey"
             columns: ["sector_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["id_sector"]
+          },
+          {
+            foreignKeyName: "incidentes_sector_id_fkey"
+            columns: ["sector_id"]
             referencedRelation: "sectores"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidentes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["usuario_id"]
           },
           {
             foreignKeyName: "incidentes_usuario_id_fkey"
@@ -388,6 +403,12 @@ export type Database = {
           {
             foreignKeyName: "medidor_usuario_id_fkey"
             columns: ["usuario_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
             referencedRelation: "sheet_by_users"
             referencedColumns: ["usuario_id"]
           },
@@ -449,6 +470,12 @@ export type Database = {
           usuario_id?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "multas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["usuario_id"]
+          },
           {
             foreignKeyName: "multas_usuario_id_fkey"
             columns: ["usuario_id"]
@@ -658,6 +685,12 @@ export type Database = {
           {
             foreignKeyName: "usuarios_sector_id_fkey"
             columns: ["sector_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["id_sector"]
+          },
+          {
+            foreignKeyName: "usuarios_sector_id_fkey"
+            columns: ["sector_id"]
             referencedRelation: "sectores"
             referencedColumns: ["id"]
           },
@@ -684,6 +717,33 @@ export type Database = {
           sector_nombre: string | null
         }
         Relationships: []
+      }
+      get_incident_view: {
+        Row: {
+          costo: number | null
+          descripcion: string | null
+          fecha: string | null
+          id: number | null
+          id_sector: number | null
+          nombre_sector: string | null
+          nombre_usuario: string | null
+          sector_id: number | null
+          usuario_id: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incidentes_sector_id_fkey"
+            columns: ["sector_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["id_sector"]
+          },
+          {
+            foreignKeyName: "incidentes_sector_id_fkey"
+            columns: ["sector_id"]
+            referencedRelation: "sectores"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       get_users_inactives_actives: {
         Row: {
@@ -762,6 +822,12 @@ export type Database = {
           {
             foreignKeyName: "medidor_usuario_id_fkey"
             columns: ["usuario_id"]
+            referencedRelation: "get_incident_view"
+            referencedColumns: ["usuario_id"]
+          },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
             referencedRelation: "sheet_by_users"
             referencedColumns: ["usuario_id"]
           },
@@ -781,6 +847,33 @@ export type Database = {
       }
     }
     Functions: {
+      contar_incidentes_por_rango: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+          p_fecha_especifica?: string
+          p_search_term?: string
+          p_sector_id?: number
+        }
+        Returns: number
+      }
+      contar_incidentes_por_rango_fechas: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: number
+      }
+      contar_incidentes_por_sector_rango: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: {
+          name: string
+          value: number
+        }[]
+      }
       get_consumo_by_sector_year_month: {
         Args: {
           anio: number
@@ -1017,6 +1110,13 @@ export type Database = {
           estado: string
           tipo: string
         }[]
+      }
+      obtener_total_incidentes: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: number
       }
       year_extract: {
         Args: {

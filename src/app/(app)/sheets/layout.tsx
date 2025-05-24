@@ -5,7 +5,7 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
-    return <section>
+    return <section className="relative min-h-screen">
         <NavigationTabs links={
             [{
                 url: "/sheets",
@@ -16,7 +16,8 @@ export default function DashboardLayout({
                 title: "Planillas",
             }]
         } ></NavigationTabs>
-        {children}
+            {children}
+
 
     </section>
 }

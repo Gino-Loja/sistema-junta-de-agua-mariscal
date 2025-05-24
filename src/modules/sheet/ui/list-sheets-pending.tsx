@@ -9,6 +9,8 @@ type ListSheetsPendingProps = {
 }
 
 export default function ListSheetsPending({ data }: { data: ListSheetsPendingProps[] }) {
+
+
     if (!data || data.length === 0) {
         return <p className="text-gray-500 text-center">No hay planillas pendientes.</p>;
     }
@@ -17,8 +19,15 @@ export default function ListSheetsPending({ data }: { data: ListSheetsPendingPro
         return new Intl.DateTimeFormat("es-ES", { day: "2-digit", month: "long", year: "numeric" }).format(fecha);
     };
 
+    
+
+
     return (
-        <Listbox variant="faded"
+        <Listbox
+            variant="faded"
+            classNames={{
+                list: "max-h-[500px] overflow-auto",
+            }}
             color="danger"
             topContent={
                 <div className="flex items-center gap-2">
@@ -26,11 +35,11 @@ export default function ListSheetsPending({ data }: { data: ListSheetsPendingPro
                         {data.length} planillas pendientes
                     </p>
                 </div>
-            } 
+            }
             aria-label="Planillas pendientes">
 
             {data.map((item) =>
-                <ListboxItem className="flex justify-between items-center border-sm" key={item.id}  >
+                <ListboxItem className="flex justify-between items-center border-sm " key={item.id}  >
                     <div>
                         <p className="text-sm">{formatFecha(new Date(item.fecha))}</p>
                         <p className="text-md font-semibold">
@@ -38,7 +47,7 @@ export default function ListSheetsPending({ data }: { data: ListSheetsPendingPro
                         </p>
                     </div>
                     <p className="text-sm ">
-                        Abonado: ${item.valor_abonado.toString()  ? item.valor_abonado.toFixed(2) : "0.00"}
+                        Abonado: ${item.valor_abonado.toString() ? item.valor_abonado.toFixed(2) : "0.00"}
                     </p>
                 </ListboxItem>
             )}

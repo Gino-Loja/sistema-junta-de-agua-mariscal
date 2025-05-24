@@ -11,7 +11,6 @@ export default  async function SectorSelector({ sectors }: { sectors: { value: s
                 radius='sm'
                  size='sm'
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    console.log(e.target.value)
                     
                 }}
                 className="max-w-xs"

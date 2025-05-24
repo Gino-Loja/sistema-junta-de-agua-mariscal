@@ -256,8 +256,6 @@ export async function updateUser(user: UserDto, id: number): Promise<QueryResult
 export async function getUserPagination(currentPage: number, itemsPerPage: number, query: string, sector: string, estado: string): Promise<QueryResultError<User[]>> {
 
     //const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const offset = (currentPage - 1) * itemsPerPage;
-
     try {
         //     const user: User[] = (await pool.query(`
         //     SELECT *

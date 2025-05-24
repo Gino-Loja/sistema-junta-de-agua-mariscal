@@ -93,30 +93,30 @@ export default async function Page({ params, searchParams }: {
             query=""
           />
           <div className="flex justify-between items-center mt-4">
-          <FechtRenderPaginationControls
-            repository={repositorySheets}
-            date={date}
-            year={yr}
-            month={month}
-            status={status}
-            usuarioId={Number(params.id)}
-            medidorId={wm ? Number(wm) : waterMeters.data[0].id}
-            page={Number(page)}
-            per_page={Number(per_page)}
-          />
+            <FechtRenderPaginationControls
+              repository={repositorySheets}
+              date={date}
+              year={yr}
+              month={month}
+              status={status}
+              usuarioId={Number(params.id)}
+              medidorId={wm ? Number(wm) : waterMeters.data[0].id}
+              page={Number(page)}
+              per_page={Number(per_page)}
+            />
           </div>
 
-       
+
 
 
         </div>
-        <div className="col-span-1 flex  justify-center border shadow-sm p-3 rounded-md">
+        <div className="col-span-1 flex justify-center border shadow-sm p-3 rounded-md overflow-y-auto max-h-[500px]">
           <FechtRenderListSheetsPending
             repository={repositorySheets}
             yr={yr} month={month}
             userId={Number(params.id)}
             medidorId={wm ? Number(wm) : waterMeters.data[0].id}
-             />
+          />
         </div>
 
       </div>

@@ -1,4 +1,6 @@
-import { create } from 'zustand'
+import { Incident } from '@/modules/incident/types';
+import { create, StateCreator } from 'zustand'
+import { persist, PersistOptions } from 'zustand/middleware'
 
 type FormModalState<T = any> = {
   data: T;
@@ -64,21 +66,35 @@ interface IncidentStore {
   setIncident: (incident: Incident | null) => void;
   clearIncident: () => void;
 }
-export const useIncidentStore = create<IncidentStore>((set) => ({
-  incident: null,
-  setIncident: (incident) => set({ incident }),
-  clearIncident: () => set({ incident: null }),
-}))
+
+// Define a type that combines IncidentStore with PersistOptions
+type IncidentStorePersist = (
+  config: StateCreator<IncidentStore>,
+  options: PersistOptions<IncidentStore>
+) => StateCreator<IncidentStore>;
+
+export const useIncidentStore = create<IncidentStore>(
+  (persist as IncidentStorePersist)(
+    (set) => ({
+      incident: null,
+      setIncident: (incident) => set({ incident }),
+      clearIncident: () => set({ incident: null }),
+    }),
+    {
+      name: "incident-storage",
+    }
+  )
+);
 
 
 interface DeleteStore {
- 
+
   id: number;
   isOpen: boolean;
   setId: (id: number) => void;
   openModalDelete: () => void;
   closeModalDelete: () => void;
-  
+
 }
 
 export const useDeleteStore = create<DeleteStore>((set) => ({

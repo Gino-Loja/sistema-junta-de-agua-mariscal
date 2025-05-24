@@ -1,78 +1,60 @@
 'use client'
-import { ColumnDef } from "@tanstack/react-table";
-import ActionsMenuIncident from "./actions-menu-incident";
-import Image from "next/image";
+import { ColumnDef } from "@tanstack/react-table"
+import ActionsMenuIncident from "./actions-menu-incident"
+import { Incident } from "../../types"
+import { RenderImageIncident } from "./render-image-incident"
 
-
-export const columns: ColumnDef<Incident, any>[] = [
-
+export const columns: ColumnDef<Incident>[] = [
   {
-    header: "id",
+    header: "ID",
     accessorKey: "id",
+    cell: ({ row }) => <span className="text-muted-foreground">{row.original.id}</span>
   },
-  // {
-  //   header: "Numero de factura",
-  //   accessorKey: "numero_factura",
-  // },
   {
     header: "Nombre",
-    accessorKey: "nombre_usuario"
-  }
-  ,
-
+    accessorKey: "nombre_usuario",
+    cell: ({ row }) => <span className="font-medium">{row.original.nombre_usuario}</span>
+  },
   {
     header: "Fecha",
-    accessorFn: (row) => row.fecha ? row.fecha.toLocaleDateString() : null,  // Verifica si 'fecha' no es null
     accessorKey: "fecha",
+    cell: ({ row }) => row.original.fecha
   },
   {
     header: "Sector",
-    accessorKey: "nombre_sector"
+    accessorKey: "nombre_sector",
+    cell: ({ row }) => <span className="text-primary">{row.original.nombre_sector}</span>
   },
   {
-    header: "Descripcion",
-    accessorKey: "descripcion"
+    header: "Descripción",
+    accessorKey: "descripcion",
+    cell: ({ row }) => <span className="max-w-[200px] truncate">{row.original.descripcion}</span>
   },
-  //   {
-  //     header: "Foto",
-  //     accessorKey: "foto"
-  //   },
   {
     header: "Costo",
-    accessorKey: "costo"
+    accessorKey: "costo",
+    cell: ({ row }) => new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS'
+    }).format(row.original.costo!)
   },
+
   {
 
     header: "Foto",
-    accessorKey: "foto",
-  
-    cell: (info) => {
 
-      const formattedImageData = info.getValue().startsWith('data:image/')
-        ? info.getValue()
-        : `data:image/png;base64,${info.getValue()}`;
-
-      return (
-        <div className="flex justify-end items-center gap-2">
-          <Image width={100} height={100} src={formattedImageData} alt="Foto" className="w-24 h-24" />
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <RenderImageIncident id={row.original.id} />
+      </div>
+    )
   },
-
   {
     header: "Acciones",
-    cell: (info) => {
-      return (
-        <div className="flex justify-end items-center gap-2">
-          <ActionsMenuIncident data={info.row.original} />
-        </div>
-      );
-    },
-
-  },
-
-
-
-
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <ActionsMenuIncident data={row.original} />
+      </div>
+    )
+  }
 ]

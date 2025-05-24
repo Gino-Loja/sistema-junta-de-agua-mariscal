@@ -1,10 +1,9 @@
 'use client';
 import { Card, CardBody, Chip, Divider } from "@nextui-org/react";
-import { Badge } from "@nextui-org/react";
 import { MapPin, User, Calendar, DollarSign, ChevronLeft } from "lucide-react";
 import { useIncidentStore } from "@/lib/store";
-import Image from "next/image";
 import Link from "next/link";
+import { RenderImageIncident } from "@/modules/incident/ui/table/render-image-incident";
 
 
 // este es el tipo de datos que se espera recibir
@@ -22,23 +21,24 @@ import Link from "next/link";
 export default function Page() {
   const { incident } = useIncidentStore()
 
-  if (!incident) {
-    return (
-      <Card className="max-w-[400px]">
-        <CardBody>
-          <p>No incident data available.</p>
-        </CardBody>
-      </Card>
-    )
-  }
-  const hexToDataUrl = (hex: string) => {
+  // if (!incident) {
+  //   return (
+  //     <Card className="max-w-[400px]">
+  //       <CardBody>
+  //         <p>No incident data available.</p>
+  //       </CardBody>
+  //     </Card>
+  //   )
+  // }
+  // const hexToDataUrl = (hex: string) => {
 
 
-    return hex.startsWith('data:image/')
-      ? hex
-      : `data:image/png;base64,${hex}`;
+  //   return hex.startsWith('data:image/')
+  //     ? hex
+  //     : `data:image/png;base64,${hex}`;
 
-  }
+  // }
+
 
 
   return (
@@ -63,16 +63,22 @@ export default function Page() {
 
 
         <Card className="w-full max-w-3xl  shadow-lg rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl">
-          <div className="relative h-[400px] w-full overflow-hidden">
-            <Image
+          <div className="relative flex justify-center items-center overflow-hidden">
+            {/* <Image
               src={hexToDataUrl(incident.foto) || "placeholder.svg"}
               alt="Incidente"
               width={400}
               height={400}
               className="w-full h-full object-center p-6 transition-transform duration-300 hover:scale-105"
-            />
+            /> */}
+
+            {
+              incident && <RenderImageIncident width={600} height={600} id={incident.id} />
+            }
+            
+
             <div className="absolute top-4 left-4  backdrop-blur-sm px-4 py-2 rounded-full">
-              <span className="text-sm font-medium">Incidente #{incident.id}</span>
+              <span className="text-sm font-medium">Incidente #{incident?.id}</span>
             </div>
           </div>
 
@@ -80,12 +86,12 @@ export default function Page() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <User className="w-5 h-5 text-gray-500" />
-                <span className="text-lg font-medium">{incident.nombre_usuario}</span>
+                <span className="text-lg font-medium">{incident?.nombre_usuario}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Calendar className="w-5 h-5 text-gray-500" />
                 <span className="text-sm text-gray-600">
-                  {incident.fecha.toLocaleDateString()}
+                  {incident?.fecha}
                 </span>
               </div>
             </div>
@@ -96,11 +102,11 @@ export default function Page() {
               <Chip variant="flat" color="primary" className="px-3 py-1 ">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 mr-1" />
-                  {incident.nombre_sector}
+                  {incident?.nombre_sector}
                 </div>
 
               </Chip>
-              {incident.costo && (
+              {incident?.costo && (
                 <Chip variant="flat" color="success" className="px-3 py-1 flex ">
 
                   <div className="flex items-center gap-2">
@@ -114,7 +120,7 @@ export default function Page() {
 
             <div className="h-24 rounded-md border p-4">
               <p className="text-gray-600 leading-relaxed">
-                {incident.descripcion}
+                {incident?.descripcion}
               </p>
             </div>
           </div>

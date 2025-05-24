@@ -7,6 +7,7 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Incident } from "../../types";
 
 export default function ActionsMenuIncident({ data }: { data: Incident }) {
 
@@ -51,7 +52,7 @@ export default function ActionsMenuIncident({ data }: { data: Incident }) {
 
                         onPress={() => {
                             setType("delete")
-                            setId(data.id)
+                            setId(data.id!)
                             openModalDelete()
                         }}
                     >

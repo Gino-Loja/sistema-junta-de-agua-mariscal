@@ -1,19 +1,21 @@
 'use client'
 
-import React, {  useState } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Card, CardHeader, CardBody, Input, Button, Textarea, Autocomplete, AutocompleteItem, Select, SelectItem, DatePicker, DateValue } from "@nextui-org/react";
 import { useFormDrawer, useIncidentStore, useUserStore } from '@/lib/store';
 import { useAsyncList } from '@react-stately/data';
 import { createApiWaterMeter } from '@/services/waterMeterService';
-import {  now, parseAbsoluteToLocal } from '@internationalized/date';
+import {  parseAbsoluteToLocal } from '@internationalized/date';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';
 import { createApiIncidentRepository } from '../service/service-incident';
 import { toast } from 'react-toastify';
-import Image from 'next/image';
 import { TIME_ZONE } from '@/model/Definitions';
+
+import DropzoneComponent from './dropzone';
+// import { Dropzone, DropzoneContent, DropzoneEmptyState } from './dropzone';
 
 
 
@@ -55,34 +57,23 @@ const schema = z.object({
 
     sector_id: z.preprocess((val) => Number(val),
         z.number().min(1, { message: "Sector es obligatorio!" })),
-    foto: z.string().min(2, { message: "Debe ingresar la foto del incidente !" }),
+    // foto: z.string().min(2, { message: "Debe ingresar la foto del incidente !" }),
 });
 type IncidentForm = z.infer<typeof schema>;
 
-
-
 export const FormIncident = ({ sectors }: { sectors: { value: string, label: string }[] }) => {
 
+
     const { incident } = useIncidentStore();
-
-
     const { onClose } = useFormDrawer();
-
     const { type } = useUserStore();
-
-    const [previewImage, setPreviewImage] = useState<string | null>(incident?.foto ? incident.foto.toString() : null);
 
     const {
         handleSubmit,
         control,
-        setValue,
-
         formState: { errors, isSubmitted },
     } = useForm<IncidentForm>({
         resolver: zodResolver(schema),
-        defaultValues: {
-            foto: incident?.foto,
-        }
 
     });
 
@@ -90,12 +81,14 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
     const repositoryIncident = createApiIncidentRepository();
 
 
+
+
     const onSubmit = async (data: IncidentForm) => {
 
         try {
             if (type === "create") {
 
-                const res = await repositoryIncident.insertIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE) });
+                const res = await repositoryIncident.insertIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE).toISOString(), usuario_id: Number(data.usuario_id) });
                 if (res.success) {
                     toast.success('Incidente creado con éxito');
                     onClose();
@@ -103,7 +96,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                     toast.error('Algo salió mal, no se pudo crear el incidente');
                 }
             } else if (type === "update") {
-                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE), incident_id: Number(incident?.id) });
+                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE).toISOString(), incident_id: Number(!incident?.id), usuario_id: Number(data.usuario_id) });
                 if (res.success) {
                     toast.success('Incidente actualizado con éxito');
                     onClose();
@@ -114,24 +107,6 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
 
         } catch (error) {
             throw error;
-        }
-    };
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setPreviewImage(base64String);
-                setValue('foto', base64String);
-
-
-                // register('foto').onChange({
-                //     target: { value: base64String }
-                // });
-            };
-            reader.readAsDataURL(file);
         }
     };
 
@@ -150,6 +125,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
     });
 
 
+
     return (
         <div className="min-h-screen bg-gradient-to-b  p-4 sm:p-6 lg:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="max-w-6xl mx-auto space-y-6">
@@ -164,7 +140,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="usuario_id"
                                 control={control}
-                                defaultValue={incident?.usuario_id}
+                                defaultValue={incident?.usuario_id ?? undefined}
 
                                 render={({ field }) => {
 
@@ -174,15 +150,6 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                                         size='sm'
                                         items={list.items}
 
-                                        // defaultItems={
-                                        //     [{
-                                        //         nombre: incident?.nombre_usuario?.toString(),
-                                        //         id: incident?.usuario_id,
-                                        //         cedula: ''
-                                        //     }]
-                                        // }
-
-
 
                                         isLoading={list.isLoading}
                                         inputValue={
@@ -191,19 +158,11 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                                         //inputValue={incident?.nombre_usuario == null ? list.filterText : incident?.nombre_usuario?.toString()}
                                         //defaultInputValue={defaulUser?.toString()}
 
-
-
                                         label="Seleccione un usuario"
                                         placeholder="Busque el usuario..."
                                         variant="bordered"
-                                        //defaultSelectedKey={incident?.usuario_id?.toString()}
                                         defaultSelectedKey={incident?.usuario_id?.toString()}
 
-                                        defaultInputValue='lkahdlaskdhsalk'
-
-                                        //selectedKey={field.value?.toString()}
-                                        //defaultInputValue={data?.nombre || ''}
-                                        // isInvalid={errors?.usuario_id?.message ? true : false}
                                         onInputChange={list.setFilterText}
                                         errorMessage={errors?.usuario_id?.message}
                                         onSelectionChange={(selected) => {
@@ -226,7 +185,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="fecha"
                                 control={control}
-                                defaultValue={incident?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(incident?.fecha.toISOString())}
+                                defaultValue={incident?.fecha ? parseAbsoluteToLocal(new Date(incident.fecha).toISOString()) : undefined}
                                 render={({ field }) => (
                                     <I18nProvider locale="es">
                                         <DatePicker
@@ -248,7 +207,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="costo"
                                 control={control}
-                                defaultValue={incident?.costo}
+                                defaultValue={incident?.costo ?? undefined}
                                 render={({ field }) => (
                                     <Input
                                         {...field}
@@ -281,8 +240,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="sector_id"
                                 control={control}
-                                defaultValue={incident?.sector_id}
-                                //defaultValue={data?.sector_id}
+                                defaultValue={incident?.sector_id ?? undefined}
                                 render={({ field }) => (
                                     <Select
                                         {...field}
@@ -307,7 +265,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="descripcion"
                                 control={control}
-                                defaultValue={incident?.descripcion}
+                                defaultValue={incident?.descripcion ?? undefined}
 
                                 render={({ field }) => (
                                     <Textarea
@@ -338,7 +296,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                     </CardHeader>
                     <CardBody>
                         {/* <ImagePreview imageData={previewImage} /> */}
-                        <Image
+                        {/* <Image
                             src={previewImage ?
                                 previewImage.startsWith('data:image/')
                                     ? previewImage
@@ -348,31 +306,23 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             className="max-w-full h-auto rounded-lg mx-auto m-3"
                             width={300}
                             height={300}
-                        />
+                        /> */}
+
+                        {/* {
+                            incident ? <RenderImageIncident width={300} height={300} id={incident.id} /> :
+                                <Image
+                                    src={previewImage ?
+                                        previewImage
+                                        : "placeholder.svg"}
+                                    alt="Vista previa"
+                                    className="max-w-full h-auto rounded-lg mx-auto m-3"
+                                    width={300}
+                                    height={300} />
+                        } */}
+                        <DropzoneComponent type={type} incidentId={incident?.id} />
 
 
-                        <Controller
-                            name="foto"
-                            control={control}
-                            defaultValue={incident?.foto}
 
-                            render={({ field }) => (
-                                <Input
-                                    type="file"
-                                    accept="image/jpeg, image/png"
-                                    onChange={handleImageChange}
-                                    className="block w-full text-sm text-gray-500
-                                            file:mr-4 file:py-2 file:px-4
-                                            file:rounded-md file:border-0
-                                            file:text-sm file:font-semibold
-                                            file:bg-primary file:text-white
-                                            hover:file:bg-primary/80"
-                                    isInvalid={errors?.foto?.message == undefined ? false : true}
-                                    errorMessage={errors?.foto?.message}
-
-                                />
-                            )}
-                        />
 
 
                         {/* <input
@@ -388,6 +338,8 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                 file:bg-primary file:text-white
                 hover:file:bg-primary/80"
                         /> */}
+
+
                     </CardBody>
                 </Card>
 
