@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { z } from "zod";
-import { Company, DigitalCert } from "../../types";
-import { Controller, set, useForm } from "react-hook-form";
+import { DigitalCert } from "../../types";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, DatePicker, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
+import { Button, DatePicker, Input } from "@nextui-org/react";
 import { ISettingRepository } from "../../utils/model";
-import { toast } from "react-toastify";
-import { DateValue, getLocalTimeZone, now, parseAbsoluteToLocal } from "@internationalized/date";
+import { DateValue, now, parseAbsoluteToLocal } from "@internationalized/date";
+import { TIME_ZONE } from "@/model/Definitions";
 const schema = z.object({
     id: z.number(),
     certificado: z.string(),
@@ -140,8 +140,7 @@ export default function FormDigitalCert({ data, repository }: { data: DigitalCer
                         <Controller
                             name="fecha_caducidad"
                             control={control}
-                            defaultValue={parseAbsoluteToLocal(data?.fecha_caducidad.toISOString())}
-
+                            defaultValue={data?.fecha_caducidad == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha_caducidad.toISOString())}
                             render={({ field }) => (
                                 <DatePicker
                                     {...field}

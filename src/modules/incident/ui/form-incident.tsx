@@ -6,7 +6,7 @@ import { Card, CardHeader, CardBody, Input, Button, Textarea, Autocomplete, Auto
 import { useFormDrawer, useIncidentStore, useUserStore } from '@/lib/store';
 import { useAsyncList } from '@react-stately/data';
 import { createApiWaterMeter } from '@/services/waterMeterService';
-import {  parseAbsoluteToLocal } from '@internationalized/date';
+import { now, parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';
@@ -185,7 +185,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                             <Controller
                                 name="fecha"
                                 control={control}
-                                defaultValue={incident?.fecha ? parseAbsoluteToLocal(new Date(incident.fecha).toISOString()) : undefined}
+                                defaultValue={incident?.fecha == null ? now(TIME_ZONE) : parseDate(incident?.fecha)}
                                 render={({ field }) => (
                                     <I18nProvider locale="es">
                                         <DatePicker

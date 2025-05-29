@@ -91,6 +91,7 @@ export async function getComsumedMetersByMonths(month: number, year: number): Pr
                     mes: month
                 }
             )
+            .select()
             .single();
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
 
@@ -230,7 +231,6 @@ export async function updateLecture(formData: LecturesDto, id: number): Promise<
                 lectura_actual: formData.lectura_actual
             })
             .eq('id', id)
-            .select().single()
 
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
 
@@ -469,7 +469,6 @@ export const deleteMeasurementMacro = async (id: number): Promise<QueryResultErr
             .from('lectura_macromedidor')
             .delete()
             .eq('id', id)
-            .select().single()
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
 
         revalidatePath('/measurement/macro');

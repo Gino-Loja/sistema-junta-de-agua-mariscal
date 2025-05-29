@@ -22,8 +22,8 @@ export const columns: ColumnDef<Meeting, any>[] = [
   },
   {
     header: "Fecha de sesion",
-    accessorFn: (row) => row.fecha ? row.fecha.toLocaleDateString() : null,  // Verifica si 'fecha' no es null
-    accessorKey: "fecha_emision",
+    accessorFn: (row) => row.fecha ,  // Verifica si 'fecha' no es null
+    accessorKey: "fecha",
   },
   {
     header: "Motivo",

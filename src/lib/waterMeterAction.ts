@@ -222,7 +222,6 @@ export async function createWaterMeter(waterMeter: WaterMeterCreate): Promise<Qu
                     estado: waterMeter.estado,
                 },
             ])
-            .select()
 
 
         // const waterMeterId = (await pool.query(

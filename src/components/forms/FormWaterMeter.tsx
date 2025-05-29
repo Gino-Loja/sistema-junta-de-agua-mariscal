@@ -1,6 +1,6 @@
 "use client"
 
-import React, { use, useEffect } from 'react'
+import React from 'react'
 import {
   Button,
   Select,
@@ -24,7 +24,6 @@ import { IWaterMeter } from '@/model/water-meter/WaterMeterRepository'
 import { createApiWaterMeter } from '@/services/waterMeterService'
 import { toast } from 'react-toastify'
 import { useAsyncList } from '@react-stately/data'
-import { error } from 'console'
 import { I18nProvider } from '@react-aria/i18n'
 import { TIME_ZONE } from '@/model/Definitions'
 
@@ -241,7 +240,7 @@ export function FormWaterMeter() {
           <Controller
             name="fecha_instalacion"
             control={control}
-            defaultValue={data?.fecha_instalacion == null ? now(TIME_ZONE) : parseDate(data?.fecha_instalacion)}
+            defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseDate(data?.fecha)}
             render={({ field }) => (
 
               <I18nProvider

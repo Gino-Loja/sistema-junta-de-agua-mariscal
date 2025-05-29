@@ -140,3 +140,19 @@ export const getCounterInvoiceByDate = async (date: string, query: string,month:
 
     }
 };
+
+export const fechaCaducidadFirma = async (): Promise<QueryResultError<string>> => {
+    try {
+        const fechaCaducidad: string = (await pool.query(`
+            SELECT 
+                fecha_caducidad
+            FROM 
+                certificado_digital
+  
+        `,)).rows[0].fecha_caducidad;
+
+        return { success: true, data: fechaCaducidad.toString() };
+    } catch (error) {   
+        return { success: false, error: `Error al obtener la fecha de caducidad de la firma: ${error}` };
+    }   
+}

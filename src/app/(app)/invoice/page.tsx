@@ -1,6 +1,7 @@
 'use server'
 import { createApiServiceInvoiceRepository } from "@/modules/invoice/service/service-invoice";
 import FormInvoice from "@/modules/invoice/ui/form-invoice";
+import { fechaCaducidadFirma } from "@/modules/invoice/utils/use-media-query";
 
 export default async function Page() {
     const repository = createApiServiceInvoiceRepository();
@@ -8,6 +9,8 @@ export default async function Page() {
     const informationCompany = await repository.getInformationCompany();
     const numberInvoice = await repository.getNumberInvoice();
     const paymentMethods = await repository.getPaymentMethods();
+
+    const fechaCaducidad = await fechaCaducidadFirma()
 
     if (!informationCompany.success) {
         return <div>Error al obtener la información de la empresa</div>;
@@ -25,12 +28,13 @@ export default async function Page() {
     return (
         <div className="flex flex-col gap-4 px-4 pb-4">
 
-            <FormInvoice 
-            paymentMethods={paymentMethods.data}
-             informationCompany={informationCompany.data[0]}
-              repositoryService={repository}
-              numberInvoice={numberInvoice.data}
-              />
+            <FormInvoice
+                paymentMethods={paymentMethods.data}
+                informationCompany={informationCompany.data[0]}
+                repositoryService={repository}
+                numberInvoice={numberInvoice.data}
+                fechaCaducidad={ fechaCaducidad.success ? fechaCaducidad.data : "" }
+            />
         </div>
 
     )

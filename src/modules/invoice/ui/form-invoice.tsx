@@ -1,7 +1,7 @@
 'use client'
-import { useFormDrawer, useUserStore } from "@/lib/store";
+import { useUserStore } from "@/lib/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getLocalTimeZone, now, parseAbsoluteToLocal, parseDate } from "@internationalized/date";
+import { now, parseAbsoluteToLocal } from "@internationalized/date";
 import {
 
     DateValue,
@@ -10,7 +10,6 @@ import {
     SelectItem,
     Textarea,
     DatePicker,
-    Divider,
     Autocomplete,
     AutocompleteItem,
     Card,
@@ -20,7 +19,7 @@ import {
     Tabs,
     Tab,
 } from "@nextui-org/react";
-import { Controller, set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAsyncList } from "@react-stately/data";
 import { z } from "zod";
 import { createApiWaterMeter } from "@/services/waterMeterService";
@@ -28,7 +27,7 @@ import { IWaterMeter } from "@/model/water-meter/WaterMeterRepository";
 import { toast } from "react-toastify";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { Details, InformationCompany, PaymentMethod, Service } from "../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IInvoiceRepository } from "../utils/model";
 import { I18nProvider } from "@react-aria/i18n";
 import React from "react";
@@ -100,12 +99,14 @@ type DocumentInfo = {
 export default function FormInvoice({ repositoryService,
     informationCompany,
     paymentMethods,
-    numberInvoice
+    numberInvoice,
+    fechaCaducidad
 }: {
     repositoryService: IInvoiceRepository,
     informationCompany: InformationCompany,
     paymentMethods: PaymentMethod[],
     numberInvoice: number
+    fechaCaducidad: string
 }) {
 
 
@@ -113,6 +114,7 @@ export default function FormInvoice({ repositoryService,
     const [details, setDetails] = useState<Details[]>([]);
     const [description, setDescription] = useState<string>("");
     const [paymentMethodCode, setPaymentMethodCode] = useState<string>("20");
+    // console.log("fechaCaducidad: ", fechaCaducidad);
 
 
     const [dateInvoice, setDateInvoice] = React.useState<DateValue | null>(() => {
@@ -126,8 +128,31 @@ export default function FormInvoice({ repositoryService,
 
     const [currentUser, setCurrentUser] = useState<Record<number, string>>({});
 
+    useEffect(() => {
+        //mensaje de alerta sobre la fecha de caducidad de la firma electrónica
+        if (fechaCaducidad) {
+            const fecha = new Date(fechaCaducidad);
+            const today = new Date();
+
+            if (fecha < today) {
+                toast.warning(`
+                        La firma electrónica ha caducado el ${fecha.toLocaleDateString()},
+                        dirijase al Panel: Configuración/Configuración de empresa,
+                        para actualizar su firma electrónica.
+                    `);
+            } else {
+                toast.info(`La firma electrónica caduca el ${fecha.toLocaleDateString()}`);
+            }
+        }
+
+    }, []);
+
 
     const sendDataInvoice = async () => {
+
+
+
+
         if (!currentUser || !('id' in currentUser)) {
             toast.error('No hay un usuario seleccionado');
             return;
@@ -147,6 +172,20 @@ export default function FormInvoice({ repositoryService,
             return;
         }
 
+        //validar la fecha de caducidad de la firma electrónica
+        const fechaCaducidadDeFirma = new Date(fechaCaducidad);
+        const today = new Date();
+        if (fechaCaducidadDeFirma < today) {
+            toast.error(`La firma electrónica ha caducado el ${fechaCaducidadDeFirma.toLocaleDateString()},
+                dirijase al Panel: Configuración/Configuración de empresa,
+                para actualizar su firma electrónica.`);
+            return;
+        }
+
+
+
+
+
         try {
             const id = toast.loading("Por favor espere, se está generando la factura");
 
@@ -158,7 +197,6 @@ export default function FormInvoice({ repositoryService,
                 },
                 body: JSON.stringify(body), // Reemplaza con tu lógica para crear la factura
             });
-
 
 
             if (!response.ok) {

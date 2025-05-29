@@ -214,6 +214,12 @@ export type Database = {
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "facturas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "vista_multas_con_usuarios"
+            referencedColumns: ["usuario_id"]
+          },
         ]
       }
       incidentes: {
@@ -277,6 +283,12 @@ export type Database = {
             columns: ["usuario_id"]
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidentes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "vista_multas_con_usuarios"
+            referencedColumns: ["usuario_id"]
           },
         ]
       }
@@ -424,6 +436,12 @@ export type Database = {
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "vista_multas_con_usuarios"
+            referencedColumns: ["usuario_id"]
+          },
         ]
       }
       metodos_pagos: {
@@ -493,6 +511,12 @@ export type Database = {
             columns: ["usuario_id"]
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "multas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "vista_multas_con_usuarios"
+            referencedColumns: ["usuario_id"]
           },
         ]
       }
@@ -843,10 +867,57 @@ export type Database = {
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "medidor_usuario_id_fkey"
+            columns: ["usuario_id"]
+            referencedRelation: "vista_multas_con_usuarios"
+            referencedColumns: ["usuario_id"]
+          },
         ]
+      }
+      vista_multas_con_usuarios: {
+        Row: {
+          cedula: string | null
+          estado: string | null
+          fecha: string | null
+          fecha_actualizacion: string | null
+          id: number | null
+          motivo: string | null
+          nombre_usuario: string | null
+          usuario_id: number | null
+        }
+        Relationships: []
       }
     }
     Functions: {
+      calcular_total_costo_incidentes: {
+        Args: {
+          p_fecha_inicio?: string
+          p_fecha_fin?: string
+        }
+        Returns: number
+      }
+      calcular_total_pendiente_planillas: {
+        Args: {
+          p_fecha_inicio?: string
+          p_fecha_fin?: string
+        }
+        Returns: number
+      }
+      calcular_total_recaudado_multas: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: number
+      }
+      calcular_total_valor_abonado: {
+        Args: {
+          p_fecha_inicio?: string
+          p_fecha_fin?: string
+        }
+        Returns: number
+      }
       contar_incidentes_por_rango: {
         Args: {
           p_fecha_inicio: string
@@ -872,6 +943,25 @@ export type Database = {
         Returns: {
           name: string
           value: number
+        }[]
+      }
+      contar_multas_filtradas: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+          p_fecha_especifica?: string
+          p_search_term?: string
+        }
+        Returns: number
+      }
+      contar_multas_por_estado_en_rango: {
+        Args: {
+          p_fecha_inicio: string
+          p_fecha_fin: string
+        }
+        Returns: {
+          estado: string
+          total: number
         }[]
       }
       get_consumo_by_sector_year_month: {

@@ -1,6 +1,6 @@
 'use server'
 import { MonthlyRevenue, QueryResultError, RevenueBySector, SheetDto, Sheets } from "@/model/types";
-import pool from "./db";
+// import pool from "./db";
 import { revalidatePath } from 'next/cache';
 import { createClient } from "./supabase/server";
 import { calculateRangeDate, getPagination } from '@/utils/getPagination';
@@ -56,6 +56,7 @@ export const getCalculateMonthlyRevenue = async (year: number, month: number | n
             p_fecha_fin: fecha_fin,
             p_fecha_inicio: fecha_inicio
         })
+        
             .single();
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
         return { success: true, data };

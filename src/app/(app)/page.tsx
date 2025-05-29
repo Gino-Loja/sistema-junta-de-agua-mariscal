@@ -188,9 +188,9 @@ async function GetRenderAmountInvoice({ repository, date }: { repository: IServi
   }
 
   return (<StatsCard
-    title="Dinero de planillas"
+    title="Dinero por cobrar de planillas"
     value={amountInvoice.data.toFixed(2)}
-    description={`Dinero por cobrar de planillas`}
+    // description={`Dinero por cobrar de planillas`}
   >
     <div className="p-3 rounded-full bg-success-500 ">
       <CircleDollarSign className="h-6 w-6" />

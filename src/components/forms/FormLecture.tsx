@@ -6,7 +6,7 @@ import InputField from "./InputField";
 import { Button, Input } from "@nextui-org/react";
 import { useUserStore } from "@/lib/store";
 import { DatePicker } from "@nextui-org/react";
-import { getLocalTimeZone, now, parseAbsoluteToLocal, DateValue } from "@internationalized/date";
+import {now, parseAbsoluteToLocal, DateValue, parseDate } from "@internationalized/date";
 import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { toast } from "react-toastify";
@@ -143,7 +143,7 @@ export default function FormAddLecture() {
                 <Controller
                     name="fecha"
                     control={control}
-                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                        defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseDate(data?.fecha)}
                     render={({ field }) => (
                         <I18nProvider
 

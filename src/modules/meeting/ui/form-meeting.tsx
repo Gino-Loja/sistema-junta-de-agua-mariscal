@@ -1,7 +1,7 @@
 'use client'
 import { useFormDrawer, useUserStore } from "@/lib/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getLocalTimeZone, now, parseAbsoluteToLocal } from "@internationalized/date";
+import { now, parseAbsoluteToLocal, parseDate } from "@internationalized/date";
 import {
 
     DateValue,
@@ -47,7 +47,7 @@ const schema = z.object({
         return data != null && typeof data === 'object' && 'calendar' in data;
     }, { message: "Debe ingresar la Fecha!" })),
 
-    
+
     motivo: z.string().min(2, { message: "Debe ingresar el detalle de la instalación!" }),
     estado: z.enum(["pendiente", "pagado"]),
 });
@@ -137,8 +137,8 @@ export default function FormMeeting() {
                                 items={list.items}
                                 isLoading={list.isLoading}
                                 //inputValue={list.filterText}
-                                inputValue={list.filterText }
-                                
+                                inputValue={list.filterText}
+
                                 label="Seleccione un usuario"
                                 placeholder="Busque el usuario..."
                                 variant="bordered"
@@ -164,12 +164,15 @@ export default function FormMeeting() {
                             </Autocomplete>
                         )}
                     />
+                    {/* {console.log(data?.fecha)} */}
 
 
                     <Controller
                         name="fecha"
                         control={control}
-                        defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                        // defaultValue={data?.fecha == null ? now(TIME_ZONE) : data?.fecha}
+                        defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseDate(data?.fecha)}
+
                         render={({ field }) => (
                             <DatePicker
                                 {...field}

@@ -1,12 +1,6 @@
-export type Meeting = {
-    id: number;
-    nombre_usuario: string;
-    usuario_id: number;
-    fecha: Date;
-    motivo: string;
-    estado: string;
-    fecha_actualizacion: Date;
-};
+import { Database } from "@/supabase";
+
+export type Meeting = Database["public"]["Views"]["vista_multas_con_usuarios"]["Row"];
 
 export type StatusAllMeeting = {
     estado: string;
