@@ -63,7 +63,7 @@ export const getMeeting = async (date: string, query: string, currentPage: numbe
     }
 };
 
-export const insertMeeting = async (formData: { usuario_id: number; fecha: Date, estado: string; motivo: string; }): Promise<QueryResultError<boolean>> => {
+export const insertMeeting = async (formData: { usuario_id: number, fecha: Date, estado: string, motivo: string }): Promise<QueryResultError<boolean>> => {
 
     try {
         // const meeting: Meeting[] = (await pool.query(`

@@ -2,19 +2,20 @@
 
 import { Card, CardBody, CardHeader } from '@nextui-org/react'
 import { Droplet, AlertTriangle, Ruler, BarChart2, TrendingUp, Ban } from 'lucide-react'
+import { Rate } from '../types'
 
-interface RateProps {
-  id?: number
-  valor_m3?: number
-  valor_exceso?: number
-  metros_base?: number
-  metros_base_exceso?: number
-  valor_exceso_superior?: number
-  multa_sesiones?: number
-}
+// interface RateProps {
+//   id?: number
+//   valor_m3?: number
+//   valor_exceso?: number
+//   metros_base?: number
+//   metros_base_exceso?: number
+//   valor_exceso_superior?: number
+//   multa_sesiones?: number
+// }
 
 // Adding default values in the component
-export function RateCard({ rate  }: { rate: RateProps }) {
+export function RateCard({ rate  }: { rate: Rate }) {
   const items = [
     {
       label: "Valor m³",

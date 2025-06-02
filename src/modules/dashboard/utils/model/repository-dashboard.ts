@@ -1,4 +1,5 @@
 import { QueryResultError, Sector } from "@/model/types";
+import { Rate } from "../../types";
 
 export interface IServiceDashboardRepository {
 

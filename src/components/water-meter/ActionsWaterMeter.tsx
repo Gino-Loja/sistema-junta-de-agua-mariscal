@@ -55,7 +55,7 @@ export function ActionsWaterMeter<T>({ data }: ActionsProps<T>) {
 
 
                         onPress={() => {
-                            setId(data.id);
+                            setId(data.id!);
                             setType("delete");
                             openModalDelete();
                         }}
