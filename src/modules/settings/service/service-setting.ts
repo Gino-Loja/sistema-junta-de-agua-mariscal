@@ -1,5 +1,5 @@
 import { ISettingRepository } from "../utils/model";
-import { getAdministrator, getCompany, getCountAdministrator, getDigitalCertificate, updateCompany, updateDigitalCertificate } from "../utils/use-media-query";
+import { countSectors, getAdministrator, getCompany, getCountAdministrator, getDigitalCertificate, getSectors, updateCompany, updateDigitalCertificate } from "../utils/use-media-query";
 
 
 export function createApiSettingRepository(): ISettingRepository {
@@ -10,7 +10,9 @@ export function createApiSettingRepository(): ISettingRepository {
         getDigitalCertificate,
         updateDigitalCertificate,
         getAdministrator,
-        getCountAdministrator
+        getCountAdministrator,
+        getSectors,
+        countSectors,
     
     };
 }

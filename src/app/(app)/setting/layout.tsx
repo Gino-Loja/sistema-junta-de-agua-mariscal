@@ -29,6 +29,10 @@ export default function DashboardLayout({
                     url: "/setting/permissions",
                     title: "Permisos",
                 },
+                {
+                    url: "/setting/sectors",
+                    title: "Sectores",
+                }
             ]
         } ></NavigationTabs>
         {children}

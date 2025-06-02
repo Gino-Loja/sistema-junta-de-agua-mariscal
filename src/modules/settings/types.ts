@@ -29,3 +29,5 @@ export type Administrators = Database["public"]["Views"]["administradores_con_em
 export type InsertAdministrators = Omit<Administrators, "id"> & {
     email: string;
 };
+
+export type SectorsTable = Database["public"]["Tables"]["sectores"]["Row"];

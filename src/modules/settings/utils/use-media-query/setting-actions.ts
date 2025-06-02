@@ -2,9 +2,8 @@
 import pool from "../../../../lib/db";
 import { revalidatePath } from 'next/cache';
 import { QueryResultError } from "@/model/types";
-import { Administrators, Company, DigitalCert } from "../../types";
+import { Administrators, Company, DigitalCert, SectorsTable } from "../../types";
 import { createClient } from "@/lib/supabase/server";
-import { Database } from "@/supabase";
 import { getPagination } from "@/utils/getPagination";
 
 
@@ -171,6 +170,53 @@ export const getCountAdministrator = async (date: string, search: string, status
     }
 
 };
+
+export const getSectors = async (
+    { search }: { search: string }
+): Promise<QueryResultError<SectorsTable[]>> => {
+    try {
+        const supabase = await createClient();
+        const { data: sectors, error } = await supabase
+            .from("sectores")
+            .select("*")
+            .ilike("nombre", `%${search}%`);
+        if (error) { return { success: false, error: `Error: ${error.message}` } }
+        return { success: true, data: sectors };
+    } catch (error) {
+        return { success: false, error: `Error al obtener todos los sectores: ${error}` };
+    }
+}
+
+export const countSectors = async ({ search }: { search: string }): Promise<QueryResultError<number>> => {
+    try {
+        const supabase = await createClient();
+        const { data: count, error } = await supabase
+            .from("sectores")
+            .select("*", { count: 'exact' })
+            .ilike("nombre", `%${search}%`);
+
+        if (error) {
+            return { success: false, error: `Error: ${error.message}` };
+        }
+
+        return { success: true, data: count!.length };
+    } catch (error) {
+        return { success: false, error: `Error al contar los sectores: ${error}` };
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

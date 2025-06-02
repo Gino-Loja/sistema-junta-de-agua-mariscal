@@ -1,5 +1,5 @@
 import { QueryResultError } from "@/model/types";
-import { Administrators, Company, DigitalCert, DigitalCertDto } from "../../types";
+import { Administrators, Company, DigitalCert, DigitalCertDto, SectorsTable } from "../../types";
 
 export interface ISettingRepository {
     getCompany(): Promise<QueryResultError<Company[]>>;
@@ -9,6 +9,10 @@ export interface ISettingRepository {
     getAdministrator(date: string, search: string, status: string, currentPage: number, itemsPerPage: number): Promise<QueryResultError<Administrators[]>>;
     
     getCountAdministrator(date: string, query: string, status: string): Promise<QueryResultError<number>>;
+
+    getSectors({ search }: { search: string; }): Promise<QueryResultError<SectorsTable[]>>;
+    countSectors({ search }: { search: string; }): Promise<QueryResultError<number>>;
+
 
 }
 

@@ -14,6 +14,7 @@ export default function FormModal({ children }: { children: React.ReactNode }) {
     };
     return (
         <div>
+            
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                     {(closeModal) => (
