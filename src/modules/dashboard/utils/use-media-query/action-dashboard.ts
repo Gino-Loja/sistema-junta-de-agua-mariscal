@@ -111,7 +111,7 @@ export const getTotalWaterMeter = async (date: number | null): Promise<QueryResu
         // `, [date])).rows[0].total;
         const supabase = await createClient();
         let builder = supabase.from('lecturas')
-            .select('*', { count: 'exact' });
+            .select('consumo', { count: 'exact', head: false }); // Trae todos los campos `consumo`
 
 
         if (date) {
@@ -119,11 +119,12 @@ export const getTotalWaterMeter = async (date: number | null): Promise<QueryResu
             builder = builder.gte('fecha', fecha_inicio).lte('fecha', fecha_fin);
         }
 
-        const { count, error } = await builder;
+        const { data, error } = await builder;
+        const total = data?.reduce((acc, row) => acc + (row.consumo ?? 0), 0);
 
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
 
-        return { success: true, data: count || 0 };
+        return { success: true, data: total || 0 };
     } catch (error) {
         return { success: false, error: `Error al obtener los datos: ${error}` };
     }
@@ -270,8 +271,8 @@ export const getRate = async (): Promise<QueryResultError<Rate>> => {
         //         *
         //     from
         //         tarifas_agua
-            
-               
+
+
         // `)).rows[0];
         const supabase = await createClient();
         const { data, error } = await supabase.from('tarifas_agua').select('*').single();

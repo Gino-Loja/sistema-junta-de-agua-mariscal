@@ -130,6 +130,7 @@ export const updateIncident = async (formData: { usuario_id: number; fecha: stri
 
         // `, [formData.usuario_id, formData.fecha, formData.sector_id, formData.descripcion, fotoBuffer, formData.costo, formData.incident_id])).rows; // Formateamos la fecha con año-mes-01
         const supabase = await createClient();
+        console.log("formData", formData);
 
         const { data: incidents, error: incidentsError } = await supabase
             .from('incidentes')
@@ -142,6 +143,7 @@ export const updateIncident = async (formData: { usuario_id: number; fecha: stri
                     costo: formData.costo
                 }
             )
+            .eq('id', formData.incident_id)
             .select()
             .single();
 

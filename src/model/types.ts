@@ -97,6 +97,20 @@ export const monthsInSpanish = [
   "Noviembre",
   "Diciembre",
 ];
+export const ObjectMonthsInSpanish = {
+  January: 'Enero',
+  February: 'Febrero',
+  March: 'Marzo',
+  April: 'Abril',
+  May: 'Mayo',
+  June: 'Junio',
+  July: 'Julio',
+  August: 'Agosto',
+  September: 'Septiembre',
+  October: 'Octubre',
+  November: 'Noviembre',
+  December: 'Diciembre'
+};
 
 export type CustomSearchParams = { date: string, page: string, per_page: string, query: string, type:string , status:string, user: string, medidor: string }
 

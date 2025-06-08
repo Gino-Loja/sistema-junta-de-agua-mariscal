@@ -74,14 +74,13 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
         formState: { errors, isSubmitted },
     } = useForm<IncidentForm>({
         resolver: zodResolver(schema),
+        defaultValues: {}
+            ,
 
     });
 
     const repositoryWaterMeter = createApiWaterMeter();
     const repositoryIncident = createApiIncidentRepository();
-
-
-
 
     const onSubmit = async (data: IncidentForm) => {
 
@@ -96,7 +95,7 @@ export const FormIncident = ({ sectors }: { sectors: { value: string, label: str
                     toast.error('Algo salió mal, no se pudo crear el incidente');
                 }
             } else if (type === "update") {
-                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE).toISOString(), incident_id: Number(!incident?.id), usuario_id: Number(data.usuario_id) });
+                const res = await repositoryIncident.updateIncident({ ...data, fecha: data.fecha.toDate(TIME_ZONE).toISOString(), incident_id: Number(incident?.id), usuario_id: Number(data.usuario_id) });
                 if (res.success) {
                     toast.success('Incidente actualizado con éxito');
                     onClose();

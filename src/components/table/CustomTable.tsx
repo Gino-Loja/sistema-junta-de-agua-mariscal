@@ -184,7 +184,7 @@ export default function TableCustom<T>({ data, columns, per_page, filtersConfig,
                 <TableHeader key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableColumn colSpan={header.colSpan} key={header.id}>
+                      <TableColumn className="text-wrap" colSpan={header.colSpan} key={header.id}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(

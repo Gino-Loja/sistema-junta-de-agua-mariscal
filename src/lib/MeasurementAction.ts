@@ -1,5 +1,5 @@
 'use server'
-import { Lectures, LecturesDto, MeasurementMacro, Months, QueryResultError, Years } from "@/model/types";
+import { Lectures, LecturesDto, MeasurementMacro, ObjectMonthsInSpanish, QueryResultError } from "@/model/types";
 // import pool from "./db";
 import { revalidatePath } from 'next/cache';
 import { createClient } from "./supabase/server";
@@ -170,10 +170,17 @@ export async function getComsumedMonthsByYear(year: number): Promise<QueryResult
             .rpc('get_monthly_consumo_exceso_by_year', {
                 anio: year
             })
+        // console.log(data)
 
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
 
-        return { success: true, data };
+        return {
+            success: true, data:
+                data.map(entry => ({
+                    ...entry,
+                    mes: ObjectMonthsInSpanish[entry.mes as keyof typeof ObjectMonthsInSpanish] || entry.mes // mantiene el nombre original si no hay traducción
+                }))
+        };
     } catch (error) {
         return { success: false, error: `Error al obtener el consumo: ${error}` };
     }
@@ -551,7 +558,7 @@ export const getCounterMeasurementMacro = async (month: number, year: number, fr
 
 
 
-        return { success: true, data:{ total: data } };
+        return { success: true, data: { total: data } };
     } catch (error) {
 
         return { success: false, error: `Error al obtener el conteo : ${error}` };

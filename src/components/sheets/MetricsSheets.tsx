@@ -22,13 +22,13 @@ export default async function MetricSheets({ year, month }: { year: number, mont
             {" "}
             Planillas pendientes en {monthsInSpanish[month - 1]}
           </span>
-          <p className="text-sm text-default-500 ">Total de planillas pagadas durante en {monthsInSpanish[month - 1]} </p>
+          <p className="text-sm text-default-500 ">Total de planillas pagadas durante {monthsInSpanish[month - 1]} </p>
         </CardHeader>
         <Divider></Divider>
         <CardBody className="flex flex-col items-center justify-center mt-0">
           <div className="cursor-pointer flex flex-col items-center justify-center">
 
-            <h4 className="text-4xl font-bold">  {percentageRevenueByStatus.success && 100 - percentageRevenueByStatus.data.porcentaje_planilla_pagadas} %</h4>
+            <h4 className="text-4xl font-bold">  {percentageRevenueByStatus.success && (100 - percentageRevenueByStatus.data.porcentaje_planilla_pagadas).toFixed(2)} %</h4>
             <p className="text-muted-fx`oreground">Planillas pendientes</p>
           </div>
         </CardBody>
@@ -39,12 +39,12 @@ export default async function MetricSheets({ year, month }: { year: number, mont
             {" "}
             Planillas pagadas en {monthsInSpanish[month - 1]}
           </span>
-          <p className="text-sm text-default-500 ">Total de planillas pagadas durante en {monthsInSpanish[month - 1]} </p>
+          <p className="text-sm text-default-500 ">Total de planillas pagadas durante {monthsInSpanish[month - 1]} </p>
         </CardHeader>
         <Divider></Divider>
         <CardBody className="flex flex-col items-center justify-center mt-0">
           <div className="cursor-pointer flex flex-col items-center justify-center">
-            <h4 className="text-4xl font-bold">  {percentageRevenueByStatus.success && percentageRevenueByStatus.data.porcentaje_planilla_pagadas} %</h4>
+            <h4 className="text-4xl font-bold">  {percentageRevenueByStatus.success && percentageRevenueByStatus.data.porcentaje_planilla_pagadas.toFixed(2)} %</h4>
             <p className="text-muted-fx`oreground">Planillas pagadas</p>
           </div>
         </CardBody>

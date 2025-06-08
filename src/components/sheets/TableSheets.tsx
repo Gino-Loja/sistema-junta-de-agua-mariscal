@@ -1,7 +1,6 @@
 import CustomTable from "../table/CustomTable";
 import { columns } from './ColumnsSheets';
 import { ISheetsRepository } from '@/model/sheets-repository/sheetsRepository';
-import dynamic from "next/dynamic";
 
 
 

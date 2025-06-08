@@ -31,3 +31,4 @@ export type QueryParams = {
     type: string;
     sector: string;
 };
+

@@ -6,108 +6,148 @@ import { Chip } from "@nextui-org/react";
 import { ActionSheet } from "./ActionSheet";
 
 
-export const columns: ColumnDef<Sheets, any>[] =  [
-      {
-        header: "Codigo_Medidor",
-        accessorKey: "medidor_id",
-      },
-      // {
-      //   header: "Numero de Lectura",
-      //   accessorKey: "id_lectura",
-      // },
-      {
-        header: "Nombre",
-        accessorKey: "nombre",
-      },
-      {
-        header: "Fecha de Emisión",
-        accessorFn: (row) => row.fecha_emision ,  // Verifica si 'fecha' no es null
-        accessorKey: "fecha_emision",
-      },
-      {
-        header: "Consumo (m³)",
-        accessorKey: "consumo",
-        cell: (info) => {
-          return (
-            <Chip className="capitalize" color={info.getValue() == null ? "default" : "success"}
-              size={info.getValue() == null ? "sm" : "md"}
+export const columns: ColumnDef<Sheets, any>[] = [
+  {
+    header: "Codigo_Medidor",
+    accessorKey: "medidor_id",
+  },
+  // {
+  //   header: "Numero de Lectura",
+  //   accessorKey: "id_lectura",
+  // },
+  {
+    header: "Nombre",
+    accessorKey: "nombre",
+  },
+  {
+    header: "Fecha de Emisión",
+    accessorFn: (row) => row.fecha_emision,  // Verifica si 'fecha' no es null
+    accessorKey: "fecha_emision",
+  },
+  {
+    header: "Consumo (m³)",
+    accessorKey: "consumo",
+    cell: (info) => {
+      return (
+        <Chip className="capitalize" color={info.getValue() == null ? "default" : "success"}
+          size={info.getValue() == null ? "sm" : "md"}
 
-              radius="sm"
-              variant="bordered">
-              {info.getValue() == null ? "SR" : info.getValue()}
-            </Chip>
-          );
+          radius="sm"
+          variant="bordered">
+          {info.getValue() == null ? "SR" : info.getValue()}
+        </Chip>
+      );
+    }
+  },
+  {
+    header: "Exceso (m³)",
+    accessorKey: "exceso",
+    cell: (info) => {
+      return (
+        <Chip className="capitalize"
+          color={info.getValue() == null ? "default" : info.getValue() > 0 ? "warning" : "success"}
+          size={info.getValue() == null ? "sm" : "md"}
+
+          radius="sm"
+          variant="bordered">
+          {info.getValue() == null ? "SR" : info.getValue()}
+        </Chip>
+      );
+    }
+  },
+
+  {
+    header: "Tarifa base",
+    accessorKey: "total_consumo",
+    accessorFn: (row) => row.total_consumo?.toFixed(2) + "$",  // Verifica si 'fecha' no es null
+
+  },
+  {
+    header: "Valor de Exceso",
+    accessorKey: "total_exceso",
+    accessorFn: (row) => {
+      return row.total_exceso?.toFixed(2) + "$"
+    },  // Verifica si 'fecha' no es null
+  },
+  {
+    header: "Total a pagar",
+    accessorKey: "total_pagar",
+    accessorFn: (row) => row.total_pagar?.toFixed(2) + "$"
+  },
+  {
+    header: "Cancelado",
+    accessorKey: "valor_abonado",
+    accessorFn: (row) => row.valor_abonado?.toFixed(2) + "$",  // Verifica si 'fecha' no es null
+
+  },
+  {
+    header: "Saldo",
+    id: "saldo",
+    cell: (info) => {
+      const row = info.row.original;
+      const totalPagar = row.total_pagar ?? 0;
+      const valorAbonado = row.valor_abonado ?? 0;
+      const estado = (row.estado ?? "").toLowerCase();
+
+      // Si está pagada, no se muestra saldo
+      if (estado === "pagada") {
+        return null; // También puedes retornar "—" o un <span> vacío si lo prefieres
+      }
+
+      const saldo = totalPagar - valorAbonado;
+
+      return (
+        <span className="text-sm font-medium text-default-700">
+          ${saldo.toFixed(2)}
+        </span>
+      );
+    }
+  },
+  {
+    header: "Estado",
+    accessorKey: "estado",
+    cell: (info) => {
+      const row = info.row.original;
+      const valorAbonado = row.valor_abonado ?? 0;
+      const totalPagar = row.total_pagar ?? 0;
+      const estado = row.estado?.toLowerCase(); // por si viene con mayúsculas
+
+      let colorEstado: "success" | "danger" | "warning" | "default" = "default";
+
+      if (estado === "pagada") {
+        colorEstado = "success";
+      } else if (estado === "pendiente") {
+        if (valorAbonado > 0 && valorAbonado < totalPagar) {
+          colorEstado = "warning";
+        } else {
+          colorEstado = "danger";
         }
-      },
-      {
-        header: "Exceso (m³)",
-        accessorKey: "exceso",
-        cell: (info) => {
-          return (
-            <Chip className="capitalize"
-              color={info.getValue() == null ? "default" : info.getValue() > 0 ? "warning" : "success"}
-              size={info.getValue() == null ? "sm" : "md"}
+      }
 
-              radius="sm"
-              variant="bordered">
-              {info.getValue() == null ? "SR" : info.getValue()}
-            </Chip>
-          );
-        }
-      },
+      return (
+        <Chip
+          className="capitalize"
+          color={colorEstado}
+          size="sm"
+          radius="sm"
+          variant="bordered"
+        >
+          {info.getValue() == null ? "SR" : info.getValue()}
+        </Chip>
+      );
+    },
+  },
+  {
+    header: "Acciones",
+    cell: (info) => {
+      const items =
+        [{ name: "Pagar", key: "update" },
+        { name: "Ver planillas", key: "Link" }]
+      return (
+        // <CustomActions data={info.row.original} items={items}></CustomActions>
+        <ActionSheet data={info.row.original}></ActionSheet>
+      );
+    },
 
-      {
-        header: "Tarifa base",
-        accessorKey: "total_consumo",
-        accessorFn: (row) => row.total_consumo?.toFixed(2) + "$",  // Verifica si 'fecha' no es null
-
-      },
-      {
-        header: "Valor de Exceso",
-        accessorKey: "total_exceso",
-        accessorFn: (row) => {
-          return row.total_exceso?.toFixed(2) + "$"
-        },  // Verifica si 'fecha' no es null
-      },
-      {
-        header: "Total a pagar",
-        accessorKey: "total_pagar",
-        accessorFn: (row) => row.total_pagar?.toFixed(2) + "$"
-      },
-      {
-        header: "Cancelado",
-        accessorKey: "valor_abonado",
-        accessorFn: (row) => row.valor_abonado?.toFixed(2) + "$",  // Verifica si 'fecha' no es null
-
-      },
-      {
-        header: "Estado",
-        accessorKey: "estado",
-        cell: (info) => {
-          return (
-            <Chip className="capitalize"
-              color={info.getValue() == null ? "default" : info.getValue() == "pendiente" ? "danger" : "success"}
-              size={'sm'}
-
-              radius="sm"
-              variant="bordered">
-              {info.getValue() == null ? "SR" : info.getValue()}
-            </Chip>
-          );
-        }
-      },
-      {
-        header: "Acciones",
-        cell: (info) => {
-          const items =
-            [{ name: "Pagar", key: "update" },
-            { name: "Ver planillas", key: "Link" }]
-          return (
-            // <CustomActions data={info.row.original} items={items}></CustomActions>
-            <ActionSheet data={info.row.original}></ActionSheet>
-          );
-        },
-
-      },
-    ]
-    
+  },
+]

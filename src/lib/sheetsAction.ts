@@ -163,6 +163,7 @@ export const getAmountMonthsByYear = async (year: number): Promise<QueryResultEr
         const { data, error } = await supabase.rpc('get_sheets_recaudado_by_month_sector', {
             p_fecha_fin: fecha_fin,
             p_fecha_inicio: fecha_inicio
+            
         }).order('mes', { ascending: true });
 
         if (error) { return { success: false, error: `Error: ${error.message}` }; }
@@ -176,7 +177,6 @@ export const getAmountMonthsByYear = async (year: number): Promise<QueryResultEr
 
 
 export const getSheetsPagination = async (date: string, currentPage: number, itemsPerPage: number, query: string, year: number, month: number, status: string): Promise<QueryResultError<Sheets[]>> => {
-    const offset = (currentPage - 1) * itemsPerPage;
     //console.log(date, query, currentPage, itemsPerPage)
 
     try {
@@ -209,6 +209,7 @@ export const getSheetsPagination = async (date: string, currentPage: number, ite
 
         // `, [query, year, month, queryStatus, queryDate])).rows; // Formateamos la fecha con año-mes-01
         const { fecha_fin, fecha_inicio } = calculateRangeDate(year, month);
+        const { from, to } = getPagination(currentPage, itemsPerPage);
         const supabase = await createClient();
         let builder = supabase
             .from('sheet_by_years_and_months')
@@ -216,6 +217,7 @@ export const getSheetsPagination = async (date: string, currentPage: number, ite
             .gte("fecha_emision", fecha_inicio)
             .lte("fecha_emision", fecha_fin)
             .or(`nombre.ilike.%${query}%,cedula.ilike.%${query}%`)
+            .range(from, to)
             .order('nombre', { ascending: true })
 
         // Si se especifica sector, filtramos

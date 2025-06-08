@@ -17,9 +17,6 @@ export default function SelectWaterMeterByUser({ waterMeter }: { waterMeter: Wat
         shallow: false
     });
 
-    console.log(waterMeter, "wm")
-
-
     useEffect(() => {
         if (waterMeter.length > 0) {
             setCoordinates({ wm: waterMeter[0].id })
@@ -40,12 +37,16 @@ export default function SelectWaterMeterByUser({ waterMeter }: { waterMeter: Wat
     return (
 
         <Select
-            size="sm"
+            items={waterMeter}
+            size="md"
             label="Selecciona un medidor"
+            // labelPlacement=""
             className="max-w-xs"
-            selectedKeys={[String(waterMeter[0].id)]}
+            defaultSelectedKeys={[String(waterMeter[0].id)]}
             onChange={handleSelectionChange}
             disallowEmptySelection
+
+
             listboxProps={{
                 itemClasses: {
                     base: [
@@ -60,27 +61,40 @@ export default function SelectWaterMeterByUser({ waterMeter }: { waterMeter: Wat
                         "data-[focus-visible=true]:ring-default-500",
                     ],
                 },
-            }}            
-        >
-            {waterMeter.map((medidor) => (
-                <SelectItem startContent={
-                    <Chip size="sm" color={medidor.estado === "Activo" ? 'success' : "danger"}>{medidor.estado}</Chip>
-                }
-                    key={medidor.id}
-                    value={String(medidor.id)}
-                    textValue={medidor.id.toString()}
-                >
-
-                    <div className="flex items-center text-sm">
-                        <span className="text-default-500 text-tiny">{medidor.tipo}</span>
-                        <span className="text-default-500 font-bold text-tiny ml-2">{medidor.id}</span>
+            }}
+            renderValue={(items) => {
+                return items.map((item) => (
+                    <div key={item.key} className="flex items-center gap-2 py-2 px-1 rounded-md">
+                        <div
+                            className="flex items-center text-sm gap-1"
+                        >
+                            <Chip size="sm" color={item.data?.estado === "Activo" ? 'success' : "danger"}>{item.data?.estado}</Chip>
+                            <div className="flex items-center text-sm">
+                                <span className="text-default-500 text-tiny">{item.data?.tipo}</span>
+                                <span className="text-default-500 font-bold text-tiny ml-2">{item.data?.id}</span>
+                            </div>
+                        </div>
                     </div>
+                ));
+            }}
+        >
+            {
+                (medidor) => (
+                    <SelectItem startContent={
+                        <Chip size="sm" color={medidor.estado === "Activo" ? 'success' : "danger"}>{medidor.estado}</Chip>
+                    }
+                        key={medidor.id}
+                        value={String(medidor.id)}
+                        textValue={medidor.id.toString()}
+                    >
 
-
-
-
-                </SelectItem>
-            ))}
+                        <div className="flex items-center text-sm">
+                            <span className="text-default-500 text-tiny">{medidor.tipo}</span>
+                            <span className="text-default-500 font-bold text-tiny ml-2">{medidor.id}</span>
+                        </div>
+                    </SelectItem>
+                )
+            }
         </Select>
 
     );

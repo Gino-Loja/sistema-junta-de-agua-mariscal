@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import SkeletonCustom from '@/components/skeletons/skeleton';
 import PaginationControls from '@/components/table/PaginationControlsx';
 import Search from '@/components/forms/Search';
-import { Divider } from '@nextui-org/react';
+import { Divider, Skeleton } from '@nextui-org/react';
 import { PageProps } from '@/modules/types';
 import { coordinatesCache } from '@/modules/searchParams';
 import MonthYearSelector from '@/components/filters-table/MonthYearSelector';
@@ -53,7 +53,9 @@ export default async function Page({ searchParams }: PageProps) {
         </div>
 
         <div className="w-full sm:w-80 min-w-[200px]">
-          <Suspense fallback={<LoadingIcon />}>
+          <Suspense fallback={<Skeleton className="w-4/5 rounded-lg">
+            <div className="h-10 w-4/5 rounded-lg bg-default-200" />
+          </Skeleton>}>
             <GetSectorSelector />
           </Suspense>
         </div>
@@ -73,7 +75,7 @@ export default async function Page({ searchParams }: PageProps) {
         ></MeasurementTable>
       </Suspense>
 
-      <Suspense key={page  + query + year + month} fallback={<LoadingIcon />}>
+      <Suspense key={page + query + year + month} fallback={<LoadingIcon />}>
         <FechtRenderPaginationControls
           repository={repositoryLectures}
           page={page}

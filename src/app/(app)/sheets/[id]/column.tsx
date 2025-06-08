@@ -3,11 +3,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Sheets } from "@/model/types";
 import { Chip } from "@nextui-org/react";
 import PaymentButtonSheet from "@/modules/sheet/ui/payment-button-sheet";
+import { color } from "framer-motion";
 
 
 export const columns: ColumnDef<Sheets, any>[] = [
   {
-    header: "Codigo_Medidor",
+    header: "Codigo de Medidor",
     accessorKey: "medidor_id",
   },
   // {
@@ -16,7 +17,8 @@ export const columns: ColumnDef<Sheets, any>[] = [
   // },
   {
     header: "Fecha de Emisión",
-    accessorFn: (row) => row.fecha_emision ,  // Verifica si 'fecha' no es null
+    
+    accessorFn: (row) => row.fecha_emision,  // Verifica si 'fecha' no es null
     accessorKey: "fecha_emision",
   },
   {
@@ -59,6 +61,7 @@ export const columns: ColumnDef<Sheets, any>[] = [
   },
   {
     header: "Valor de Exceso",
+
     accessorKey: "total_exceso",
     accessorFn: (row) => {
       return row.total_exceso?.toFixed(2) + "$"
@@ -76,20 +79,65 @@ export const columns: ColumnDef<Sheets, any>[] = [
 
   },
   {
+    header: "Saldo",
+    id: "saldo",
+    cell: (info) => {
+      const row = info.row.original;
+      const totalPagar = row.total_pagar ?? 0;
+      const valorAbonado = row.valor_abonado ?? 0;
+      const estado = (row.estado ?? "").toLowerCase();
+
+      // Si está pagada, no se muestra saldo
+      if (estado === "pagada") {
+        return null; // También puedes retornar "—" o un <span> vacío si lo prefieres
+      }
+
+      const saldo = totalPagar - valorAbonado;
+
+      return (
+        <span className="text-sm font-medium text-default-700">
+          ${saldo.toFixed(2)}
+        </span>
+      );
+    }
+  },
+
+
+
+
+  {
     header: "Estado",
     accessorKey: "estado",
     cell: (info) => {
-      return (
-        <Chip className="capitalize"
-          color={info.getValue() == null ? "default" : info.getValue() == "pendiente" ? "danger" : "success"}
-          size={'sm'}
+      const row = info.row.original;
+      const valorAbonado = row.valor_abonado ?? 0;
+      const totalPagar = row.total_pagar ?? 0;
+      const estado = row.estado?.toLowerCase(); // por si viene con mayúsculas
 
+      let colorEstado: "success" | "danger" | "warning" | "default" = "default";
+
+      if (estado === "pagada") {
+        colorEstado = "success";
+      } else if (estado === "pendiente") {
+        if (valorAbonado > 0 && valorAbonado < totalPagar) {
+          colorEstado = "warning";
+        } else {
+          colorEstado = "danger";
+        }
+      }
+
+      return (
+        <Chip
+          className="capitalize"
+          color={colorEstado}
+          size="sm"
           radius="sm"
-          variant="bordered">
+          variant="bordered"
+        >
           {info.getValue() == null ? "SR" : info.getValue()}
         </Chip>
       );
-    }
+    },
   },
   {
     header: "Pagar",

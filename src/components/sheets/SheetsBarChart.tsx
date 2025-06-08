@@ -65,13 +65,16 @@ export function SheetsBarChart({ data }: { data: InputData[] }) {
     // Transformamos los datos para incluir ambas métricas por fecha y sector.
     const transformData = (data: InputData[]): TransformedData[] => {
         const result: { [key: string]: TransformedData } = {};
+
         data.forEach(({ mes, sector_nombre, total_recaudado, total_deuda }) => {
-            const fechaKey = mes.toString().split('T')[0];
-            if (!result[fechaKey]) {
-                result[fechaKey] = { mes: new Date(mes) };
+            const [year, month] = mes.split('-'); // Asume formato 'YYYY-MM'
+            const dateKey = `${year}-${month}-01`; // Fijamos día 1 del mes
+
+            if (!result[dateKey]) {
+                result[dateKey] = { mes: new Date(`${dateKey}T00:00:00`) }; // ISO 8601 seguro
             }
-            result[fechaKey][`${sector_nombre}_recaudado`] = total_recaudado;
-            result[fechaKey][`${sector_nombre}_deuda`] = total_deuda;
+            result[dateKey][`${sector_nombre}_recaudado`] = total_recaudado;
+            result[dateKey][`${sector_nombre}_deuda`] = total_deuda;
         });
         return Object.values(result);
     };

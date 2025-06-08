@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic'
 
 import { Suspense } from "react";
 import { now } from "@internationalized/date";
@@ -10,7 +9,7 @@ import MetricSkeleton from '@/components/skeletons/SkeletomMetric';
 import BarChartSkeleton from '@/components/skeletons/BarChartSkeleton';
 import { Divider } from '@nextui-org/react';
 import { TIME_ZONE } from '@/model/Definitions';
-import { PageProps } from '@/modules/types';
+import {  PageProps } from '@/modules/types';
 import { coordinatesCache } from '@/modules/searchParams';
 import MonthYearSelector from '@/components/filters-table/MonthYearSelector';
 
@@ -24,11 +23,12 @@ export default async function Page({ searchParams }: PageProps) {
 
 
 
+
     return (
         <div className='flex flex-col overflow-hidden gap-4 px-4 pb-4'>
 
             <div className='flex flex-col sm:flex-row gap-2 justify-between items-center'>
-                <h1 className="text-2xl font-bold p-1 border-divider rounded-xl shrink-0">Resumen Planillas</h1>
+                <h1 className="text-2xl font-bold p-1 border-divider rounded-xl shrink-0">Resumen Planillas </h1>
                 <div className='min-w-48'>
                     <MonthYearSelector />
 
