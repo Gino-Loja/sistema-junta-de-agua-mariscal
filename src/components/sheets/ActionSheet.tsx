@@ -4,6 +4,7 @@ import { VerticalDotsIcon } from "../icons/VerticalDotsIcon ";
 import { useUserStore, } from "@/lib/store";
 import { Sheets } from "@/model/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ActionsProps<T> {
     data: Sheets;
@@ -12,7 +13,7 @@ interface ActionsProps<T> {
 export function ActionSheet<T>({ data }: ActionsProps<T>) {
     const { setData, setType, openModal } = useUserStore();
 
-
+    const router = useRouter()
 
     // console.log(data,"data")
     return (
@@ -41,9 +42,11 @@ export function ActionSheet<T>({ data }: ActionsProps<T>) {
                     </DropdownItem>
 
                     <DropdownItem
-                    key={'link'}
+                        key={'link'}
+                        onPress={() => {
+                            router.push(`/sheets/${data.usuario_id}/`);
+                        }}
                     >
-
                         <Link href={`/sheets/${data.usuario_id}/`} className="flex items-center gap-2">
                             <span>Ver Planillas</span>
                         </Link>

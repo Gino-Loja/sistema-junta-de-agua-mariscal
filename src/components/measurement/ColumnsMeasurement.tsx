@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Lectures } from "@/model/types";
 import { Chip } from "@nextui-org/react";
 
-export const columns: ColumnDef<Lectures, any>[] = 
+export const columns: ColumnDef<Lectures, any>[] =
     [
         {
             header: "ID",
@@ -31,8 +31,8 @@ export const columns: ColumnDef<Lectures, any>[] =
         {
             header: "Fecha de lectura",
             accessorKey: "fecha",
-            accessorFn: (row) => row.fecha ,
-              // Verifica si 'fecha' no es null
+            accessorFn: (row) => row.fecha,
+            // Verifica si 'fecha' no es null
             cell: (info) => {
                 return (
                     <Chip className="capitalize" color={info.getValue() == null ? "default" : "success"}
@@ -111,7 +111,8 @@ export const columns: ColumnDef<Lectures, any>[] =
             cell: (info) => {
 
                 const items = info.row.original.id != null
-                    ? [{ name: "Editar", key: "update" }, { name: "Ver consumo", key: "delete" }]
+                    ? [{ name: "Editar", key: "update" },
+                    { name: "Ver consumo", key: "consumo" }]
                     : [{ name: "Añadir lectura", key: "create" }];
 
                 return (

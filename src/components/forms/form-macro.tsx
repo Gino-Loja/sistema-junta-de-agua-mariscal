@@ -125,8 +125,11 @@ export default function FormMacro() {
                     name="fecha"
 
                     control={control}
-                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseDate(data?.fecha)}
-                    render={({ field }) => (
+                    defaultValue={
+                        data?.fecha == null
+                            ? now(TIME_ZONE)
+                            : parseDate(data?.fecha.split('T')[0])
+                    } render={({ field }) => (
                         <I18nProvider
 
                             locale="es">

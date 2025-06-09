@@ -6,7 +6,7 @@ import InputField from "./InputField";
 import { Button, Input } from "@nextui-org/react";
 import { useUserStore } from "@/lib/store";
 import { DatePicker } from "@nextui-org/react";
-import {now, parseAbsoluteToLocal, DateValue, parseDate } from "@internationalized/date";
+import { now, parseAbsoluteToLocal, DateValue, parseDate } from "@internationalized/date";
 import { createApiLecturesRepository } from "@/services/serviceMeasurement";
 import { ILecturesRepository } from "@/model/lecturas-repository/lecturasRepository";
 import { toast } from "react-toastify";
@@ -143,22 +143,22 @@ export default function FormAddLecture() {
                 <Controller
                     name="fecha"
                     control={control}
-                        defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseDate(data?.fecha)}
+                    defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseDate(data?.fecha)}
                     render={({ field }) => (
                         <I18nProvider
 
-                        locale="es">
-                        <DatePicker
-                            {...field}
-                            label="Fecha"
-                            size="sm"
-                            granularity="day"
-                            isInvalid={errors?.fecha?.message == undefined ? false : true}
-                            errorMessage={errors?.fecha?.message}
-                            showMonthAndYearPickers
-                        //defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
-                        />
-                            </I18nProvider>
+                            locale="es">
+                            <DatePicker
+                                {...field}
+                                label="Fecha"
+                                size="sm"
+                                granularity="day"
+                                isInvalid={errors?.fecha?.message == undefined ? false : true}
+                                errorMessage={errors?.fecha?.message}
+                                showMonthAndYearPickers
+                            //defaultValue={data?.fecha == null ? now(TIME_ZONE) : parseAbsoluteToLocal(data?.fecha.toISOString())}
+                            />
+                        </I18nProvider>
                     )}
                 />
                 <Input
@@ -215,7 +215,7 @@ export default function FormAddLecture() {
                                 //name="medidor_id"
                                 type="number"
                                 isDisabled
-                                value={String(field.value)} 
+                                value={String(field.value)}
                                 size="sm"
                             />
                         )}

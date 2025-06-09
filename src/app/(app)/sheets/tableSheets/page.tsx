@@ -1,11 +1,10 @@
 import dynamic from 'next/dynamic'
-
 import { Suspense } from "react";
 import TableSheets from '@/components/sheets/TableSheets';
 import { ISheetsRepository } from '@/model/sheets-repository/sheetsRepository';
 import { createApiSheetsRepository } from '@/services/serviceSheets';
 import SkeletonCustom from '@/components/skeletons/skeleton';
-import { ITEMS_PER_PAGE, TIME_ZONE } from '@/model/Definitions';
+import { TIME_ZONE } from '@/model/Definitions';
 import PaginationControls from '@/components/table/PaginationControlsx';
 import Search from '@/components/forms/Search';
 import FiltersSearchSheets from '@/components/sheets/FiltersSearchSheets';

@@ -2,17 +2,20 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { VerticalDotsIcon } from "../icons/VerticalDotsIcon ";
 import { useUserStore, } from "@/lib/store";
+import { useRouter } from "next/navigation";
 
 interface ActionsProps<T> {
-    data: T;
-    items: { name: string; key: string }[];
+    data: T;    items: { name: string; key: string }[];
 }
 
 export function CustomActions<T>({ data, items }: ActionsProps<T>) {
     const { setData, setType, openModal } = useUserStore();
+    const router = useRouter()
 
 
-    // console.log(data,"data")
+
+ console.log(data,"data")
+
     return (
         <div className="relative flex justify-end items-center gap-2">
             <Dropdown classNames={{
@@ -25,15 +28,13 @@ export function CustomActions<T>({ data, items }: ActionsProps<T>) {
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu items={items}>
-                    
+
 
                     {(item) => (
                         <DropdownItem
                             key={item.key}
-                            
                             onPress={() => {
                                 if (item.key === 'update') {
-                                    
                                     setData(data);
                                     setType("update");
                                     openModal();
@@ -43,17 +44,18 @@ export function CustomActions<T>({ data, items }: ActionsProps<T>) {
                                     setData(data)
                                     openModal()
                                 }
-                            
-                                
-                               
+                                if (item.key === 'consumo') {
+                                    router.push(`/water-meter/${(data as { usuario_id: string | number }).usuario_id}`);
+                                }
+
                             }}
                         >
                             {item.name}
                         </DropdownItem>
                     )
-                    
+
                     }
-                    
+
 
                 </DropdownMenu>
             </Dropdown>
